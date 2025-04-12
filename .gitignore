@@ -1,0 +1,32 @@
+# Copied from the react-basic template of TanStack Start.
+node_modules
+package-lock.json
+yarn.lock
+
+.DS_Store
+.cache
+.env
+.vercel
+.output
+.vinxi
+
+/build/
+/api/
+/server/build
+/public/build
+.vinxi
+# Sentry Config File
+.env.sentry-build-plugin
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
+.aider.*
+!.aider.conf.yml
+.direnv*
+
+# Is it necessary to commit these files?
+app.config.timestamp_*.*
+
+/data

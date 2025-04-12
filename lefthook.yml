@@ -1,0 +1,5 @@
+pre-commit:
+  runner: bash
+  commands:
+    eslint:
+      run: pnpm run lint-staged
