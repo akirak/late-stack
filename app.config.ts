@@ -5,9 +5,6 @@ import tsConfigPaths from "vite-tsconfig-paths"
 import { collections } from "./vite/plugins/collections"
 
 export default defineConfig({
-  server: {
-    preset: 'vercel',
-  },
   tsr: {
     appDirectory: "src",
   },

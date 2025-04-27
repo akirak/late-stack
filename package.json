@@ -6,7 +6,7 @@
   "sideEffects": false,
   "scripts": {
     "dev": "vinxi dev",
-    "build": "vinxi build",
+    "build": "NITRO_PRESET=deno_deploy vinxi build",
     "start": "vinxi start",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
