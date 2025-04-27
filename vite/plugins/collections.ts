@@ -15,7 +15,6 @@ const cwd = new URL('.', import.meta.url).pathname
 export function collections(): Plugin {
   return {
     name: "vite-plugin-collections",
-    apply: "build",
 
     async buildStart() {
       const contentDir = path.resolve(cwd, "src/contents/posts")
