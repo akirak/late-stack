@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "vinxi dev",
     "build": "NITRO_PRESET=deno_deploy vinxi build",
-    "start": "vinxi start",
+    "start": "cp -r data .output/ && cd .output && deno run --allow-all server/index.ts",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "lint-fix": "eslint --fix ."

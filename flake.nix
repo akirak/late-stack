@@ -10,11 +10,13 @@
       devShells = eachSystem (pkgs: {
         default = pkgs.mkShell {
           packages = [
+            pkgs.deno
+            # Stick with pnpm for development for the time being, because vinxi
+            # doesn't prefix node imports with "node:".
             pkgs.nodejs
             pkgs.corepack
             pkgs.nodePackages.typescript
             pkgs.nodePackages.typescript-language-server
-            pkgs.deno
           ];
         };
       });
