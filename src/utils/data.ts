@@ -5,8 +5,9 @@ import { isRunningInDeno } from './env';
 
 function getDataDir() {
   if (isRunningInDeno()) {
-    // The data directory should be copied to .output directory
-    return '../data'
+    // The data directory should be copied to .output directory.
+    // The working directory will be directly under .output.
+    return 'data'
   } else {
     const __filename = url.fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
