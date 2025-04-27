@@ -28,3 +28,5 @@ yarn.lock
 
 # Is it necessary to commit these files?
 app.config.timestamp_*.*
+
+/data

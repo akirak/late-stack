@@ -43,7 +43,9 @@ export function collections(): Plugin {
             ...doc.data,
           })
           index.push(metadata)
-          const outPath = path.resolve(cwd, "data", "posts", `${basename}.json`)
+          const dir = path.resolve(cwd, "data", "posts")
+          await fs.mkdir(dir, { recursive: true })
+          const outPath = path.resolve(dir, `${basename}.json`)
           const fullData = JSON.stringify({
             ...metadata,
             hastBody: hast,
