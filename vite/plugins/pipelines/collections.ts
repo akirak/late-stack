@@ -107,6 +107,11 @@ export const PipelineLive: Layer.Layer<Pipeline, Error, Config> = Layer.effect(
       }
     })
 
+    const clean = Effect.promise(() => fs.rm(path.join(config.outDir, "*.*"), {
+      force: true,
+      recursive: true,
+    }))
+
     return {
       handleAddFile: matchFilePath({
         posts: filePath => Effect.gen(function* () {
@@ -138,6 +143,11 @@ export const PipelineLive: Layer.Layer<Pipeline, Error, Config> = Layer.effect(
         }),
       }),
       buildAll: Effect.gen(function* () {
+        if (config.production) {
+          console.log("Cleaning ...")
+          yield* clean
+        }
+        yield* Effect.promise(() => fs.mkdir(config.outDir, { recursive: true }))
         const dir = path.join(config.contentDir, "posts")
         const files = yield* Effect.promise(() => fs.readdir(dir))
         postIndex = yield* Effect.all(
