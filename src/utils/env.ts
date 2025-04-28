@@ -1,10 +1,7 @@
-const Deno = globalThis.Deno as any | undefined | null
-const window = globalThis.window as Window | undefined | null
-
 export function isRunningInDeno() {
-  return typeof Deno !== "undefined" && Deno !== null
+  return "Deno" in globalThis
 }
 
 export function isRunningInBrowser() {
-  return typeof window !== "undefined" && typeof document !== "undefined"
+  return typeof globalThis.window !== "undefined" && typeof document !== "undefined"
 }
