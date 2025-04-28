@@ -13,19 +13,7 @@ export interface Options {
  */
 export function collections({ contentDir, outDir }: Options): Plugin {
   let mode: string
-
-  const configLayer = Layer.succeed(
-    Config,
-    Config.of({
-      contentDir,
-      outDir,
-    })
-  )
-
-  const runtime = PipelineLive.pipe(
-    Layer.provide(configLayer),
-    ManagedRuntime.make
-  )
+  let runtime: ManagedRuntime.ManagedRuntime<Pipeline, Error>
 
   const isContentFile = String.startsWith(contentDir)
 
@@ -34,6 +22,20 @@ export function collections({ contentDir, outDir }: Options): Plugin {
 
     config(_, env) {
       mode = env.command
+
+      const configLayer = Layer.succeed(
+        Config,
+        Config.of({
+          contentDir,
+          outDir,
+          production: mode === "build"
+        })
+      )
+
+      runtime = PipelineLive.pipe(
+        Layer.provide(configLayer),
+        ManagedRuntime.make
+      )
     },
 
     async configureServer(server) {

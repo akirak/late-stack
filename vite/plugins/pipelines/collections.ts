@@ -7,7 +7,7 @@ import remarkGfm from "remark-gfm"
 import remarkRehype from "remark-rehype"
 import rehypeSanitize from "rehype-sanitize"
 import { PostMetadata } from "@/collections/posts";
-import { pipe, String, Schema } from "effect"
+import { Array, pipe, String, Schema } from "effect"
 import { Effect, Layer, Context } from "effect";
 import path from "node:path"
 
@@ -23,6 +23,7 @@ export class Config extends Context.Tag("Config")<
   {
     readonly contentDir: string
     readonly outDir: string
+    readonly production: boolean
   }
 >() { }
 
@@ -91,6 +92,9 @@ export const PipelineLive: Layer.Layer<Pipeline, Error, Config> = Layer.effect(
           slug: getSlug(filePath),
           ...doc.data,
         })
+        if (config.production && metadata.draft) {
+          return null
+        }
         const dir = path.join(config.outDir, "posts")
         await fs.mkdir(dir, { recursive: true })
         const outPath = path.resolve(dir, `${metadata.slug}.json`)
@@ -110,15 +114,23 @@ export const PipelineLive: Layer.Layer<Pipeline, Error, Config> = Layer.effect(
       handleAddFile: matchFilePath({
         posts: (filePath) => Effect.gen(function*() {
           const metadata = yield* processPost(filePath)
-          postIndex.push(metadata)
-          yield* updatePostIndex
+          // In development, the returned value is never null, but this is only
+          // for type checking.
+          if (!!metadata) {
+            postIndex.push(metadata)
+            yield* updatePostIndex
+          }
         })
       }),
       handleModifyFile: matchFilePath({
         posts: (filePath) => Effect.gen(function*() {
           const fileName = path.basename(filePath)
           const metadata = yield* processPost(filePath)
-          postIndex[postIndex.findIndex((metadata) => metadata.fileName === fileName)] = metadata
+          // In development, the returned value is never null, but this is only
+          // for type checking.
+          if (!!metadata) {
+            postIndex[postIndex.findIndex((metadata) => metadata.fileName === fileName)] = metadata
+          }
         })
       }),
       handleDeleteFile: matchFilePath({
@@ -133,6 +145,9 @@ export const PipelineLive: Layer.Layer<Pipeline, Error, Config> = Layer.effect(
         const files = yield* Effect.promise(() => fs.readdir(dir))
         postIndex = yield* Effect.all(
           files.map((fileName) => processPost(path.join(dir, fileName))),
+        ).pipe(
+          // In production, the metadata of draft posts will be null.
+          Effect.map(Array.filter((metadata) => !!metadata))
         )
         yield* updatePostIndex
       }),
