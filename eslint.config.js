@@ -11,5 +11,10 @@ export default antfu({
   ignores: [
     "**/*.gen.ts",
   ],
-  ...pluginRouter.configs["flat/recommended"],
-})
+  rules: {
+    "array-callback-return": "off",
+    // Effect uses many of them
+    "no-lone-blocks": "off",
+    "no-empty": "off",
+  },
+}, pluginRouter.configs["flat/recommended"])

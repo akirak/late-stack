@@ -26,6 +26,7 @@ export const PostSchema = Schema.Struct({
  * Schema for the metadata of a post which corresponds to the YAML header.
  */
 export const PostMetadataSchema = PostSchema.omit("hastBody").pipe(
+
   Schema.filter(
     (meta) => {
       if (!meta.draft && !meta.publicationDate) {

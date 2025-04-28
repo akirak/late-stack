@@ -47,7 +47,7 @@ export const PipelineLive: Layer.Layer<Pipeline, Error, Config> = Layer.effect(
               path.relative(config.contentDir, filePath),
               String.split(path.sep),
             )
-            if (arr.length == 2) {
+            if (arr.length === 2) {
               const type_ = arr[0]
               const handler = handlers[type_]
               if (!handler) {
@@ -55,7 +55,7 @@ export const PipelineLive: Layer.Layer<Pipeline, Error, Config> = Layer.effect(
                   new Error(`missing handler for ${type_}`),
                 )
               }
-              return yield* handler.call(null, filePath)
+              return yield* handler(filePath)
             }
           })
     { }
@@ -144,6 +144,7 @@ export const PipelineLive: Layer.Layer<Pipeline, Error, Config> = Layer.effect(
       }),
       buildAll: Effect.gen(function* () {
         if (config.production) {
+          // eslint-disable-next-line no-console
           console.log("Cleaning ...")
           yield* clean
         }

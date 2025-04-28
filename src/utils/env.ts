@@ -1,13 +1,10 @@
-declare namespace globalThis {
-  const Deno: any | undefined | null
-
-  const window: Window | undefined | null
-}
+const Deno = globalThis.Deno as any | undefined | null
+const window = globalThis.window as Window | undefined | null
 
 export function isRunningInDeno() {
-  return typeof globalThis.Deno !== "undefined" && globalThis.Deno !== null
+  return typeof Deno !== "undefined" && Deno !== null
 }
 
 export function isRunningInBrowser() {
-  return typeof globalThis.window !== "undefined" && typeof document !== "undefined"
+  return typeof window !== "undefined" && typeof document !== "undefined"
 }
