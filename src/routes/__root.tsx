@@ -1,4 +1,3 @@
-import "@/types/css"
 import appCss from "@/styles/app.css?url"
 import { seo } from "@/utils/seo"
 import {
@@ -9,6 +8,7 @@ import {
 } from "@tanstack/react-router"
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools"
 import * as React from "react"
+import "@/types/css"
 
 export const Route = createRootRoute({
   head: () => ({

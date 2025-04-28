@@ -3,6 +3,9 @@ import browserslist from "browserslist"
 import { browserslistToTargets } from "lightningcss"
 import tsConfigPaths from "vite-tsconfig-paths"
 import { collections } from "./vite/plugins/collections"
+import path from "node:path"
+
+const root = new URL(".", import.meta.url).pathname
 
 export default defineConfig({
   tsr: {
@@ -13,7 +16,10 @@ export default defineConfig({
       tsConfigPaths({
         projects: ["./tsconfig.json"],
       }),
-      collections(),
+      collections({
+        contentDir: path.resolve(root, "src/contents"),
+        outDir: path.resolve(root, "data"),
+      }),
     ],
     css: {
       transformer: "lightningcss",

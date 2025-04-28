@@ -1,21 +1,41 @@
-import * as url from 'node:url';
-import * as fs from "node:fs/promises"
+import * as fs from "node:fs"
+import * as fsPromise from "node:fs/promises"
 import * as path from "node:path"
-import { isRunningInDeno } from './env';
+import * as url from "node:url"
+import { isRunningInBrowser, isRunningInDeno } from "./env"
+import { Option } from "effect"
 
+/**
+ * Returns a path to the data directory for SSR. Data files are only available
+ * on the server, so this value is set to null on browser.
+ */
 function getDataDir() {
-  if (isRunningInDeno()) {
-    // The data directory should be copied to .output directory.
-    // The working directory will be directly under .output.
-    return 'data'
+  if (isRunningInBrowser()) {
+    throw new Error(`Server data is not available inside browser`)
+  } else if (isRunningInDeno()) {
+    // In the production enviroment of Deno Deploy, The data directory should be
+    // copied to .output directory. The working directory will be directly under
+    // .output.
+    return "data"
   } else {
-    const __filename = url.fileURLToPath(import.meta.url);
-    const __dirname = path.dirname(__filename);
-    return path.join(__dirname, '../../data');
+    const __filename = url.fileURLToPath(import.meta.url)
+    const __dirname = path.dirname(__filename)
+    // Top-level directory in the repository
+    return path.join(__dirname, "../../data")
   }
 }
 
-export async function readDataFile(filePath: string) {
-  const fullPath = path.join(getDataDir(), filePath);
-  return await fs.readFile(fullPath, 'utf-8')
+/**
+ * Read a JSON file in the data directory.
+ *
+ * If the file doesn't exist, the function returns None.
+ */
+export async function readJsonDataFile<T>(filePath: string): Promise<Option.Option<T>> {
+  const fullPath = path.join(getDataDir(), filePath)
+  if (fs.existsSync(fullPath)) {
+    const string = await fsPromise.readFile(fullPath, "utf-8")
+    return Option.some(JSON.parse(string) as T)
+  } else {
+    return Option.none()
+  }
 }

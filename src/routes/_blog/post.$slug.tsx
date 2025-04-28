@@ -1,34 +1,31 @@
-import { createFileRoute } from "@tanstack/react-router"
-import {toJsxRuntime} from 'hast-util-to-jsx-runtime'
-import { Post } from "@/schemas/post"
-import {Fragment, jsxs, jsx} from 'react/jsx-runtime'
-import { readDataFile } from "@/utils/data"
+import { Option } from "effect"
+import { getPost, PostSlug } from "@/collections/posts"
+import { hastToJsx } from "@/utils/hast"
+import { createFileRoute, notFound } from "@tanstack/react-router"
 
 export const Route = createFileRoute("/_blog/post/$slug")({
   component: PostComponent,
   staleTime: Infinity,
   loader: async ({ params }) => {
-    const rawContent = await readDataFile(`posts/${params.slug}.json`)
-    const post = JSON.parse(rawContent) as Post
     return {
-      post,
+      post: await getPost(params.slug as PostSlug).then(
+        Option.getOrThrowWith(() => notFound())
+      )
     }
   },
 })
 
 function PostComponent() {
-  const { slug } = Route.useParams()
   const { post } = Route.useLoaderData()
 
   return (
     <main>
       <h1>
-        Category
-        {slug}
+        {post.title}
       </h1>
 
       <div>
-        {toJsxRuntime(post.hastBody, {Fragment, jsxs, jsx})}
+        {hastToJsx(post.hastBody)}
       </div>
     </main>
   )

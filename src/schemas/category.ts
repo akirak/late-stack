@@ -11,5 +11,5 @@ export const Category = Schema.Struct({
 export type Category = typeof Category.Type
 
 export interface CategoryApi {
-  
+
 }

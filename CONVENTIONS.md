@@ -1,11 +1,13 @@
 # Guidelines for Developing This Blog
 
 ### Commands
+
 - Dev: `pnpm run dev`
 - Build: `pnpm run build`
 - Check: `pnpm run typecheck` and `pnpm run lint-fix`
 
 ### Code Style
+
 - Package manager: pnpm
 - Framework: TanStack Start
 - TypeScript: Use Effect-TS for data validation and manipulation (Schema, Option, Array, etc.)

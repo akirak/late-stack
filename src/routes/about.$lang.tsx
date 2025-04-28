@@ -1,17 +1,17 @@
-import type { LangId } from "@/schemas/common"
-import { about } from "@/contents/about"
+import { getLocalProfile } from "@/collections/about"
+import { LanguageId } from "@/schemas/common"
 import { createFileRoute, notFound } from "@tanstack/react-router"
 import { Option, pipe } from "effect"
 
 export const Route = createFileRoute("/about/$lang")({
   component: AboutComponent,
-  loader: ({ params: { lang } }) => {
-    const localProfile = pipe(
-      about.getLocalProfile(lang as LangId),
-      Option.getOrThrowWith(() => notFound()),
-    )
+  staleTime: Infinity,
+  loader: ({ params }) => {
     return {
-      localProfile,
+      localProfile: pipe(
+        getLocalProfile(params.lang as LanguageId),
+        Option.getOrThrowWith(() => notFound()),
+      ),
     }
   },
 })
@@ -40,7 +40,9 @@ function AboutComponent() {
         <section aria-labelledby={profileHeadingId} className="profile-info">
           <h2 id={profileHeadingId}>{fullName}</h2>
           <p>
-            <strong>Location:</strong> My Current Location (e.g., City, Country)
+            <strong>Location:</strong>
+            {" "}
+            My Current Location (e.g., City, Country)
           </p>
         </section>
 

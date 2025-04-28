@@ -1,10 +1,14 @@
-import type { AboutCollectionApi, LocalProfile } from "@/schemas/about"
-import type { LangId } from "@/schemas/common"
+import { LocalProfile, SocialLink } from "@/schemas/about"
+import { LanguageId } from "@/schemas/common"
 import { Option } from "effect"
 
 const defaultFullName = "Akira Komamura"
 
-function getLocalProfile(lang: LangId) {
+export type SocialLink = typeof SocialLink.Type
+
+export type LocalProfile = typeof LocalProfile.Type
+
+export function getLocalProfile(lang: LanguageId): Option.Option<LocalProfile> {
   switch (lang) {
     case "en": {
       return Option.some({
@@ -24,8 +28,4 @@ function getLocalProfile(lang: LangId) {
       return Option.none() as Option.Option<LocalProfile>
     }
   }
-}
-
-export const about: AboutCollectionApi = {
-  getLocalProfile,
 }
