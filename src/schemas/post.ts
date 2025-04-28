@@ -9,6 +9,7 @@ export const PostSlugSchema = GenericSlugSchema.pipe(
  * Schema for the entire post.
  */
 export const PostSchema = Schema.Struct({
+  fileName: Schema.String,
   slug: PostSlugSchema,
   title: Schema.String,
   language: LanguageIdSchema,
