@@ -1,9 +1,9 @@
+import path from "node:path"
 import { defineConfig } from "@tanstack/react-start/config"
 import browserslist from "browserslist"
 import { browserslistToTargets } from "lightningcss"
 import tsConfigPaths from "vite-tsconfig-paths"
 import { collections } from "./vite/plugins/collections"
-import path from "node:path"
 
 const root = new URL(".", import.meta.url).pathname
 

@@ -1,15 +1,14 @@
+import type { PostMetadata } from "@/collections/posts"
 import fs from "node:fs/promises"
-import { PostMetadataSchema } from "../../../src/schemas/post"
-import matter from "gray-matter"
-import { unified } from "unified"
-import remarkParse from "remark-parse"
-import remarkGfm from "remark-gfm"
-import remarkRehype from "remark-rehype"
-import rehypeSanitize from "rehype-sanitize"
-import { PostMetadata } from "@/collections/posts";
-import { Array, pipe, String, Schema } from "effect"
-import { Effect, Layer, Context } from "effect";
 import path from "node:path"
+import { Array, Context, Effect, Layer, pipe, Schema, String } from "effect"
+import matter from "gray-matter"
+import rehypeSanitize from "rehype-sanitize"
+import remarkGfm from "remark-gfm"
+import remarkParse from "remark-parse"
+import remarkRehype from "remark-rehype"
+import { unified } from "unified"
+import { PostMetadataSchema } from "../../../src/schemas/post"
 
 // The Effect runtime is used, but @effect/platform is not used here.
 
@@ -27,24 +26,23 @@ export class Config extends Context.Tag("Config")<
   }
 >() { }
 
-export class Pipeline extends Context.Tag("Pipeline")<Pipeline,
-  {
-    readonly handleAddFile: (filePath: string) => Effect.Effect<void, Error, never>,
-    readonly handleModifyFile: (filePath: string) => Effect.Effect<void, Error, never>,
-    readonly handleDeleteFile: (filePath: string) => Effect.Effect<void, Error, never>,
-    readonly buildAll: Effect.Effect<void, never, never>,
-  }>() { }
+export class Pipeline extends Context.Tag("Pipeline")<Pipeline, {
+  readonly handleAddFile: (filePath: string) => Effect.Effect<void, Error, never>
+  readonly handleModifyFile: (filePath: string) => Effect.Effect<void, Error, never>
+  readonly handleDeleteFile: (filePath: string) => Effect.Effect<void, Error, never>
+  readonly buildAll: Effect.Effect<void, never, never>
+}>() { }
 
 type Handler = (filePath: string) => Effect.Effect<void, Error, never>
 
 export const PipelineLive: Layer.Layer<Pipeline, Error, Config> = Layer.effect(
   Pipeline,
-  Effect.gen(function*(_) {
+  Effect.gen(function* (_) {
     const config = yield* Config
-    const matchFilePath =
-      (handlers: { [dir: string]: Handler }) =>
+    const matchFilePath
+      = (handlers: { [dir: string]: Handler }) =>
         (filePath: string) =>
-          Effect.gen(function*() {
+          Effect.gen(function* () {
             const arr = pipe(
               path.relative(config.contentDir, filePath),
               String.split(path.sep),
@@ -54,7 +52,7 @@ export const PipelineLive: Layer.Layer<Pipeline, Error, Config> = Layer.effect(
               const handler = handlers[type_]
               if (!handler) {
                 yield* Effect.fail(
-                  new Error(`missing handler for ${type_}`)
+                  new Error(`missing handler for ${type_}`),
                 )
               }
               return yield* handler.call(null, filePath)
@@ -72,9 +70,8 @@ export const PipelineLive: Layer.Layer<Pipeline, Error, Config> = Layer.effect(
 
     const updatePostIndex = Effect.promise(
       () =>
-        fs.writeFile(path.join(config.outDir, "posts.index.json"),
-          JSON.stringify(postIndex)
-        )
+        fs.writeFile(path.join(config.outDir, "posts.index.json"), JSON.stringify(postIndex),
+        ),
     )
 
     /**
@@ -106,51 +103,51 @@ export const PipelineLive: Layer.Layer<Pipeline, Error, Config> = Layer.effect(
         return metadata
       }
       catch (e) {
-        throw new Error(`Validation failed for file: ${filePath}\n${JSON.stringify(e, null, 2)}`,)
+        throw new Error(`Validation failed for file: ${filePath}\n${JSON.stringify(e, null, 2)}`)
       }
     })
 
     return {
       handleAddFile: matchFilePath({
-        posts: (filePath) => Effect.gen(function*() {
+        posts: filePath => Effect.gen(function* () {
           const metadata = yield* processPost(filePath)
           // In development, the returned value is never null, but this is only
           // for type checking.
-          if (!!metadata) {
+          if (metadata) {
             postIndex.push(metadata)
             yield* updatePostIndex
           }
-        })
+        }),
       }),
       handleModifyFile: matchFilePath({
-        posts: (filePath) => Effect.gen(function*() {
+        posts: filePath => Effect.gen(function* () {
           const fileName = path.basename(filePath)
           const metadata = yield* processPost(filePath)
           // In development, the returned value is never null, but this is only
           // for type checking.
-          if (!!metadata) {
-            postIndex[postIndex.findIndex((metadata) => metadata.fileName === fileName)] = metadata
+          if (metadata) {
+            postIndex[postIndex.findIndex(metadata => metadata.fileName === fileName)] = metadata
           }
-        })
+        }),
       }),
       handleDeleteFile: matchFilePath({
-        posts: (filePath) => Effect.gen(function*() {
+        posts: filePath => Effect.gen(function* () {
           const fileName = path.basename(filePath)
-          delete postIndex[postIndex.findIndex((metadata) => metadata.fileName === fileName)]
+          delete postIndex[postIndex.findIndex(metadata => metadata.fileName === fileName)]
           yield* updatePostIndex
-        })
+        }),
       }),
-      buildAll: Effect.gen(function*() {
+      buildAll: Effect.gen(function* () {
         const dir = path.join(config.contentDir, "posts")
         const files = yield* Effect.promise(() => fs.readdir(dir))
         postIndex = yield* Effect.all(
-          files.map((fileName) => processPost(path.join(dir, fileName))),
+          files.map(fileName => processPost(path.join(dir, fileName))),
         ).pipe(
           // In production, the metadata of draft posts will be null.
-          Effect.map(Array.filter((metadata) => !!metadata))
+          Effect.map(Array.filter(metadata => !!metadata)),
         )
         yield* updatePostIndex
       }),
     } as const
-  })
+  }),
 )

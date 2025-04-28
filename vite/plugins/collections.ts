@@ -1,11 +1,10 @@
-import { Effect, Layer } from "effect";
 import type { Plugin } from "vite"
-import { ManagedRuntime, String } from "effect"
-import { Config, Pipeline, PipelineLive } from "./pipelines/collections";
+import { Effect, Layer, ManagedRuntime, String } from "effect"
+import { Config, Pipeline, PipelineLive } from "./pipelines/collections"
 
 export interface Options {
-  contentDir: string,
-  outDir: string,
+  contentDir: string
+  outDir: string
 }
 
 /**
@@ -28,13 +27,13 @@ export function collections({ contentDir, outDir }: Options): Plugin {
         Config.of({
           contentDir,
           outDir,
-          production: mode === "build"
-        })
+          production: mode === "build",
+        }),
       )
 
       runtime = PipelineLive.pipe(
         Layer.provide(configLayer),
-        ManagedRuntime.make
+        ManagedRuntime.make,
       )
     },
 
@@ -45,10 +44,11 @@ export function collections({ contentDir, outDir }: Options): Plugin {
             try {
               await runtime.runPromise(
                 Pipeline.pipe(
-                  Effect.andThen((pipeline) => pipeline.handleAddFile(filePath))
-                )
+                  Effect.andThen(pipeline => pipeline.handleAddFile(filePath)),
+                ),
               )
-            } catch (e) {
+            }
+            catch (e) {
               console.error(e)
             }
           }
@@ -58,10 +58,11 @@ export function collections({ contentDir, outDir }: Options): Plugin {
             try {
               await runtime.runPromise(
                 Pipeline.pipe(
-                  Effect.andThen((pipeline) => pipeline.handleModifyFile(filePath))
-                )
+                  Effect.andThen(pipeline => pipeline.handleModifyFile(filePath)),
+                ),
               )
-            } catch (e) {
+            }
+            catch (e) {
               console.error(e)
             }
           }
@@ -71,10 +72,11 @@ export function collections({ contentDir, outDir }: Options): Plugin {
             try {
               await runtime.runPromise(
                 Pipeline.pipe(
-                  Effect.andThen((pipeline) => pipeline.handleDeleteFile(filePath))
-                )
+                  Effect.andThen(pipeline => pipeline.handleDeleteFile(filePath)),
+                ),
               )
-            } catch (e) {
+            }
+            catch (e) {
               console.error(e)
             }
           }
@@ -92,17 +94,10 @@ export function collections({ contentDir, outDir }: Options): Plugin {
     async buildStart() {
       await runtime.runPromise(
         Pipeline.pipe(
-          Effect.andThen((pipeline) => pipeline.buildAll)
-        )
+          Effect.andThen(pipeline => pipeline.buildAll),
+        ),
       )
       this.info("✅ Generated blog collection")
     },
-
-    async buildEnd(e?: Error) {
-      if (e) {
-        console.error(e)
-      }
-      this.info(`Finished ${mode}`)
-    }
   }
 }

@@ -9,5 +9,5 @@ export function isRunningInDeno() {
 }
 
 export function isRunningInBrowser() {
-  return typeof globalThis.window !== 'undefined' && typeof document !== 'undefined'
+  return typeof globalThis.window !== "undefined" && typeof document !== "undefined"
 }

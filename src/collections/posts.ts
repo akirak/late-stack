@@ -1,7 +1,7 @@
-import { PostMetadataSchema, PostSchema, PostSlugSchema } from "@/schemas/post";
-import { readJsonDataFile } from "@/utils/data";
-import { Option } from "effect";
-import path from "node:path";
+import type { PostMetadataSchema, PostSchema, PostSlugSchema } from "@/schemas/post"
+import type { Option } from "effect"
+import path from "node:path"
+import { readJsonDataFile } from "@/utils/data"
 
 export type PostSlug = typeof PostSlugSchema.Type
 

@@ -2,8 +2,8 @@ import * as fs from "node:fs"
 import * as fsPromise from "node:fs/promises"
 import * as path from "node:path"
 import * as url from "node:url"
-import { isRunningInBrowser, isRunningInDeno } from "./env"
 import { Option } from "effect"
+import { isRunningInBrowser, isRunningInDeno } from "./env"
 
 /**
  * Returns a path to the data directory for SSR. Data files are only available
@@ -12,12 +12,14 @@ import { Option } from "effect"
 function getDataDir() {
   if (isRunningInBrowser()) {
     throw new Error(`Server data is not available inside browser`)
-  } else if (isRunningInDeno()) {
+  }
+  else if (isRunningInDeno()) {
     // In the production enviroment of Deno Deploy, The data directory should be
     // copied to .output directory. The working directory will be directly under
     // .output.
     return "data"
-  } else {
+  }
+  else {
     const __filename = url.fileURLToPath(import.meta.url)
     const __dirname = path.dirname(__filename)
     // Top-level directory in the repository
@@ -35,7 +37,8 @@ export async function readJsonDataFile<T>(filePath: string): Promise<Option.Opti
   if (fs.existsSync(fullPath)) {
     const string = await fsPromise.readFile(fullPath, "utf-8")
     return Option.some(JSON.parse(string) as T)
-  } else {
+  }
+  else {
     return Option.none()
   }
 }

@@ -1,5 +1,5 @@
+import type { LanguageId } from "@/schemas/common"
 import { getLocalProfile } from "@/collections/about"
-import { LanguageId } from "@/schemas/common"
 import { createFileRoute, notFound } from "@tanstack/react-router"
 import { Option, pipe } from "effect"
 

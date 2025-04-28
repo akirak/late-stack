@@ -1,5 +1,5 @@
-import { LocalProfile, SocialLink } from "@/schemas/about"
-import { LanguageId } from "@/schemas/common"
+import type { LocalProfile, SocialLink } from "@/schemas/about"
+import type { LanguageId } from "@/schemas/common"
 import { Option } from "effect"
 
 const defaultFullName = "Akira Komamura"

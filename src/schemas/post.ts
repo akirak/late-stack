@@ -16,7 +16,7 @@ export const PostSchema = Schema.Struct({
   // category: Schema.optional(Schema.String),
   // tags: Schema.Array(Schema.String),
   publicationDate: Schema.optionalWith(Schema.Date, {
-    nullable: true
+    nullable: true,
   }),
   draft: Schema.Boolean,
   hastBody: Schema.Any,
