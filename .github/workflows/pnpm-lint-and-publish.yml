@@ -34,14 +34,8 @@ jobs:
           purge-created: 0
           purge-last-accessed: 0
           purge-primary-key: never
-
-      - name: Restore the pnpm cache
-        uses: nix-community/cache-nix-action@v6
-        with:
-          primary-key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-prefixes-first-match: |
-            ${{ runner.os }}-pnpm-
-          paths: node_modules/.pnpm
+          paths: |
+            node_modules/.pnpm
 
       - run: nix develop .#node-build -c sh -x -c 'node --version'
 
