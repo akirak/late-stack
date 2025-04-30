@@ -17,20 +17,27 @@ jobs:
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
-      - uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4
-        name: Install pnpm
+      - uses: nixbuild/nix-quick-install-action@5bb6a3b3abe66fd09bbf250dce8ada94f856a703 # v30
         with:
-          run_install: false
+          nix_conf: |
+            keep-env-derivations = true
+            keep-outputs = true
 
-      - name: Install Node.js
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+      - name: Restore and save Nix store
+        uses: nix-community/cache-nix-action@135667ec418502fa5a3598af6fb9eb733888ce6a # v6
         with:
-          cache: pnpm
+          primary-key: nix-${{ runner.os }}-${{ hashFiles('**/flake.lock', '**/pnpm-lock.yaml') }}
+          restore-prefixes-first-match: nix-${{ runner.os }}-
+          gc-max-store-size-linux: 1G
+          paths: |
+            node_modules/.pnpm
 
-      - run: pnpm install
+      - run: nix develop -L .#node-build -c sh -x -c 'node --version'
 
-      - run: pnpm run typecheck
+      - run: nix develop -L .#node-build -c pnpm install
 
-      - run: pnpm run lint
+      - run: nix develop -L .#node-build -c pnpm run typecheck
 
-      - run: pnpm run build
+      - run: nix develop -L .#node-build -c pnpm run lint
+
+      - run: nix develop -L .#node-build -c pnpm run build
