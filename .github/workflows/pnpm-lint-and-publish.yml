@@ -51,4 +51,4 @@ jobs:
 
       - run: nix develop .#node-build -c pnpm lint
 
-      # - run: nix develop .#node-build -c pnpm build
+      - run: nix develop .#node-build -c pnpm build
