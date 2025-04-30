@@ -1,5 +1,4 @@
 import type { PostMetadata } from "../collections/posts"
-import type { DuckDBWriter } from "./duckdb-writer"
 import { TextEncoder } from "node:util"
 import { FileSystem, Path } from "@effect/platform"
 import { Array, Console, Context, Effect, Layer, Option, Order, pipe, Schema, Stream } from "effect"
@@ -30,7 +29,7 @@ const byOptionalDateDescending = Option.getOrder(
 export const PostBuilderLive: Layer.Layer<
   PostBuilder,
   Error,
-  Config | Path.Path | FileSystem.FileSystem | DuckDBWriter
+  Config | Path.Path | FileSystem.FileSystem
 > = Layer.effect(
   PostBuilder,
   Effect.gen(function* (_) {

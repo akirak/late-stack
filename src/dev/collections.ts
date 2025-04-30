@@ -2,7 +2,6 @@ import { FileSystem, Path } from "@effect/platform"
 import { NodeCommandExecutor, NodeFileSystem, NodePath } from "@effect/platform-node"
 import { Console, Context, Effect, Layer, pipe, String } from "effect"
 import { Config } from "./config"
-import { DuckDBWriterLive } from "./duckdb-writer"
 import { PostBuilder, PostBuilderLive } from "./post-builder"
 
 export class Pipeline extends Context.Tag("Pipeline")<Pipeline, {
@@ -99,13 +98,7 @@ export function makeCollectionsLayer(config: {
     Config.of(config),
   )
 
-  const duckdbLayer = DuckDBWriterLive.pipe(
-    Layer.provide(configLayer),
-  )
-
-  const postBuilderLayer = PostBuilderLive.pipe(
-    Layer.provide(duckdbLayer),
-  )
+  const postBuilderLayer = PostBuilderLive
 
   return PipelineLive.pipe(
     Layer.provide(postBuilderLayer),
