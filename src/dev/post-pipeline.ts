@@ -162,22 +162,31 @@ export const PostBuilderLive: Layer.Layer<
     return {
       buildNewPost: filePath => Effect.gen(function* () {
         const postMetadata = Option.getOrNull(yield* processPost(filePath))!
-        postList.push(postMetadata)
-        yield* writePostList
+        const index = postList.findIndex(post => post.fileName === postMetadata.fileName)
+        // This method can be run multiple times because of how filesystem
+        // events work, so check if the operation has not been done yet.
+        if (!index) {
+          postList.push(postMetadata)
+          yield* writePostList
+        }
       }),
 
       rebuildPost: filePath => Effect.gen(function* () {
         const postMetadata = Option.getOrNull(yield* processPost(filePath))!
-        const index = postList.findIndex(post => post.fileName === postMetadata.fileName)!
+        const index = postList.findIndex(post => post.fileName === postMetadata.fileName)
         postList[index] = postMetadata
         yield* writePostList
       }),
 
       deletePost: filePath => Effect.gen(function* () {
         const fileName = path.basename(filePath)
-        const index = postList.findIndex(post => post.fileName === fileName)!
-        delete postList[index]
-        yield* writePostList
+        const index = postList.findIndex(post => post.fileName === fileName)
+        // This method can be run multiple times because of how filesystem
+        // events work, so check if the operation has not been done yet.
+        if (index) {
+          delete postList[index]
+          yield* writePostList
+        }
       }),
 
       buildAllPosts,
