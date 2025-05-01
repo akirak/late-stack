@@ -1,6 +1,7 @@
+import type { Scope } from "effect"
 import { FileSystem, Path } from "@effect/platform"
 import { NodeCommandExecutor, NodeFileSystem, NodePath } from "@effect/platform-node"
-import { Console, Context, Effect, Layer, pipe, Ref, String } from "effect"
+import { Console, Context, Effect, Layer, Match, pipe, Queue, Ref, Stream, String } from "effect"
 import { Config } from "./pipeline-config"
 import { PostBuilder, PostBuilderLive } from "./post-pipeline"
 
@@ -13,10 +14,17 @@ export class Pipeline extends Context.Tag("Pipeline")<Pipeline, {
 
 type Handler = (filePath: string) => Effect.Effect<void, Error, never>
 
+type FileEventType = "add" | "remove" | "change"
+
+interface FileEvent {
+  type_: FileEventType
+  filePath: string
+}
+
 export const PipelineLive: Layer.Layer<
   Pipeline,
   Error,
-  Config | FileSystem.FileSystem | Path.Path | PostBuilder
+  Config | FileSystem.FileSystem | Path.Path | PostBuilder | Scope.Scope
 > = Layer.effect(
   Pipeline,
   Effect.gen(function* (_) {
@@ -81,15 +89,49 @@ export const PipelineLive: Layer.Layer<
       yield* posts.buildAllPosts
     })
 
+    const queue = yield* Queue.unbounded<FileEvent>()
+
+    const matchFileEvent = Match.type<FileEvent>().pipe(
+      Match.when(
+        { type_: "add" },
+        ({ filePath }) => matchFilePath({
+          posts: posts.buildNewPost,
+        })(filePath),
+      ),
+      Match.when(
+        { type_: "change" },
+        ({ filePath }) => matchFilePath({
+          posts: posts.rebuildPost,
+        })(filePath),
+      ),
+      Match.when(
+        { type_: "remove" },
+        ({ filePath }) => matchFilePath({
+          posts: posts.deletePost,
+        })(filePath),
+      ),
+      Match.exhaustive,
+    )
+
+    yield* Stream.fromQueue(queue).pipe(
+      Stream.debounce("10 millis"),
+      Stream.tap(ev => Console.log(JSON.stringify(ev))),
+      Stream.runForEach(matchFileEvent),
+      Effect.forkScoped,
+    )
+
     return {
-      handleFileAddition: matchFilePath({
-        posts: posts.buildNewPost,
+      handleFileModification: filePath => Queue.offer(queue, {
+        type_: "change",
+        filePath,
       }),
-      handleFileModification: matchFilePath({
-        posts: posts.rebuildPost,
+      handleFileAddition: filePath => Queue.offer(queue, {
+        type_: "add",
+        filePath,
       }),
-      handleFileDeletion: matchFilePath({
-        posts: posts.deletePost,
+      handleFileDeletion: filePath => Queue.offer(queue, {
+        type_: "remove",
+        filePath,
       }),
       buildAll: Effect.gen(function* () {
         yield* Ref.set(allBuildingOrBuilt, true)
@@ -122,5 +164,6 @@ export function makePipelineLayer(config: {
     Layer.provide(NodeCommandExecutor.layer),
     Layer.provide(NodeFileSystem.layer),
     Layer.provide(NodePath.layer),
+    Layer.provide(Layer.scope),
   )
 }
