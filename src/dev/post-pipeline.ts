@@ -152,8 +152,6 @@ export const PostBuilderLive: Layer.Layer<
           postList = posts
           yield* writePostList
         })),
-        // Effect.map(Stream.fromIterable),
-        // Effect.andThen(db.createNewTableFromStream({ tableName: "posts" })),
       )
     }).pipe(
       Effect.scoped,
