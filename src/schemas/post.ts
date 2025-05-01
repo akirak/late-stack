@@ -1,4 +1,4 @@
-import { Schema } from "effect"
+import { Option, Schema } from "effect"
 import { GenericSlugSchema, LanguageIdSchema, OptionalDateSchema } from "./common"
 
 export const PostSlugSchema = GenericSlugSchema.pipe(
@@ -32,7 +32,7 @@ export const PostSchema = Schema.Struct({
 export const PostMetadataSchema = PostSchema.omit("hastBody").pipe(
   Schema.filter(
     (meta) => {
-      if (!meta.draft && !meta.publicationDate) {
+      if (!meta.draft && Option.isNone(meta.publicationDate)) {
         return {
           path: ["publicationDate"],
           message: "A non-draft post must have a publicationDate metadata. Set the metadata, or set the draft status to true",
