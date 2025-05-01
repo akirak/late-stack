@@ -3,3 +3,10 @@ pre-commit:
   commands:
     lint-staged:
       run: pnpm run lint-staged
+pre-push:
+  runner: bash
+  commands:
+    typecheck:
+      run: pnpm run typecheck
+    lint:
+      run: pnpm run lint-fix
