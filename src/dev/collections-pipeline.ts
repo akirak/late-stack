@@ -1,6 +1,6 @@
 import { FileSystem, Path } from "@effect/platform"
 import { NodeCommandExecutor, NodeFileSystem, NodePath } from "@effect/platform-node"
-import { Console, Context, Effect, Layer, pipe, String } from "effect"
+import { Console, Context, Effect, Layer, pipe, Ref, String } from "effect"
 import { Config } from "./pipeline-config"
 import { PostBuilder, PostBuilderLive } from "./post-pipeline"
 
@@ -68,6 +68,19 @@ export const PipelineLive: Layer.Layer<
         ),
       )
 
+    // Use Ref to track the status of buildAll to prevent multiple runs
+    const allBuildingOrBuilt = yield* Ref.make(false)
+
+    const buildAll = Effect.gen(function* () {
+      yield* Console.log("Building all")
+      if (config.production) {
+        yield* Console.log("Cleaning up the directory (if any) for the production build ...")
+        yield* clean
+      }
+      yield* ensureOutDirectory
+      yield* posts.buildAllPosts
+    })
+
     return {
       handleFileAddition: matchFilePath({
         posts: posts.buildNewPost,
@@ -79,14 +92,14 @@ export const PipelineLive: Layer.Layer<
         posts: posts.deletePost,
       }),
       buildAll: Effect.gen(function* () {
-        yield* Console.log("Building all")
-        if (config.production) {
-          yield* Console.log("Cleaning up the directory (if any) for the production build ...")
-          yield* clean
-        }
-        yield* ensureOutDirectory
-        yield* posts.buildAllPosts
-      }),
+        yield* Ref.set(allBuildingOrBuilt, true)
+        yield* buildAll
+      }).pipe(
+        Effect.tapError(_ => Ref.set(allBuildingOrBuilt, false)),
+        Effect.unlessEffect(
+          Ref.get(allBuildingOrBuilt),
+        ),
+      ),
     } as const
   }),
 )
