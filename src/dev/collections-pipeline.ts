@@ -20,6 +20,8 @@ export const PipelineLive: Layer.Layer<
 > = Layer.effect(
   Pipeline,
   Effect.gen(function* (_) {
+    yield* Console.log("Instantiating the build pipeline")
+
     const config = yield* Config
     const fs = yield* FileSystem.FileSystem
     const path = yield* Path.Path
@@ -77,6 +79,7 @@ export const PipelineLive: Layer.Layer<
         posts: posts.deletePost,
       }),
       buildAll: Effect.gen(function* () {
+        yield* Console.log("Building all")
         if (config.production) {
           yield* Console.log("Cleaning up the directory (if any) for the production build ...")
           yield* clean
