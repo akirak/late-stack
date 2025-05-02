@@ -4,14 +4,23 @@ import { hastToJsx } from "@/utils/hast"
 import { createFileRoute, notFound } from "@tanstack/react-router"
 import { Option } from "effect"
 
-export const Route = createFileRoute("/_blog/post/$slug")({
+export const Route = createFileRoute("/_blog/post/$lang/$slug")({
   component: PostComponent,
   staleTime: Infinity,
   loader: async ({ params }) => {
-    return {
-      post: await getPost(params.slug as PostSlug).then(
-        Option.getOrThrowWith(() => notFound()),
-      ),
+    const post = await getPost(params.slug as PostSlug).then(
+      Option.getOrThrowWith(() => notFound()),
+    )
+
+    // Check the language.
+    if (post.language === params.lang) {
+      return {
+        post,
+      }
+    }
+    else {
+      // The post is not available in the language. The world is complex.
+      throw notFound()
     }
   },
 })
