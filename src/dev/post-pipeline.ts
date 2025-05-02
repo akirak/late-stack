@@ -107,7 +107,7 @@ export const PostBuilderLive: Layer.Layer<
           Schema.encodeUnknownSync(PostSchema)({
             ...metadata,
             hastBody: hast,
-          })
+          }),
         )
         yield* fs.writeFileString(outPath, fullData)
         return Option.some(metadata) as Option.Option<PostMetadata>

@@ -1,8 +1,11 @@
+import type { Pagination } from "./pagination"
+import events from "node:events"
 import * as fs from "node:fs"
 import * as fsPromise from "node:fs/promises"
 import * as path from "node:path"
+import readline from "node:readline"
 import * as url from "node:url"
-import { Option, pipe } from "effect"
+import { Option, pipe, Schema } from "effect"
 import { isRunningInBrowser, isRunningInDeno } from "./env"
 
 /**
@@ -32,7 +35,7 @@ function getDataDir() {
  *
  * If the file doesn't exist, the function returns None.
  */
-export async function readJsonDataFile<T>(filePath: string): Promise<Option.Option<T>> {
+async function readJsonDataFile<T>(filePath: string): Promise<Option.Option<T>> {
   const fullPath = path.join(getDataDir(), filePath)
   if (fs.existsSync(fullPath)) {
     return pipe(
@@ -46,7 +49,47 @@ export async function readJsonDataFile<T>(filePath: string): Promise<Option.Opti
   }
 }
 
-export function readTextStreamFromDataFile(filePath: string): fs.ReadStream {
+export async function readJsonDataFileWithSchema<A, I>(
+  schema: Schema.Schema<A, I>,
+  filePath: string,
+): Promise<Option.Option<A>> {
+  return readJsonDataFile(filePath)
+    .then(Option.map(Schema.decodeUnknownSync(schema)))
+}
+
+export async function readJsonLinesDataFileWithSchema<A, I>(
+  filePath: string,
+  schema: Schema.Schema<A, I>,
+  predicate: (x: A) => boolean,
+  { offset, limit }: Pagination,
+): Promise<A[]> {
   const fullPath = path.join(getDataDir(), filePath)
-  return fs.createReadStream(fullPath, "utf-8")
+  const stream = fs.createReadStream(fullPath, "utf-8")
+  const rl = readline.createInterface({
+    input: stream,
+    crlfDelay: Infinity,
+  })
+  const result: A[] = []
+  let count = -offset
+  rl.on("line", (line) => {
+    if (typeof line === "string") {
+      if (line.length > 0) {
+        const data = Schema.decodeUnknownSync(schema)(JSON.parse(line))
+        if (predicate(data)) {
+          if (count >= 0) {
+            result.push(data)
+          }
+          count += 1
+        }
+      }
+    }
+    else {
+      throw new TypeError(`undecoded input while reading a file ${filePath}`)
+    }
+    if (count === limit) {
+      rl.close()
+    }
+  })
+  await events.once(rl, "close")
+  return result
 }
