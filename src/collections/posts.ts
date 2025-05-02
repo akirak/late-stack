@@ -1,11 +1,10 @@
-import type { PostSchema, PostSlugSchema } from "@/schemas/post"
-import type { Option } from "effect"
+import type { PostSlugSchema } from "@/schemas/post"
 import events from "node:events"
 import path from "node:path"
 import readline from "node:readline"
-import { PostMetadataSchema } from "@/schemas/post"
+import { PostMetadataSchema, PostSchema } from "@/schemas/post"
 import { readJsonDataFile, readTextStreamFromDataFile } from "@/utils/data"
-import { Schema } from "effect"
+import { Option, Schema } from "effect"
 
 export type PostSlug = typeof PostSlugSchema.Type
 
@@ -23,9 +22,9 @@ interface PageOptions {
 
 const DefaultLimit = 25
 
-export async function getPost(slug: PostSlug): Promise<Option.Option<Post>> {
-  return await readJsonDataFile<Post>(path.join(PostDir, `${slug}.json`))
-}
+export const getPost: (slug: PostSlug) => Promise<Option.Option<Post>>
+  = slug => readJsonDataFile(path.join(PostDir, `${slug}.json`))
+    .then(Option.map(Schema.decodeUnknownSync(PostSchema)))
 
 export async function getPostList({ limit }: PageOptions = {}): Promise<PostMetadata[]> {
   const thisLimit = limit ?? DefaultLimit

@@ -2,7 +2,7 @@ import * as fs from "node:fs"
 import * as fsPromise from "node:fs/promises"
 import * as path from "node:path"
 import * as url from "node:url"
-import { Option } from "effect"
+import { Option, pipe } from "effect"
 import { isRunningInBrowser, isRunningInDeno } from "./env"
 
 /**
@@ -35,8 +35,11 @@ function getDataDir() {
 export async function readJsonDataFile<T>(filePath: string): Promise<Option.Option<T>> {
   const fullPath = path.join(getDataDir(), filePath)
   if (fs.existsSync(fullPath)) {
-    const string = await fsPromise.readFile(fullPath, "utf-8")
-    return Option.some(JSON.parse(string) as T)
+    return pipe(
+      (await fsPromise.readFile(fullPath, "utf-8")),
+      JSON.parse,
+      Option.some,
+    )
   }
   else {
     return Option.none()

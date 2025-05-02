@@ -8,7 +8,7 @@ import remarkGfm from "remark-gfm"
 import remarkParse from "remark-parse"
 import remarkRehype from "remark-rehype"
 import { unified } from "unified"
-import { PostMetadataSchema } from "../schemas/post"
+import { PostMetadataSchema, PostSchema } from "../schemas/post"
 import { Config } from "./pipeline-config"
 
 type FileHandler = (filePath: string) => Effect.Effect<void, Error, never>
@@ -103,10 +103,12 @@ export const PostBuilderLive: Layer.Layer<
         }
         yield* fs.makeDirectory(postOutDir, { recursive: true })
         const outPath = path.resolve(postOutDir, `${metadata.slug}.json`)
-        const fullData = JSON.stringify({
-          ...metadata,
-          hastBody: hast,
-        })
+        const fullData = JSON.stringify(
+          Schema.encodeUnknownSync(PostSchema)({
+            ...metadata,
+            hastBody: hast,
+          })
+        )
         yield* fs.writeFileString(outPath, fullData)
         return Option.some(metadata) as Option.Option<PostMetadata>
       }
