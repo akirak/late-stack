@@ -3,8 +3,8 @@ import { createFileRoute } from "@tanstack/react-router"
 
 export const Route = createFileRoute("/_blog/_archive/post/")({
   component: PostArchiveComponent,
-  loader: () => {
-    const posts = getPostList()
+  loader: async () => {
+    const posts = await getPostList()
     return { posts }
   },
 })

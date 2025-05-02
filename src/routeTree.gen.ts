@@ -16,10 +16,11 @@ import { Route as IndexImport } from './routes/index'
 import { Route as AboutIndexImport } from './routes/about.index'
 import { Route as AboutLangImport } from './routes/about.$lang'
 import { Route as BlogArchiveRouteImport } from './routes/_blog/_archive.route'
-import { Route as BlogPostSlugImport } from './routes/_blog/post.$slug'
 import { Route as BlogArchivePostIndexImport } from './routes/_blog/_archive.post.index'
 import { Route as BlogArchiveCategoryIndexImport } from './routes/_blog/_archive.category.index'
+import { Route as BlogPostLangSlugImport } from './routes/_blog/post.$lang.$slug'
 import { Route as BlogArchiveCategorySlugImport } from './routes/_blog/_archive.category.$slug'
+import { Route as BlogArchivePostLangIndexImport } from './routes/_blog/_archive.post.$lang.index'
 
 // Create/Update Routes
 
@@ -51,12 +52,6 @@ const BlogArchiveRouteRoute = BlogArchiveRouteImport.update({
   getParentRoute: () => BlogRouteRoute,
 } as any)
 
-const BlogPostSlugRoute = BlogPostSlugImport.update({
-  id: '/post/$slug',
-  path: '/post/$slug',
-  getParentRoute: () => BlogRouteRoute,
-} as any)
-
 const BlogArchivePostIndexRoute = BlogArchivePostIndexImport.update({
   id: '/post/',
   path: '/post/',
@@ -69,9 +64,21 @@ const BlogArchiveCategoryIndexRoute = BlogArchiveCategoryIndexImport.update({
   getParentRoute: () => BlogArchiveRouteRoute,
 } as any)
 
+const BlogPostLangSlugRoute = BlogPostLangSlugImport.update({
+  id: '/post/$lang/$slug',
+  path: '/post/$lang/$slug',
+  getParentRoute: () => BlogRouteRoute,
+} as any)
+
 const BlogArchiveCategorySlugRoute = BlogArchiveCategorySlugImport.update({
   id: '/category/$slug',
   path: '/category/$slug',
+  getParentRoute: () => BlogArchiveRouteRoute,
+} as any)
+
+const BlogArchivePostLangIndexRoute = BlogArchivePostLangIndexImport.update({
+  id: '/post/$lang/',
+  path: '/post/$lang/',
   getParentRoute: () => BlogArchiveRouteRoute,
 } as any)
 
@@ -114,19 +121,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutIndexImport
       parentRoute: typeof rootRoute
     }
-    '/_blog/post/$slug': {
-      id: '/_blog/post/$slug'
-      path: '/post/$slug'
-      fullPath: '/post/$slug'
-      preLoaderRoute: typeof BlogPostSlugImport
-      parentRoute: typeof BlogRouteImport
-    }
     '/_blog/_archive/category/$slug': {
       id: '/_blog/_archive/category/$slug'
       path: '/category/$slug'
       fullPath: '/category/$slug'
       preLoaderRoute: typeof BlogArchiveCategorySlugImport
       parentRoute: typeof BlogArchiveRouteImport
+    }
+    '/_blog/post/$lang/$slug': {
+      id: '/_blog/post/$lang/$slug'
+      path: '/post/$lang/$slug'
+      fullPath: '/post/$lang/$slug'
+      preLoaderRoute: typeof BlogPostLangSlugImport
+      parentRoute: typeof BlogRouteImport
     }
     '/_blog/_archive/category/': {
       id: '/_blog/_archive/category/'
@@ -142,6 +149,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogArchivePostIndexImport
       parentRoute: typeof BlogArchiveRouteImport
     }
+    '/_blog/_archive/post/$lang/': {
+      id: '/_blog/_archive/post/$lang/'
+      path: '/post/$lang'
+      fullPath: '/post/$lang'
+      preLoaderRoute: typeof BlogArchivePostLangIndexImport
+      parentRoute: typeof BlogArchiveRouteImport
+    }
   }
 }
 
@@ -151,12 +165,14 @@ interface BlogArchiveRouteRouteChildren {
   BlogArchiveCategorySlugRoute: typeof BlogArchiveCategorySlugRoute
   BlogArchiveCategoryIndexRoute: typeof BlogArchiveCategoryIndexRoute
   BlogArchivePostIndexRoute: typeof BlogArchivePostIndexRoute
+  BlogArchivePostLangIndexRoute: typeof BlogArchivePostLangIndexRoute
 }
 
 const BlogArchiveRouteRouteChildren: BlogArchiveRouteRouteChildren = {
   BlogArchiveCategorySlugRoute: BlogArchiveCategorySlugRoute,
   BlogArchiveCategoryIndexRoute: BlogArchiveCategoryIndexRoute,
   BlogArchivePostIndexRoute: BlogArchivePostIndexRoute,
+  BlogArchivePostLangIndexRoute: BlogArchivePostLangIndexRoute,
 }
 
 const BlogArchiveRouteRouteWithChildren =
@@ -164,12 +180,12 @@ const BlogArchiveRouteRouteWithChildren =
 
 interface BlogRouteRouteChildren {
   BlogArchiveRouteRoute: typeof BlogArchiveRouteRouteWithChildren
-  BlogPostSlugRoute: typeof BlogPostSlugRoute
+  BlogPostLangSlugRoute: typeof BlogPostLangSlugRoute
 }
 
 const BlogRouteRouteChildren: BlogRouteRouteChildren = {
   BlogArchiveRouteRoute: BlogArchiveRouteRouteWithChildren,
-  BlogPostSlugRoute: BlogPostSlugRoute,
+  BlogPostLangSlugRoute: BlogPostLangSlugRoute,
 }
 
 const BlogRouteRouteWithChildren = BlogRouteRoute._addFileChildren(
@@ -181,10 +197,11 @@ export interface FileRoutesByFullPath {
   '': typeof BlogArchiveRouteRouteWithChildren
   '/about/$lang': typeof AboutLangRoute
   '/about': typeof AboutIndexRoute
-  '/post/$slug': typeof BlogPostSlugRoute
   '/category/$slug': typeof BlogArchiveCategorySlugRoute
+  '/post/$lang/$slug': typeof BlogPostLangSlugRoute
   '/category': typeof BlogArchiveCategoryIndexRoute
   '/post': typeof BlogArchivePostIndexRoute
+  '/post/$lang': typeof BlogArchivePostLangIndexRoute
 }
 
 export interface FileRoutesByTo {
@@ -192,10 +209,11 @@ export interface FileRoutesByTo {
   '': typeof BlogArchiveRouteRouteWithChildren
   '/about/$lang': typeof AboutLangRoute
   '/about': typeof AboutIndexRoute
-  '/post/$slug': typeof BlogPostSlugRoute
   '/category/$slug': typeof BlogArchiveCategorySlugRoute
+  '/post/$lang/$slug': typeof BlogPostLangSlugRoute
   '/category': typeof BlogArchiveCategoryIndexRoute
   '/post': typeof BlogArchivePostIndexRoute
+  '/post/$lang': typeof BlogArchivePostLangIndexRoute
 }
 
 export interface FileRoutesById {
@@ -205,10 +223,11 @@ export interface FileRoutesById {
   '/_blog/_archive': typeof BlogArchiveRouteRouteWithChildren
   '/about/$lang': typeof AboutLangRoute
   '/about/': typeof AboutIndexRoute
-  '/_blog/post/$slug': typeof BlogPostSlugRoute
   '/_blog/_archive/category/$slug': typeof BlogArchiveCategorySlugRoute
+  '/_blog/post/$lang/$slug': typeof BlogPostLangSlugRoute
   '/_blog/_archive/category/': typeof BlogArchiveCategoryIndexRoute
   '/_blog/_archive/post/': typeof BlogArchivePostIndexRoute
+  '/_blog/_archive/post/$lang/': typeof BlogArchivePostLangIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -218,20 +237,22 @@ export interface FileRouteTypes {
     | ''
     | '/about/$lang'
     | '/about'
-    | '/post/$slug'
     | '/category/$slug'
+    | '/post/$lang/$slug'
     | '/category'
     | '/post'
+    | '/post/$lang'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | ''
     | '/about/$lang'
     | '/about'
-    | '/post/$slug'
     | '/category/$slug'
+    | '/post/$lang/$slug'
     | '/category'
     | '/post'
+    | '/post/$lang'
   id:
     | '__root__'
     | '/'
@@ -239,10 +260,11 @@ export interface FileRouteTypes {
     | '/_blog/_archive'
     | '/about/$lang'
     | '/about/'
-    | '/_blog/post/$slug'
     | '/_blog/_archive/category/$slug'
+    | '/_blog/post/$lang/$slug'
     | '/_blog/_archive/category/'
     | '/_blog/_archive/post/'
+    | '/_blog/_archive/post/$lang/'
   fileRoutesById: FileRoutesById
 }
 
@@ -283,7 +305,7 @@ export const routeTree = rootRoute
       "filePath": "_blog/route.tsx",
       "children": [
         "/_blog/_archive",
-        "/_blog/post/$slug"
+        "/_blog/post/$lang/$slug"
       ]
     },
     "/_blog/_archive": {
@@ -292,7 +314,8 @@ export const routeTree = rootRoute
       "children": [
         "/_blog/_archive/category/$slug",
         "/_blog/_archive/category/",
-        "/_blog/_archive/post/"
+        "/_blog/_archive/post/",
+        "/_blog/_archive/post/$lang/"
       ]
     },
     "/about/$lang": {
@@ -301,13 +324,13 @@ export const routeTree = rootRoute
     "/about/": {
       "filePath": "about.index.tsx"
     },
-    "/_blog/post/$slug": {
-      "filePath": "_blog/post.$slug.tsx",
-      "parent": "/_blog"
-    },
     "/_blog/_archive/category/$slug": {
       "filePath": "_blog/_archive.category.$slug.tsx",
       "parent": "/_blog/_archive"
+    },
+    "/_blog/post/$lang/$slug": {
+      "filePath": "_blog/post.$lang.$slug.tsx",
+      "parent": "/_blog"
     },
     "/_blog/_archive/category/": {
       "filePath": "_blog/_archive.category.index.tsx",
@@ -315,6 +338,10 @@ export const routeTree = rootRoute
     },
     "/_blog/_archive/post/": {
       "filePath": "_blog/_archive.post.index.tsx",
+      "parent": "/_blog/_archive"
+    },
+    "/_blog/_archive/post/$lang/": {
+      "filePath": "_blog/_archive.post.$lang.index.tsx",
       "parent": "/_blog/_archive"
     }
   }
