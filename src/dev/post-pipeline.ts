@@ -102,7 +102,7 @@ export const PostBuilderLive: Layer.Layer<
           return Option.none() as Option.Option<PostMetadata>
         }
         yield* fs.makeDirectory(postOutDir, { recursive: true })
-        const outPath = path.resolve(postOutDir, `${metadata.slug}.json`)
+        const outPath = path.resolve(postOutDir, `${metadata.slug}.${metadata.language}.json`)
         const fullData = JSON.stringify(
           Schema.encodeUnknownSync(PostSchema)({
             ...metadata,

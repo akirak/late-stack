@@ -1,4 +1,5 @@
 import type { PostSlug } from "@/collections/posts"
+import type { LanguageId } from "@/schemas/common"
 import { getPost } from "@/collections/posts"
 import { hastToJsx } from "@/utils/hast"
 import { createFileRoute, notFound } from "@tanstack/react-router"
@@ -7,20 +8,14 @@ import { Option } from "effect"
 export const Route = createFileRoute("/_blog/post/$lang/$slug")({
   component: PostComponent,
   staleTime: Infinity,
-  loader: async ({ params }) => {
-    const post = await getPost(params.slug as PostSlug).then(
+  loader: async ({ params: { slug, lang } }) => {
+    const post = await getPost(slug as PostSlug, {
+      lang: lang as LanguageId,
+    }).then(
       Option.getOrThrowWith(() => notFound()),
     )
-
-    // Check the language.
-    if (post.language === params.lang) {
-      return {
-        post,
-      }
-    }
-    else {
-      // The post is not available in the language. The world is complex.
-      throw notFound()
+    return {
+      post,
     }
   },
 })

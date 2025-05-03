@@ -1,3 +1,4 @@
+import type { LanguageId } from "@/schemas/common"
 import type { PostSlugSchema } from "@/schemas/post"
 import type { Pagination } from "@/utils/pagination"
 import path from "node:path"
@@ -16,10 +17,14 @@ const PostDir = "posts"
 
 const PostsIndexFile = "posts.index.jsonl"
 
-export function getPost(slug: PostSlug) {
+interface PostOptions {
+  lang: LanguageId
+}
+
+export function getPost(slug: PostSlug, { lang }: PostOptions) {
   return readJsonDataFileWithSchema(
     PostSchema,
-    path.join(PostDir, `${slug}.json`),
+    path.join(PostDir, `${slug}.${lang}.json`),
   )
 }
 
