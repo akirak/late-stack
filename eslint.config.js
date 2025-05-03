@@ -17,4 +17,11 @@ export default antfu({
     "no-lone-blocks": "off",
     "no-empty": "off",
   },
+}, {
+  files: [
+    "tests/e2e/**/*.ts",
+  ],
+  rules: {
+    "test/consistent-test-it": "off",
+  },
 }, pluginRouter.configs["flat/recommended"])

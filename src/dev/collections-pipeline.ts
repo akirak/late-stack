@@ -1,6 +1,6 @@
 import type { Scope } from "effect"
 import { FileSystem, Path } from "@effect/platform"
-import { NodeCommandExecutor, NodeFileSystem, NodePath } from "@effect/platform-node"
+import { NodeFileSystem, NodePath } from "@effect/platform-node"
 import { Console, Context, Effect, Layer, Match, pipe, Queue, Ref, Stream, String } from "effect"
 import { Config } from "./pipeline-config"
 import { PostBuilder, PostBuilderLive } from "./post-pipeline"
@@ -161,7 +161,6 @@ export function makePipelineLayer(config: {
   return PipelineLive.pipe(
     Layer.provide(postBuilderLayer),
     Layer.provide(configLayer),
-    Layer.provide(NodeCommandExecutor.layer),
     Layer.provide(NodeFileSystem.layer),
     Layer.provide(NodePath.layer),
     Layer.provide(Layer.scope),

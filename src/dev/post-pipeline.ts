@@ -36,7 +36,6 @@ export const PostBuilderLive: Layer.Layer<
     const config = yield* Config
     const fs = yield* FileSystem.FileSystem
     const path = yield* Path.Path
-    // const db = yield* DuckDBWriter
 
     const postContentDir = path.join(config.contentDir, "posts")
     const postOutDir = path.join(config.outDir, "posts")
