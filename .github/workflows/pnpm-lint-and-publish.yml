@@ -31,6 +31,7 @@ jobs:
           gc-max-store-size-linux: 1G
           paths: |
             node_modules/.pnpm
+            ~/.cache/ms-playwright
 
       - run: nix develop -L .#node-build -c sh -x -c 'node --version'
 
