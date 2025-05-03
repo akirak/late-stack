@@ -15,8 +15,6 @@
             # doesn't prefix node imports with "node:".
             pkgs.nodejs
             pkgs.corepack
-            # Needed for generating the database
-            pkgs.duckdb
           ];
 
           playwright-browsers = pkgs.playwright-driver.browsers.override {
