@@ -36,8 +36,19 @@ jobs:
 
       - run: nix develop -L .#node-build -c pnpm install
 
-      - run: nix develop -L .#node-build -c pnpm run typecheck
+      - name: Check TypeScript types
+        run: nix develop -L .#node-build -c pnpm run typecheck
 
-      - run: nix develop -L .#node-build -c pnpm run lint
+      - name: Run eslint
+        run: nix develop -L .#node-build -c pnpm run lint
 
-      - run: nix develop -L .#node-build -c pnpm run build
+      - name: Build the production assets
+        run: nix develop -L .#node-build -c pnpm run build
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium --only-shell
+
+      - name: Run e2e tests
+        run: NODE_ENV=production nix develop -L .#node-build -c pnpm run test-e2e
+        env:
+          OPENAI_API_KEY: "${{ secrets.OPENAI_API_KEY }}"
