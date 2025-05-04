@@ -1,5 +1,6 @@
 import antfu from "@antfu/eslint-config"
 import pluginRouter from "@tanstack/eslint-plugin-router"
+import jsxA11y from "eslint-plugin-jsx-a11y"
 
 export default antfu({
   react: true,
@@ -17,7 +18,7 @@ export default antfu({
     "no-lone-blocks": "off",
     "no-empty": "off",
   },
-}, {
+}, jsxA11y.flatConfigs.recommended, {
   files: [
     "tests/e2e/**/*.ts",
   ],
