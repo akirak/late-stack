@@ -1,15 +1,24 @@
 import { Option, Schema } from "effect"
 
 /**
- * Schema for a language code, e.g. "en".
+ * Schema for a language code, e.g. "en". To prevent errors caused by mistyping,
+ * only supported languages are accepted in this schema.
  */
-export const LanguageIdSchema = Schema.String.pipe(
-  Schema.length(2),
-  Schema.pattern(/^[a-z]{2}$/),
-  Schema.brand("LanguageId"),
+export const LanguageIdSchema = Schema.Union(
+  Schema.Literal("en"),
+  Schema.Literal("ja"),
 )
 
 export type LanguageId = typeof LanguageIdSchema.Type
+
+/**
+ * Schema for information on a natural language used in this site.
+ */
+export const LanguagePropertiesSchema = Schema.Struct({
+  id: LanguageIdSchema,
+  localName: Schema.String,
+  englishName: Schema.optional(Schema.String),
+})
 
 /**
  * Schema for a generic slug type. You can create a branded type from this for
