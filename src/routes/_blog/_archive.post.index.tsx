@@ -1,4 +1,5 @@
 import { getPostList } from "@/collections/posts"
+import { PostListTable } from "@/features/blog/components/PostListTable"
 import { createFileRoute } from "@tanstack/react-router"
 
 export const Route = createFileRoute("/_blog/_archive/post/")({
@@ -17,24 +18,7 @@ function PostArchiveComponent() {
         List of posts
       </header>
 
-      <table>
-        <thead>
-          <tr>
-            <th>
-              Title
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {posts.map(post => (
-            <tr key={post.slug}>
-              <td>
-                {post.title}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <PostListTable posts={posts} />
     </>
   )
 }
