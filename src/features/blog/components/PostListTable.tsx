@@ -1,5 +1,5 @@
 import type { PostMetadata } from "@/collections/posts"
-import { DateFormat } from "@/components/DateFormat"
+import { DateFormat } from "@/components/inline/DateFormat"
 import { Link } from "@tanstack/react-router"
 
 export function PostListTable({ posts }: { posts: PostMetadata[] }) {
