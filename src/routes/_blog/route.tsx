@@ -7,8 +7,6 @@ export const Route = createFileRoute("/_blog")({
 function BlogLayout() {
   return (
     <div>
-      <header>Blog layout</header>
-
       <Outlet />
     </div>
   )
