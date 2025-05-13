@@ -77,7 +77,6 @@ class AppManager extends Effect.Service<AppManager>()("AppManager", {
 }) { }
 
 export default async function setup(_project: TestProject) {
-  // eslint-disable-next-line no-console
   console.log("[Global Setup] Starting application server...")
   const runtime = AppManager.Default.pipe(
     Layer.provide(NodeFileSystem.layer),
@@ -86,19 +85,15 @@ export default async function setup(_project: TestProject) {
 
   await runtime.runPromise(AppManager.pipe(Effect.andThen(app => app.start)))
 
-  /* eslint-disable no-console */
   console.log(`[Global Setup] Waiting for application to be available at ${BASE_URL}/`)
   await runtime.runPromise(AppManager.pipe(Effect.andThen(app => app.wait)))
   console.log("[Global Setup] Application server is ready.")
-  /* eslint-enable no-console */
 
   // Return a teardown function
   return async () => {
-    /* eslint-disable no-console */
     console.log("\n[Global Teardown] Stopping application server...")
     await runtime.runPromise(AppManager.pipe(Effect.andThen(app => app.kill)))
     console.log(`[Global Teardown] App process exited`)
     console.log("[Global Teardown] Cleanup complete.")
-    /* eslint-enable no-console */
   }
 }

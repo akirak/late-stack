@@ -25,4 +25,11 @@ export default antfu({
   rules: {
     "test/consistent-test-it": "off",
   },
+}, {
+  files: [
+    "tests/**/*.ts",
+  ],
+  rules: {
+    "no-console": "off",
+  },
 }, pluginRouter.configs["flat/recommended"])
