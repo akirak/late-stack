@@ -3,10 +3,10 @@ import { afterAll, beforeAll, expect, test } from "vitest"
 import * as z from "zod"
 import { BASE_URL, initStageHand } from "../stagehand.config"
 
-const TEST_SLUG = "sample-category"
+const TEST_SLUG = "en/tanstack-blog"
 
 // Set a longer timeout for E2E tests
-const testTimeout = 30000 // 30 seconds
+const testTimeout = 60000 // 60 seconds
 
 let stagehand: Stagehand
 let page: Stagehand["page"]
@@ -22,21 +22,19 @@ afterAll(async () => {
   }
 }, testTimeout)
 
-test(`categories`, async () => {
+test(`post`, async () => {
   // Path based on routeTree.gen.ts FileRoutesByFullPath interface
-  await page.goto(`${BASE_URL}/category/${TEST_SLUG}`)
+  await page.goto(`${BASE_URL}/post/${TEST_SLUG}`)
 
-  const { headingContent } = await page.extract({
-    instruction: "The text content of the main heading (h1)",
+  const { content } = await page.extract({
+    instruction: "Retrieve the text content of the h1 heading",
     schema: z.object({
-      headingContent: z.string(),
+      content: z.string(),
     }),
   })
 
   // Check if the heading contains the expected text and the slug
-  expect(headingContent).toContain("CategoryComponent")
-  expect(headingContent).toContain(TEST_SLUG)
+  expect(content).toContain("TanStack Blog")
 
-  // eslint-disable-next-line no-console
-  console.log(`✅ Test passed for route: /category/${TEST_SLUG}`)
+  console.log(`✅ Test passed for route: /post/${TEST_SLUG}`)
 }, testTimeout)
