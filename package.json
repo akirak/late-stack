@@ -14,6 +14,7 @@
     "lint": "eslint .",
     "lint-fix": "eslint --fix .",
     "lint-staged": "lint-staged",
+    "test-e2e": "pnpm exec playwright test",
     "test-e2e:chromium": "pnpm exec playwright test --project=chromium",
     "test-e2e-report": "pnpm exec playwright show-report",
     "prepare": "lefthook install"

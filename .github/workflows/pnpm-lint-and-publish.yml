@@ -12,30 +12,13 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
-      - uses: nixbuild/nix-quick-install-action@5bb6a3b3abe66fd09bbf250dce8ada94f856a703 # v30
-        with:
-          nix_conf: |
-            keep-env-derivations = true
-            keep-outputs = true
-
-      - name: Restore the package cache
-        uses: nix-community/cache-nix-action@135667ec418502fa5a3598af6fb9eb733888ce6a # v6
-        with:
-          primary-key: nix-${{ runner.os }}-${{ hashFiles('**/flake.lock', '**/pnpm-lock.yaml') }}
-          restore-prefixes-first-match: nix-${{ runner.os }}-
-          gc-max-store-size-linux: 1G
-          paths: |
-            node_modules/.pnpm
-            ~/.cache/ms-playwright
-
-      - run: nix develop -L .#node-build -c sh -x -c 'node --version'
-
-      - run: nix develop -L .#node-build -c pnpm install
+      - name: Set up Nix
+        uses: ./.github/actions/setup
 
       - name: Check TypeScript types
         run: nix develop -L .#node-build -c pnpm run typecheck
@@ -43,20 +26,48 @@ jobs:
       - name: Run eslint
         run: nix develop -L .#node-build -c pnpm run lint
 
+  test-e2e:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            browser: chromium
+
+          - os: ubuntu-latest
+            browser: firefox
+
+          - os: macos-latest
+            browser: chromium
+
+          - os: macos-latest
+            browser: webkit
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Set up Nix
+        uses: ./.github/actions/setup
+
       - name: Build the production assets
         run: nix develop -L .#node-build -c pnpm run build
 
       - name: Install Playwright browser
         # npm (provided by GitHub Actions) is a more reliable way to install a
         # browser that can be used on the platform.
-        run: npx playwright install --with-deps chromium --only-shell
+        run: |
+          npx playwright install --with-deps ${{ matrix.browser }}
 
       - name: Run e2e tests
-        run: CI=true NODE_ENV=production nix develop -L .#node-build -c pnpm run test-e2e:chromium
+        run: |
+          CI=true NODE_ENV=production \
+            nix develop -L .#node-build \
+            -c pnpm run test-e2e --project=${{ matrix.browser }}
 
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: playwright-report
+          name: playwright-report-${{ matrix.os }}-${{ matrix.browser }}
           path: playwright-report/
           retention-days: 30
