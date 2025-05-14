@@ -46,10 +46,10 @@ jobs:
       - name: Build the production assets
         run: nix develop -L .#node-build -c pnpm run build
 
-      - name: Install Playwright browsers
+      - name: Install Playwright browser
+        # npm (provided by GitHub Actions) is a more reliable way to install a
+        # browser that can be used on the platform.
         run: npx playwright install --with-deps chromium --only-shell
 
       - name: Run e2e tests
-        run: NODE_ENV=production nix develop -L .#node-build -c pnpm run test-e2e
-        env:
-          OPENAI_API_KEY: "${{ secrets.OPENAI_API_KEY }}"
+        run: CI=true NODE_ENV=production nix develop -L .#node-build -c pnpm run test-e2e:chromium
