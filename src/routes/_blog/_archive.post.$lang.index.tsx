@@ -1,10 +1,10 @@
 import type { PostMetadata } from "@/collections/posts"
 import type { LanguageId } from "@/schemas/common"
+import { createFileRoute, notFound } from "@tanstack/react-router"
+import { Option, pipe } from "effect"
 import { getLanguageById } from "@/collections/languages"
 import { getPostList } from "@/collections/posts"
 import { PostListTable } from "@/features/blog/components/PostListTable"
-import { createFileRoute, notFound } from "@tanstack/react-router"
-import { Option, pipe } from "effect"
 
 export const Route = createFileRoute("/_blog/_archive/post/$lang/")({
   component: PostArchiveComponent,

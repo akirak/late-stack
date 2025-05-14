@@ -1,7 +1,7 @@
-import type { LanguageId } from "@/schemas/common"
 import type { Option } from "effect"
-import { LanguagePropertiesSchema } from "@/schemas/common"
+import type { LanguageId } from "@/schemas/common"
 import { Array, pipe, Schema } from "effect"
+import { LanguagePropertiesSchema } from "@/schemas/common"
 
 type LanguageProperties = typeof LanguagePropertiesSchema.Type
 

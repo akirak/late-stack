@@ -1,7 +1,7 @@
 import type { LanguageId } from "@/schemas/common"
-import { getLocalProfile } from "@/collections/about"
 import { createFileRoute, notFound } from "@tanstack/react-router"
 import { Option, pipe } from "effect"
+import { getLocalProfile } from "@/collections/about"
 
 export const Route = createFileRoute("/about/$lang")({
   component: AboutComponent,

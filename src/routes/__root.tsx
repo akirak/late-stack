@@ -1,5 +1,3 @@
-import appCss from "@/styles/app.css?url"
-import { seo } from "@/utils/seo"
 import {
   createRootRoute,
   HeadContent,
@@ -8,6 +6,8 @@ import {
 } from "@tanstack/react-router"
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools"
 import * as React from "react"
+import appCss from "@/styles/app.css?url"
+import { seo } from "@/utils/seo"
 import "@/types/css"
 
 export const Route = createRootRoute({

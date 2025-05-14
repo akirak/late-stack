@@ -1,6 +1,6 @@
+import { createFileRoute } from "@tanstack/react-router"
 import { getPostList } from "@/collections/posts"
 import { PostListTable } from "@/features/blog/components/PostListTable"
-import { createFileRoute } from "@tanstack/react-router"
 
 export const Route = createFileRoute("/_blog/_archive/post/")({
   component: PostArchiveComponent,
