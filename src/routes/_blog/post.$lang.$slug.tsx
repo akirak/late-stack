@@ -1,20 +1,12 @@
-import type { PostSlug } from "@/collections/posts"
-import type { LanguageId } from "@/schemas/common"
-import { createFileRoute, notFound } from "@tanstack/react-router"
-import { Option } from "effect"
+import { createFileRoute } from "@tanstack/react-router"
 import { getPost } from "@/collections/posts"
 import { hastToJsx } from "@/utils/hast"
 
 export const Route = createFileRoute("/_blog/post/$lang/$slug")({
   component: PostComponent,
-  loader: async ({ params: { slug, lang } }) => {
-    const post = await getPost(slug as PostSlug, {
-      lang: lang as LanguageId,
-    }).then(
-      Option.getOrThrowWith(() => notFound()),
-    )
+  loader: async ({ params }) => {
     return {
-      post,
+      post: await getPost(params),
     }
   },
 })

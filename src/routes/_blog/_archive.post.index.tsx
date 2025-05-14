@@ -5,8 +5,7 @@ import { PostListTable } from "@/features/blog/components/PostListTable"
 export const Route = createFileRoute("/_blog/_archive/post/")({
   component: PostArchiveComponent,
   loader: async () => {
-    const posts = await getPostList()
-    return { posts }
+    return { posts: await getPostList({}) }
   },
 })
 

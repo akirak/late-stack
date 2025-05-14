@@ -35,7 +35,7 @@ function getDataDir() {
  *
  * If the file doesn't exist, the function returns None.
  */
-async function readJsonDataFile<T>(filePath: string): Promise<Option.Option<T>> {
+export async function readJsonDataFile<T>(filePath: string): Promise<Option.Option<T>> {
   const fullPath = path.join(getDataDir(), filePath)
   if (fs.existsSync(fullPath)) {
     return pipe(
@@ -57,11 +57,51 @@ export async function readJsonDataFileWithSchema<A, I>(
     .then(Option.map(Schema.decodeUnknownSync(schema)))
 }
 
+export async function readJsonLinesDataFileFiltered<A, I>(
+  filePath: string,
+  schema: Schema.Schema<A, I>,
+  { offset, limit }: Pagination,
+  predicate?: (x: A) => boolean,
+): Promise<I[]> {
+  const fullPath = path.join(getDataDir(), filePath)
+  const stream = fs.createReadStream(fullPath, "utf-8")
+  const rl = readline.createInterface({
+    input: stream,
+    crlfDelay: Infinity,
+  })
+  const result: I[] = []
+  let count = -offset
+  rl.on("line", (line) => {
+    if (typeof line === "string") {
+      if (line.length > 0) {
+        const encoded = JSON.parse(line)
+        const data = Schema.decodeUnknownSync(schema)(encoded)
+        // There is an opportunity for optimization here if the predicate is
+        // null.
+        if (!predicate || predicate(data)) {
+          if (count >= 0) {
+            result.push(encoded)
+          }
+          count += 1
+        }
+      }
+    }
+    else {
+      throw new TypeError(`undecoded input while reading a file ${filePath}`)
+    }
+    if (count === limit) {
+      rl.close()
+    }
+  })
+  await events.once(rl, "close")
+  return result
+}
+
 export async function readJsonLinesDataFileWithSchema<A, I>(
   filePath: string,
   schema: Schema.Schema<A, I>,
-  predicate: (x: A) => boolean,
   { offset, limit }: Pagination,
+  predicate: (x: A) => boolean,
 ): Promise<A[]> {
   const fullPath = path.join(getDataDir(), filePath)
   const stream = fs.createReadStream(fullPath, "utf-8")
