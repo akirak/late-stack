@@ -7,7 +7,6 @@ import { hastToJsx } from "@/utils/hast"
 
 export const Route = createFileRoute("/_blog/post/$lang/$slug")({
   component: PostComponent,
-  staleTime: Infinity,
   loader: async ({ params: { slug, lang } }) => {
     const post = await getPost(slug as PostSlug, {
       lang: lang as LanguageId,

@@ -5,7 +5,6 @@ import { getLocalProfile } from "@/collections/about"
 
 export const Route = createFileRoute("/about/$lang")({
   component: AboutComponent,
-  staleTime: Infinity,
   loader: ({ params }) => {
     return {
       localProfile: pipe(
