@@ -4,9 +4,8 @@ import { Option, Schema } from "effect"
  * Schema for a language code, e.g. "en". To prevent errors caused by mistyping,
  * only supported languages are accepted in this schema.
  */
-export const LanguageIdSchema = Schema.Union(
-  Schema.Literal("en"),
-  Schema.Literal("ja"),
+export const LanguageIdSchema = Schema.String.pipe(
+  Schema.filter(lang => ["en", "ja"].includes(lang)),
 )
 
 export type LanguageId = typeof LanguageIdSchema.Type

@@ -2,7 +2,7 @@ import type { PostMetadata } from "@/collections/posts"
 import { Link } from "@tanstack/react-router"
 import { DateFormat } from "@/components/inline/DateFormat"
 
-export function PostListTable({ posts }: { posts: PostMetadata[] }) {
+export function PostListTable({ posts }: { posts: readonly PostMetadata[] }) {
   return (
     <table>
       <thead>
