@@ -71,3 +71,25 @@ jobs:
           name: playwright-report-${{ matrix.os }}-${{ matrix.browser }}
           path: playwright-report/
           retention-days: 30
+
+  deploy:
+    needs: [lint, test-e2e]
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Set up Nix
+        uses: ./.github/actions/setup
+
+      - name: Build the production assets
+        run: nix develop -L .#node-build -c pnpm run build
+
+      - name: Upload to Deno Deploy
+        uses: denoland/deployctl@v1
+        with:
+          project: tanstack-blog
+          entrypoint: server/index.ts
+          root: .output

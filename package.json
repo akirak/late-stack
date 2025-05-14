@@ -8,7 +8,7 @@
     "dev": "vinxi dev",
     "build": "NITRO_PRESET=deno_deploy vinxi build && rm -rf .output/data && cp -r data .output/",
     "start": "cd .output && deno run --allow-all server/index.ts",
-    "deploy": "cd .output && deno run jsr:@deno/deployctl deploy --project=tanstack-blog server/index.ts",
+    "deploy": "cd .output && deno run --allow-all jsr:@deno/deployctl deploy --project=tanstack-blog server/index.ts",
     "typecheck": "tsc --noEmit",
     "serve-laddle": "pnpm ladle serve",
     "lint": "eslint .",
