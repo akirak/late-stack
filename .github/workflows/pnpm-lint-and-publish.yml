@@ -19,6 +19,8 @@ jobs:
 
       - name: Set up Nix
         uses: ./.github/actions/setup
+        with:
+          cache-key: ""
 
       - name: Check TypeScript types
         run: nix develop -L .#node-build -c pnpm run typecheck
@@ -49,6 +51,8 @@ jobs:
 
       - name: Set up Nix
         uses: ./.github/actions/setup
+        with:
+          cache-key: ${{ matrix.browser }}
 
       - name: Build the production assets
         run: nix develop -L .#node-build -c pnpm run build
@@ -57,7 +61,12 @@ jobs:
         # npm (provided by GitHub Actions) is a more reliable way to install a
         # browser that can be used on the platform.
         run: |
-          npx playwright install --with-deps ${{ matrix.browser }}
+          if [[ "${{ matrix.browser }}" = chromium ]]
+          then
+            npx playwright install --with-deps ${{ matrix.browser }} --only-shell
+          else
+            npx playwright install --with-deps ${{ matrix.browser }}
+          fi
 
       - name: Run e2e tests
         run: |
@@ -83,6 +92,8 @@ jobs:
 
       - name: Set up Nix
         uses: ./.github/actions/setup
+        with:
+          cache-key: ""
 
       - name: Build the production assets
         run: nix develop -L .#node-build -c pnpm run build

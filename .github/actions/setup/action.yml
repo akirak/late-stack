@@ -2,6 +2,12 @@ name: Install dependencies
 
 description: Set up Nix with a GH-native cache enabled
 
+inputs:
+  cache-key:
+    description: Suffix for the cache key to distinguish the package set
+    type: string
+    required: true
+
 runs:
   using: composite
   steps:
@@ -14,13 +20,13 @@ runs:
     - name: Restore the package cache
       uses: nix-community/cache-nix-action@135667ec418502fa5a3598af6fb9eb733888ce6a # v6
       with:
-        primary-key: nix-${{ runner.os }}-${{ hashFiles('**/flake.lock', '**/pnpm-lock.yaml') }}
+        primary-key: nix-${{ runner.os }}-${{ hashFiles('**/flake.lock', '**/pnpm-lock.yaml') }}-${{ inputs.cache-key }}
         restore-prefixes-first-match: nix-${{ runner.os }}-
         gc-max-store-size-linux: 1G
         paths: |
           node_modules/.pnpm
           # .output
-          # ~/.cache/ms-playwright
+          ~/.cache/ms-playwright
 
     - name: Check the node version
       shell: bash
