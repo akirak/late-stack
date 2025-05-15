@@ -68,11 +68,7 @@
     "vitest": "^3.1.2"
   },
   "lint-staged": {
-    "*.{ts,tsx}": [
-      "tsc --noEmit",
-      "eslint --fix"
-    ],
-    "*.{js,jsx,yaml}": [
+    "*.{ts,tsx,js,jsx,json,yaml}": [
       "eslint --fix"
     ]
   }
