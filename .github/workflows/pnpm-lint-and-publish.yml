@@ -38,11 +38,13 @@ jobs:
           - os: ubuntu-latest
             browser: firefox
 
-          - os: macos-latest
-            browser: chromium
+          # Mac is expensive in private repositories, so disable these for now.
 
-          - os: macos-latest
-            browser: webkit
+          # - os: macos-latest
+          #   browser: chromium
+
+          # - os: macos-latest
+          #   browser: webkit
 
     runs-on: ${{ matrix.os }}
 
