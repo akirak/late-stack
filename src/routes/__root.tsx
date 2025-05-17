@@ -6,9 +6,9 @@ import {
 } from "@tanstack/react-router"
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools"
 import * as React from "react"
-import appCss from "@/styles/app.css?url"
-import { seo } from "@/utils/seo"
-import "@/types/css"
+import { seo } from "../utils/seo"
+import "../styles/app.css"
+import "../types/css"
 
 export const Route = createRootRoute({
   head: () => ({
@@ -25,7 +25,7 @@ export const Route = createRootRoute({
         description: `Akira Komamura (@akirak)'s personal blog`,
       }),
     ],
-    links: [{ rel: "stylesheet", href: appCss }],
+    links: [{ rel: "stylesheet", href: "/src/styles/app.css" }],
   }),
   component: RootComponent,
 })

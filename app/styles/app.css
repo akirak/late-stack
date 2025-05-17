@@ -1,5 +1,1 @@
-@import url("./reset.css") layer(reset);
-@import url("./theme.css") layer(theme);
-@import url("./typography.css") layer(theme);
-
-@layer reset, theme, typography;
+/* App styles */
