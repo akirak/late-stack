@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router"
-import { getPost } from "@/collections/posts"
-import { hastToJsx } from "@/utils/hast"
+import { getPost } from "../../../src/collections/posts/item"
+import { hastToJsx } from "../../../src/utils/hast"
 
 export const Route = createFileRoute("/_blog/post/$lang/$slug")({
   component: PostComponent,
