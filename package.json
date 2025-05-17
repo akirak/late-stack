@@ -5,9 +5,9 @@
   "packageManager": "pnpm@10.11.0",
   "sideEffects": false,
   "scripts": {
-    "dev": "vinxi dev",
-    "build": "NITRO_PRESET=deno_deploy vinxi build && rm -rf .output/data && cp -r data .output/",
-    "start": "cd .output && deno run --allow-all server/index.ts",
+    "dev": "vite",
+    "build": "vite build",
+    "start": "vite preview",
     "deploy": "cd .output && deno run --allow-all jsr:@deno/deployctl deploy --project=tanstack-blog server/index.ts",
     "typecheck": "tsc --noEmit",
     "serve-laddle": "pnpm ladle serve",
@@ -24,14 +24,14 @@
     "@tanstack/react-router": "^1.119.0",
     "@tanstack/react-router-devtools": "^1.119.1",
     "@tanstack/react-start": "^1.119.0",
+    "@vitejs/plugin-react": "^4.4.1",
     "browserslist": "^4.24.4",
     "effect": "^3.14.16",
     "hast-util-to-jsx-runtime": "^2.3.6",
     "lightningcss": "^1.29.3",
     "react": "^19.1.0",
     "react-aria-components": "^1.8.0",
-    "react-dom": "^19.1.0",
-    "vinxi": "0.5.6"
+    "react-dom": "^19.1.0"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^4.12.0",
@@ -63,7 +63,7 @@
     "tsx": "^4.19.4",
     "typescript": "^5.8.3",
     "unified": "^11.0.5",
-    "vite": "^6.3.4",
+    "vite": "^6.3.5",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.1.2"
   },

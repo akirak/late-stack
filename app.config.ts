@@ -9,7 +9,7 @@ const root = new URL(".", import.meta.url).pathname
 
 export default defineConfig({
   tsr: {
-    appDirectory: "src",
+    appDirectory: "app",
   },
   vite: {
     plugins: [
