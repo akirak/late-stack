@@ -34,9 +34,9 @@ function AboutComponent() {
     <main aria-labelledby="page-heading">
       <h1 id="page-heading">About the author</h1>
 
-      <div className="profile-container">
+      <div>
         {/* Use section for better semantics */}
-        <section aria-labelledby={profileHeadingId} className="profile-info">
+        <section aria-labelledby={profileHeadingId}>
           <h2 id={profileHeadingId}>{fullName}</h2>
           <p>
             <strong>Location:</strong>
@@ -46,7 +46,7 @@ function AboutComponent() {
         </section>
 
         {/* Use section for social accounts */}
-        <section aria-labelledby={socialAccountsHeadingId} className="social-accounts">
+        <section aria-labelledby={socialAccountsHeadingId}>
           <h3 id={socialAccountsHeadingId}>Social Accounts</h3>
           {/* Subsections for clarity */}
           <section aria-labelledby={publishingPlatformsHeadingId}>
@@ -87,7 +87,7 @@ function AboutComponent() {
         </section>
 
         {/* Use section for website info */}
-        <section aria-labelledby={websiteInfoHeadingId} className="website-info">
+        <section aria-labelledby={websiteInfoHeadingId}>
           <h3 id={websiteInfoHeadingId}>Website Information</h3>
           <section aria-labelledby={nameOriginHeadingId}>
             <h4 id={nameOriginHeadingId}>Name Origin</h4>
@@ -100,7 +100,7 @@ function AboutComponent() {
         </section>
 
         {/* Use section for localized info */}
-        <section aria-labelledby={localizedInfoHeadingId} className="localized-info">
+        <section aria-labelledby={localizedInfoHeadingId}>
           <h3 id={localizedInfoHeadingId}>Description (Localized)</h3>
           <p>
             Optional biographical description in the current display language.
@@ -109,7 +109,7 @@ function AboutComponent() {
         </section>
 
         {/* Use section for local social accounts */}
-        <section aria-labelledby={localSocialAccountsHeadingId} className="local-social-accounts">
+        <section aria-labelledby={localSocialAccountsHeadingId}>
           <h3 id={localSocialAccountsHeadingId}>Local Social Accounts (Optional)</h3>
           <ul>
             <li>

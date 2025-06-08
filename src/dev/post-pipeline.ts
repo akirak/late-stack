@@ -116,6 +116,10 @@ export const PostBuilderLive: Layer.Layer<
         },
       })
       .use(rehypeExpressiveCode, {
+        styleOverrides: {
+          codeFontFamily: "DM Mono, Monaco, Menlo, Consolas, monospace",
+          uiFontFamily: "Manrope, system-ui, Roboto, sans-serif",
+        },
         plugins: [
           pluginCollapsibleSections(),
         ],
