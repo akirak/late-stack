@@ -25,6 +25,8 @@ pnpm test-e2e:chromium # Run Playwright tests (Chromium only)
 
 ## Architecture Overview
 
+For details of the architecture, see <./src/contents/posts/start-blog-late.md>.
+
 This is a blog built with **TanStack Start** (React framework) featuring a sophisticated content management system powered by **Effect** (functional programming library).
 
 ### Content Pipeline System
