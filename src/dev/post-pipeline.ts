@@ -5,11 +5,13 @@ import { pluginCollapsibleSections } from "@expressive-code/plugin-collapsible-s
 import { Array, Console, Context, Effect, Layer, Option, Order, pipe, Schema, Stream } from "effect"
 import matter from "gray-matter"
 import rehypeExpressiveCode from "rehype-expressive-code"
-import rehypeSanitize from "rehype-sanitize"
+import rehypeSanitize, { defaultSchema } from "rehype-sanitize"
+import remarkDirective from "remark-directive"
 import remarkGfm from "remark-gfm"
 import remarkParse from "remark-parse"
 import remarkRehype from "remark-rehype"
 import { unified } from "unified"
+import { visit } from "unist-util-visit"
 import { PostMetadataSchema, PostSchema } from "../schemas/post"
 import { Config } from "./pipeline-config"
 
@@ -78,11 +80,61 @@ export const PostBuilderLive: Layer.Layer<
     const getSlug = (filename: string) =>
       path.basename(filename, path.extname(filename))
 
+    const remarkAdmonitions = () => {
+      return (tree: any) => {
+        visit(tree, (node) => {
+          if (
+            node.type === "containerDirective"
+            || node.type === "leafDirective"
+            || node.type === "textDirective"
+          ) {
+            if (!/^(?:tip|info|warning|error)$/.test(node.name))
+              return
+
+            const data = node.data || (node.data = {})
+            data.hName = "div"
+            const className = `admonition admonition-${node.name}`
+            data.hProperties = {
+              ...data.hProperties,
+              className,
+            }
+
+            // Add admonition title
+            if (node.type === "containerDirective") {
+              const titleText = node.attributes?.title || node.name.charAt(0).toUpperCase() + node.name.slice(1)
+              const titleNode = {
+                type: "paragraph",
+                data: {
+                  hName: "div",
+                  hProperties: { className: "admonition-title" },
+                },
+                children: [
+                  {
+                    type: "text",
+                    value: titleText,
+                  },
+                ],
+              }
+              node.children.unshift(titleNode)
+            }
+          }
+        })
+      }
+    }
+
     const postProcessor = unified()
       .use(remarkParse)
       .use(remarkGfm)
+      .use(remarkDirective)
+      .use(remarkAdmonitions)
       .use(remarkRehype)
-      .use(rehypeSanitize)
+      .use(rehypeSanitize, {
+        ...defaultSchema,
+        attributes: {
+          ...defaultSchema.attributes,
+          div: [["className", "admonition", /^admonition-/]],
+        },
+      })
       .use(rehypeExpressiveCode, {
         plugins: [
           pluginCollapsibleSections(),

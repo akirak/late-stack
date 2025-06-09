@@ -4,6 +4,10 @@ language: en
 draft: true
 ---
 
+:::warning
+Most part of this content is AI-generated.
+:::
+
 # Markdown Showcase
 
 This post demonstrates various Markdown features and how they render in the blog.
@@ -141,6 +145,12 @@ console.log(formatUser(user)) // Output: John Doe <john@example.com>
 ```
 
 > **Tip**: This pattern is commonly used in TypeScript applications for type-safe data formatting.
+
+## Admonitions
+
+:::info[My Custom Title]
+Content here.
+:::
 
 ## Conclusion
 
