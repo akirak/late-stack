@@ -1,8 +1,10 @@
 import type { PostMetadata } from "../collections/posts"
 import { TextEncoder } from "node:util"
 import { FileSystem, Path } from "@effect/platform"
+import { pluginCollapsibleSections } from "@expressive-code/plugin-collapsible-sections"
 import { Array, Console, Context, Effect, Layer, Option, Order, pipe, Schema, Stream } from "effect"
 import matter from "gray-matter"
+import rehypeExpressiveCode from "rehype-expressive-code"
 import rehypeSanitize from "rehype-sanitize"
 import remarkGfm from "remark-gfm"
 import remarkParse from "remark-parse"
@@ -81,6 +83,11 @@ export const PostBuilderLive: Layer.Layer<
       .use(remarkGfm)
       .use(remarkRehype)
       .use(rehypeSanitize)
+      .use(rehypeExpressiveCode, {
+        plugins: [
+          pluginCollapsibleSections(),
+        ],
+      })
 
     /**
      * The file must reside inside "posts" subdirectory under postContentDir.

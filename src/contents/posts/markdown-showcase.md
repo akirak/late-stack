@@ -27,7 +27,7 @@ function greet(name) {
 greet("World")
 ```
 
-```python title="Python example" frame="code"
+```python collapse={2-4} title="Python example" frame="code"
 def fibonacci(n):
     if n <= 1:
         return n
@@ -36,10 +36,12 @@ def fibonacci(n):
 print(fibonacci(10))
 ```
 
-```bash
+```diff lang="bash"
 # Shell commands
-npm install
-npm run dev
+-npm install
+-npm run dev
++pnpm install
++pnpm run dev
 ```
 
 ## Lists
