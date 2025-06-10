@@ -14,6 +14,7 @@ import { unified } from "unified"
 import { PostMetadataSchema, PostSchema } from "../schemas/post"
 import { Config } from "./pipeline-config"
 import remarkAdmonitions from "./unified/remarkAdmonitions"
+import remarkLink from "./unified/remarkLink"
 
 type FileHandler = (filePath: string) => Effect.Effect<void, Error, never>
 
@@ -85,12 +86,27 @@ export const PostBuilderLive: Layer.Layer<
       .use(remarkGfm)
       .use(remarkDirective)
       .use(remarkAdmonitions)
+      .use(remarkLink)
       .use(remarkRehype)
       .use(rehypeSanitize, {
         ...defaultSchema,
+        tagNames: [
+          ...(defaultSchema.tagNames ?? []),
+          "video",
+          "iframe",
+        ],
         attributes: {
           ...defaultSchema.attributes,
-          div: [["className", "admonition", /^admonition-/]],
+          div: [["className", "admonition", /^admonition-/], ["className", "youtube-embed"], ["style"]],
+          iframe: [
+            "src",
+            "width",
+            "height",
+            "frameborder",
+            "allow",
+            "allowfullscreen",
+            "style",
+          ],
         },
       })
       .use(rehypeExpressiveCode, {

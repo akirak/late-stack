@@ -152,6 +152,12 @@ console.log(formatUser(user)) // Output: John Doe <john@example.com>
 Content here.
 :::
 
+## Embedded contents
+
+### YouTube
+
+::link[https://www.youtube.com/watch?v=l7OPFjPjtGs]
+
 ## Conclusion
 
 This showcase demonstrates the rich Markdown support available in this TanStack Start blog. The content pipeline processes all these elements seamlessly from Markdown to the final rendered output.
