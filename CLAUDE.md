@@ -41,6 +41,11 @@ The content pipeline runs during development via Vite plugin (`vite/plugins/coll
 2. Multilingual support (language codes in frontmatter)
 3. Draft filtering (drafts excluded in production)
 
+#### OGP Integration
+
+In the MDAST pipeline, the OGP metadata of linked sources are fetched.
+See <src/contents/posts/effect-ogp.md>.
+
 ### Data Fetching API
 
 Located in `src/collections/posts/`:
