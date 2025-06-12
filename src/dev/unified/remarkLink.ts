@@ -1,6 +1,8 @@
-import { Match, Schema } from "effect"
+import type { LinkMetadata } from "../../schemas/link-metadata"
+import { Effect, Match, Option, Runtime, Schema } from "effect"
 import { visit } from "unist-util-visit"
 import { ExternalUrlParser } from "../../schemas/external-url"
+import { LinkMetadataService } from "../link-metadata/layer"
 
 const makeLinkBlock = Match.type<typeof ExternalUrlParser.Type>().pipe(
   Match.tag("app/YoutubeVideoSource", source => (node: any) => {
@@ -29,28 +31,118 @@ const makeLinkBlock = Match.type<typeof ExternalUrlParser.Type>().pipe(
       },
     })
   }),
-  Match.tag("app/GenericExternalSource", source => (node: any) => {
+  Match.tag("app/GenericExternalSource", source => (node: any, metadata?: LinkMetadata) => {
     const data = node.data || (node.data = {})
     data.hName = "div"
     data.hProperties = {
       ...data.hProperties,
+      className: "link-card",
     }
 
-    node.children.unshift({
-      type: "link",
-      data: {
-        hName: "a",
-        hProperties: {
-          href: source.url,
+    // If we have OGP metadata, create a rich link card
+    if (metadata) {
+      node.children = [
+        {
+          type: "paragraph",
+          data: {
+            hName: "a",
+            hProperties: {
+              href: source.url,
+              className: "link-card-container",
+              target: "_blank",
+              rel: "noopener noreferrer",
+            },
+          },
+          children: [
+            metadata.image && {
+              type: "image",
+              url: metadata.image,
+              alt: metadata.title || "Link preview",
+              data: {
+                hName: "img",
+                hProperties: {
+                  className: "link-card-image",
+                  src: metadata.image,
+                  alt: metadata.title || "Link preview",
+                },
+              },
+            },
+            {
+              type: "paragraph",
+              data: {
+                hName: "div",
+                hProperties: {
+                  className: "link-card-content",
+                },
+              },
+              children: [
+                metadata.title && {
+                  type: "paragraph",
+                  data: {
+                    hName: "h3",
+                    hProperties: {
+                      className: "link-card-title",
+                    },
+                  },
+                  children: [{ type: "text", value: metadata.title }],
+                },
+                metadata.description && {
+                  type: "paragraph",
+                  data: {
+                    hName: "p",
+                    hProperties: {
+                      className: "link-card-description",
+                    },
+                  },
+                  children: [{ type: "text", value: metadata.description }],
+                },
+                {
+                  type: "paragraph",
+                  data: {
+                    hName: "span",
+                    hProperties: {
+                      className: "link-card-url",
+                    },
+                  },
+                  children: [{ type: "text", value: new URL(source.url).hostname }],
+                },
+              ].filter(Boolean),
+            },
+          ].filter(Boolean),
         },
-      },
-    })
+      ]
+    }
+    else {
+      // Fallback to simple link
+      node.children.unshift({
+        type: "link",
+        url: source.url,
+        children: [{ type: "text", value: source.url }],
+        data: {
+          hName: "a",
+          hProperties: {
+            href: source.url,
+            target: "_blank",
+            rel: "noopener noreferrer",
+          },
+        },
+      })
+    }
   }),
   Match.exhaustive,
 )
 
-function remarkLink() {
-  return (tree: any) => {
+export interface RemarkLinkOptions {
+  runtime?: Runtime.Runtime<LinkMetadataService>
+}
+
+function remarkLink(options?: RemarkLinkOptions) {
+  const { runtime } = options || {}
+
+  return async (tree: any) => {
+    // Collect all link directives that need OGP metadata
+    const linkNodes: Array<{ node: any, url: string }> = []
+
     visit(tree, (node) => {
       if (
         node.type === "containerDirective"
@@ -69,6 +161,13 @@ function remarkLink() {
 
         const source = Schema.decodeSync(ExternalUrlParser)(href)
 
+        // Store node info for OGP fetching (only for block-level directives)
+        if ((node.type === "leafDirective" || node.type === "containerDirective")
+          && source._tag === "app/GenericExternalSource"
+          && runtime) {
+          linkNodes.push({ node, url: source.url })
+        }
+
         switch (node.type) {
           case "textDirective": {
             const data = node.data || (node.data = {})
@@ -76,20 +175,61 @@ function remarkLink() {
             data.hProperties = {
               ...data.hProperties,
               href,
+              target: "_blank",
+              rel: "noopener noreferrer",
             }
             break
           }
           case "leafDirective": {
-            makeLinkBlock(source)(node)
+            // For non-generic sources or when no runtime, process immediately
+            if (source._tag !== "app/GenericExternalSource" || !runtime) {
+              makeLinkBlock(source)(node)
+            }
             break
           }
           case "containerDirective": {
-            console.error("Unimplemented containerDirective")
+            // For non-generic sources or when no runtime, process immediately
+            if (source._tag !== "app/GenericExternalSource" || !runtime) {
+              makeLinkBlock(source)(node)
+            }
             break
           }
         }
       }
     })
+
+    // Fetch OGP metadata for all collected links
+    if (runtime && linkNodes.length > 0) {
+      const effects = linkNodes.map(({ url }) =>
+        LinkMetadataService.pipe(
+          Effect.andThen(
+            service =>
+              service.get(url).pipe(
+                Effect.map(result => ({ url, result })),
+              ),
+          ),
+        ),
+      )
+
+      const results = await Runtime.runPromise(runtime)(
+        Effect.all(effects, { concurrency: 5 }),
+      )
+
+      // Create a map of URL to OGP metadata
+      const ogpMap = new Map<string, LinkMetadata>()
+      results.forEach(({ url, result }) => {
+        if (Option.isSome(result)) {
+          ogpMap.set(url, result.value)
+        }
+      })
+
+      // Apply OGP metadata to nodes
+      linkNodes.forEach(({ node, url }) => {
+        const source = { _tag: "app/GenericExternalSource" as const, url }
+        const ogpMetadata = ogpMap.get(url)
+        makeLinkBlock(source)(node, ogpMetadata)
+      })
+    }
   }
 }
 

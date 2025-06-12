@@ -15,6 +15,8 @@
             # doesn't prefix node imports with "node:".
             pkgs.nodejs
             pkgs.corepack
+            pkgs.sqlite
+            pkgs.node-gyp
           ];
 
           playwright-browsers = pkgs.playwright-driver.browsers.override {
