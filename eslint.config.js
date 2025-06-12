@@ -17,6 +17,8 @@ export default antfu({
     // Effect uses many of them
     "no-lone-blocks": "off",
     "no-empty": "off",
+    // Don't insert `new` into `extends Data.TaggedError` declarations.
+    "unicorn/throw-new-error": "off",
   },
 }, jsxA11y.flatConfigs.recommended, {
   files: [
