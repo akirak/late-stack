@@ -14,6 +14,14 @@ the content may not reflect the actual linguistic proficiency of the author.
 This document specifies an Open Graph Protocol (OGP) integration of this blog
 system.
 
+## Examples
+
+Here's how the OGP integration works:
+
+::link[https://effect.website]
+
+::link[https://github.com/anthropics/claude-code]
+
 ## Purpose: Fetching OGP metadata at build time
 
 Modern blogs are more than static pages—they are hubs that reference videos,
@@ -71,7 +79,7 @@ Each record keeps just enough to draw a link card while remaining future-proof:
 - timestamp of the last fetch
 - “unknown tags” – a bag for provider-specific keys we don’t yet understand
 
-Keeping a timestamp lets us apply a simple *time-to-live* (TTL) strategy instead
+Keeping a timestamp lets us apply a simple _time-to-live_ (TTL) strategy instead
 of hard invalidation rules.
 
 A metadata schema for each resource is defined in an Effect-TS schema.
@@ -85,7 +93,7 @@ It is decoded from a JSON object, loaded from a KVS cache.
 
 OGP Fetcher
 
-- fetch(url) → metadata *or* typed error
+- fetch(url) → metadata _or_ typed error
 
 Combining them gives **getOgMetadata(url, ttl)** that
 
@@ -117,9 +125,9 @@ etc.
 
 I will use SQLite because:
 
-* single-file, zero-config, battle-tested
-* native JSON column + indexes
-* works the same on a developer laptop, CI runner and Deno Deploy
+- single-file, zero-config, battle-tested
+- native JSON column + indexes
+- works the same on a developer laptop, CI runner and Deno Deploy
 
 :::note
 
@@ -147,7 +155,7 @@ or production build is run. Thus it is important to minimise refetching, which
 is generally much slower than accessing a local file system:
 
 1. Follow up to 5 redirects, 10 s total timeout, 1 MiB body cap.
-2. Parse *og:* and *twitter:* meta tags, then fall back to `<title>` /
+2. Parse _og:_ and _twitter:_ meta tags, then fall back to `<title>` /
    first `<img>`.
 3. Resolve relative URLs against the final location.
 4. Normalise & validate the result before handing it over.
@@ -162,10 +170,10 @@ For parsing HTML, I will use `html-rewriter-wasm` npm package from Cloudflare.
 
 The service is only called at build time:
 
-- A remark (Markdown parser) plugin detects external links → calls
-  **getOgMetadata**.
-- Metadata is embedded both in the MDAST node (for live preview) and the final
-  post JSON
+- A custom remark plugin for embedding links (via `::link` directive) calls
+  **getOgMetadata** on generic external sources and replace the directives
+  in-place. Link cards are only generated for block-level (i.e. container and
+  leaf) directives. For text directives, only an icon and tooltip are added.
 
 <!--
 Runtime
@@ -174,14 +182,14 @@ Runtime
 
 ### 7. Deployment & CI caching
 
-- Local development: The database lives at `.data/og.sqlite` (git-ignored).
+- Local development: The database lives at `data/og.sqlite` (git-ignored).
 
 - GitHub Actions: The same file is cached with `actions/cache`. the TTL logic
-makes the vast majority of builds *cache-only*, minimising network traffic and
-rate-limit risks.
+  makes the vast majority of builds _cache-only_, minimising network traffic and
+  rate-limit risks.
 
 - Production (Deno Deploy): the populated file is copied into `.output` during
-`pnpm build` – no runtime writes required.
+  `pnpm build` – no runtime writes required.
 
 <!--
 ### 8. Roadmap
