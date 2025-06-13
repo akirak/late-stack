@@ -36,7 +36,7 @@ frontend application.
 
 ## Architecture description
 
-### 1. Bird’s-eye view
+### 1. Bird's-eye view
 
 ```d2
 direction: right
@@ -49,147 +49,219 @@ Pipeline -> Extract[
   shape: note
   label: "extract external links"
 ]
-Pipeline -> Cache[
-  label: "OGP cache (SQLite)"
-]
-Pipeline -> Fetcher[
+Pipeline -> LinkMetadataService[
   shape: component
-  label: "HTTP / HTML fetcher"
+  label: "LinkMetadataService"
 ]
-Fetcher -> Internet[
+LinkMetadataService -> MetadataCache[
+  shape: component
+  label: "MetadataCache"
+]
+MetadataCache -> MetadataKvs[
+  label: "SQLite KVS"
+]
+LinkMetadataService -> MetadataFetcher[
+  shape: component
+  label: "MetadataFetcher"
+]
+MetadataFetcher -> Internet[
   shape: cloud
 ]
-Fetcher -> Cache
-Cache -> Pipeline
+MetadataFetcher -> MetadataCache
+MetadataCache -> LinkMetadataService
+LinkMetadataService -> Pipeline
 Pipeline -> PostJson[
   shape: database
   label: "Post JSON artefacts"
 ]
 ```
 
-The cache and fetcher live only during the build. At runtime the blog simply
-reads the pre-fetched metadata already embedded in each post.
+The system follows a layered architecture using Effect's service pattern:
+
+- **LinkMetadataService**: High-level API providing a simple `get(url)` method
+- **MetadataCache**: Caching layer with TTL-based expiration (60 days)
+- **MetadataKvs**: SQLite-based key-value storage
+- **MetadataFetcher**: HTTP client with HTML parsing capabilities
+
+These services live only during the build. At runtime the blog simply reads the pre-fetched metadata already embedded in each post.
 
 ### 2. Data model
 
-Each record keeps just enough to draw a link card while remaining future-proof:
+The `LinkMetadata` schema captures essential OGP fields:
 
-- canonical URL
-- title, description, cover image, site name, content type
-- timestamp of the last fetch
-- “unknown tags” – a bag for provider-specific keys we don’t yet understand
-
-Keeping a timestamp lets us apply a simple _time-to-live_ (TTL) strategy instead
-of hard invalidation rules.
-
-A metadata schema for each resource is defined in an Effect-TS schema.
-It is decoded from a JSON object, loaded from a KVS cache.
-
-### 3. OGP service
-
-- get(url) → maybe metadata
-- set(metadata)
-- purgeOlderThan(ttl) → rows removed
-
-OGP Fetcher
-
-- fetch(url) → metadata _or_ typed error
-
-Combining them gives **getOgMetadata(url, ttl)** that
-
-1. looks in the store,
-2. falls back to the fetcher if missing or stale,
-3. writes the fresh copy back.
-
-```d2
-sequence: getOgMetadata
-Client->OGPService: getOgMetadata(url)
-OGPService->Cache: get(url)
-Cache->OGPService: miss/stale
-OGPService->Fetcher: fetch(url)
-Fetcher->Internet: HTTP GET
-Internet->Fetcher: HTML
-Fetcher->OGPService: metadata
-OGPService->Cache: set(metadata)
-OGPService->Client: metadata
+```typescript
+interface LinkMetadata {
+  canonical?: string // Canonical URL from <link rel="canonical">
+  title?: string // From og:title, twitter:title, or <title>
+  description?: string // From og:description or twitter:description
+  image?: string // From og:image or twitter:image
+  imageAlt?: string // From og:image:alt or twitter:image:alt
+  imageWidth?: number // From og:image:width
+  imageHeight?: number // From og:image:height
+  siteName?: string // From og:site_name
+  ogType?: OgType // From og:type (e.g., "article", "website")
+}
 ```
 
-The call never throws – typed failures are propagated as explicit **Effect**
-errors, so the pipeline can continue building even if a provider is down.
+The cache stores metadata wrapped in an `Envelope` with creation timestamp:
+
+```typescript
+interface Envelope {
+  createdAt: Date
+  data: LinkMetadata
+}
+```
+
+This timestamp enables a simple TTL-based cache invalidation strategy (60 days) without complex invalidation rules.
+
+### 3. Service interfaces
+
+**LinkMetadataService** provides a simple API:
+
+```typescript
+declare function get(url: string): Effect<Option<LinkMetadata>, never, LinkMetadataService>
+```
+
+**MetadataCache** handles persistence:
+
+```typescript
+interface MetadataCache {
+  get: (url: string) => Effect<Option<Envelope<LinkMetadata>>, KvsError>
+  set: (url: string, metadata: LinkMetadata) => Effect<void, KvsError>
+}
+```
+
+**MetadataFetcher** handles HTTP and parsing:
+
+```typescript
+interface MetadataFetcher {
+  fetch: (url: string) => Effect<LinkMetadata, FetchError | ParseError>
+}
+```
+
+The `get` method implements smart caching:
+
+```d2
+sequence: get(url)
+Client->LinkMetadataService: get(url)
+LinkMetadataService->MetadataCache: get(url)
+MetadataCache->LinkMetadataService: cached data
+LinkMetadataService: check TTL (60 days)
+LinkMetadataService->MetadataFetcher: fetch(url) [if stale]
+MetadataFetcher->Internet: HTTP GET
+Internet->MetadataFetcher: HTML
+MetadataFetcher->LinkMetadataService: metadata
+LinkMetadataService->MetadataCache: set(url, metadata)
+LinkMetadataService->Client: Option<LinkMetadata>
+```
+
+The service returns `Option<LinkMetadata>` and never throws. On fetch failure with stale cache, it returns the stale data. This ensures the pipeline continues even if external providers are down.
 
 ### 4. Storage layer
 
-The key-value store is also defined as an Effect service. You can use a
-different backend storage, e.g. native in-memory, relational database, Redis,
-etc.
+The storage uses a generic key-value store abstraction (`MetadataKvs`) implemented with SQLite:
 
-I will use SQLite because:
+```typescript
+interface Kvs<V> {
+  get: (key: string) => Effect<Option<V>, KvsError>
+  set: (key: string, value: V) => Effect<void, KvsError>
+  has: (key: string) => Effect<boolean, KvsError>
+  clear: () => Effect<void, KvsError>
+  keys: () => Effect<string[], KvsError>
+}
+```
 
-- single-file, zero-config, battle-tested
-- native JSON column + indexes
-- works the same on a developer laptop, CI runner and Deno Deploy
+SQLite was chosen because:
 
-:::note
+- Single-file, zero-config, battle-tested
+- Native JSON column support for structured queries
+- Works identically on developer laptops, CI runners, and production
+- Located at `data/link-metadata.sqlite` (git-ignored)
 
-SQLite supports [dealing with JSON values](https://sqlite.org/json1.html).
-Storing the metadata object as a JSON allows partial fetching and filtering,
-unlike storing the entire object as a serialized string. This can entail
-slight performance overhead, this will be convenient for listing particular
-types of sources for the entire site, for example. Thus I will define the KVS to
-have JSON object values.
+The implementation uses:
 
-:::
-
-<!-- A 60-day retention policy keeps the file size in check. -->
-<!-- older rows are purged once per full build. -->
+- JSON serialization for `Envelope<LinkMetadata>` values
+- Effect Schema for type-safe encoding/decoding
+- Simple key-value table structure
 
 <!--
 Need Redis or Postgres?  Just implement the three Store functions and wire a new
 layer – no changes required elsewhere.
  -->
 
-### 5. Fetcher responsibilities
+### 5. Fetcher implementation
 
-In the pipeline, all posts are rebuilt every time the development server starts
-or production build is run. Thus it is important to minimise refetching, which
-is generally much slower than accessing a local file system:
+The `MetadataFetcher` implements robust HTML metadata extraction:
 
-1. Follow up to 5 redirects, 10 s total timeout, 1 MiB body cap.
-2. Parse _og:_ and _twitter:_ meta tags, then fall back to `<title>` /
-   first `<img>`.
-3. Resolve relative URLs against the final location.
-4. Normalise & validate the result before handing it over.
+**HTTP handling:**
 
-All network, parsing and validation errors are mapped onto a concise error type
-in Effect-TS. The caller can decide whether to retry later or silently omit the
-card.
+- Maximum 5 redirects
+- 10-second timeout
+- 1MB response size limit
+- Up to 5 retries with exponential backoff
+- Only accepts HTTP(S) URLs
 
-For parsing HTML, I will use `html-rewriter-wasm` npm package from Cloudflare.
+**HTML parsing with `html-rewriter-wasm`:**
 
-### 6. Integration points
+1. Extract Open Graph tags (`og:*`)
+2. Fall back to Twitter Card tags (`twitter:*`)
+3. Final fallback to `<title>` element
+4. Extract canonical URL from `<link rel="canonical">`
+5. Resolve all relative URLs against the base URL
 
-The service is only called at build time:
+**Error handling:**
 
-- A custom remark plugin for embedding links (via `::link` directive) calls
-  **getOgMetadata** on generic external sources and replace the directives
-  in-place. Link cards are only generated for block-level (i.e. container and
-  leaf) directives. For text directives, only an icon and tooltip are added.
+```typescript
+type FetchError
+  = | { _tag: "InvalidUrl" }
+    | { _tag: "NetworkError", error: unknown }
+    | { _tag: "Timeout" }
+    | { _tag: "ResponseTooLarge" }
+    | { _tag: "TooManyRedirects" }
+    | { _tag: "InvalidContentType" }
+```
 
-<!--
-Runtime
-(No runtime fetching – the client renders link previews solely with the metadata bundled inside the post JSON.)
- -->
+All errors are typed, allowing the pipeline to gracefully handle failures without crashing the build.
 
-### 7. Deployment & CI caching
+### 6. Integration with Remark
 
-- Local development: The database lives at `data/og.sqlite` (git-ignored).
+The `remarkLink` plugin integrates OGP fetching into the Markdown pipeline:
 
-- GitHub Actions: The same file is cached with `actions/cache`. the TTL logic
-  makes the vast majority of builds _cache-only_, minimising network traffic and
-  rate-limit risks.
+**Processing flow:**
 
-- Production (Deno Deploy): the populated file is copied into `.output` during
-  `pnpm build` – no runtime writes required.
+1. Collect all `::link` directives during AST traversal
+2. Batch fetch metadata with concurrency limit of 5
+3. Transform directives based on type:
+   - **Block-level** (container/leaf): Generate rich link cards or YouTube embeds
+   - **Text-level**: Simple links (no OGP fetching)
+
+**Link card generation:**
+
+- YouTube URLs → Embedded video players
+- Other URLs → Rich preview cards with title, description, and image
+- Failed fetches → Graceful fallback to plain links
+
+The plugin runs only at build time. All metadata is embedded in the post JSON, eliminating runtime network requests.
+
+### 7. Deployment & caching strategy
+
+**Local development:**
+
+- Database location: `data/link-metadata.sqlite` (git-ignored)
+- Persistent across dev server restarts
+- 60-day TTL minimizes redundant fetches
+
+**CI/CD (GitHub Actions):**
+
+- Cache database with `actions/cache`
+- TTL ensures most builds use cached data
+- Reduces API rate limit risks
+
+**Production (Deno Deploy):**
+
+- Database copied to build output during `pnpm build`
+- Read-only access at runtime
+- No runtime fetching or writes
 
 <!--
 ### 8. Roadmap
@@ -203,5 +275,5 @@ Runtime
 ## Credits
 
 The initial idea was drafted with Gemini 2.5 Flash and then refined with OpenAI
-o3. This document captures the refined, implementation-ready architecture while
-keeping all code in the source tree DRY.
+o3. After completing the initial implementation, this document has been updated
+accordingly.
