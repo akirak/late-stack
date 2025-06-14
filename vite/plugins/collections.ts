@@ -1,4 +1,5 @@
 import type { PlatformError } from "@effect/platform/Error"
+import type { ConfigError } from "effect/ConfigError"
 import type { Plugin } from "vite"
 import { Effect, ManagedRuntime, pipe, String } from "effect"
 import { makePipelineLayer, Pipeline } from "../../src/dev/collections-pipeline"
@@ -13,7 +14,7 @@ export interface Options {
  */
 export function collections({ contentDir, outDir }: Options): Plugin {
   let mode: string
-  let runtime: ManagedRuntime.ManagedRuntime<Pipeline, Error | PlatformError>
+  let runtime: ManagedRuntime.ManagedRuntime<Pipeline, Error | ConfigError | PlatformError>
 
   const isContentFile = String.startsWith(contentDir)
 

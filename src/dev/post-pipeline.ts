@@ -1,4 +1,6 @@
+import type { ConfigError } from "effect/ConfigError"
 import type { PostMetadata } from "../collections/posts"
+import type { LinkMetadataService } from "./link-metadata/layer"
 import { TextEncoder } from "node:util"
 import { FileSystem, Path } from "@effect/platform"
 import { pluginCollapsibleSections } from "@expressive-code/plugin-collapsible-sections"
@@ -33,14 +35,18 @@ const byOptionalDateDescending = Option.getOrder(
 
 export const PostBuilderLive: Layer.Layer<
   PostBuilder,
-  Error,
-  Config | Path.Path | FileSystem.FileSystem
+  Error | ConfigError,
+  Config | Path.Path | FileSystem.FileSystem | LinkMetadataService
+
 > = Layer.effect(
   PostBuilder,
   Effect.gen(function* (_) {
     const config = yield* Config
     const fs = yield* FileSystem.FileSystem
     const path = yield* Path.Path
+
+    // Create OGP runtime
+    const runtime = yield* Effect.runtime<LinkMetadataService>()
 
     const postContentDir = path.join(config.contentDir, "posts")
     const postOutDir = path.join(config.outDir, "posts")
@@ -86,7 +92,7 @@ export const PostBuilderLive: Layer.Layer<
       .use(remarkGfm)
       .use(remarkDirective)
       .use(remarkAdmonitions)
-      .use(remarkLink)
+      .use(remarkLink, { runtime })
       .use(remarkRehype)
       .use(rehypeSanitize, {
         ...defaultSchema,

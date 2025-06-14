@@ -41,6 +41,15 @@ The content pipeline runs during development via Vite plugin (`vite/plugins/coll
 2. Multilingual support (language codes in frontmatter)
 3. Draft filtering (drafts excluded in production)
 
+The call of the pipeline is build-time only. Effect services are defined in
+`src/dev` directory. Use `@effect/platform` and `@effect/platform-node`
+libraries where possible, which are available at build time.
+
+#### OGP Integration
+
+In the MDAST pipeline, the OGP metadata of linked sources are fetched.
+See <src/contents/posts/effect-ogp.md>.
+
 ### Data Fetching API
 
 Located in `src/collections/posts/`:

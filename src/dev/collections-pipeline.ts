@@ -1,7 +1,10 @@
 import type { Scope } from "effect"
+import * as path from "node:path"
 import { FileSystem, Path } from "@effect/platform"
-import { NodeFileSystem, NodePath } from "@effect/platform-node"
+import { NodeFileSystem, NodeHttpClient, NodePath } from "@effect/platform-node"
+import * as NodeSqlite from "@effect/sql-sqlite-node"
 import { Console, Context, Effect, Layer, Match, pipe, Queue, Ref, Stream, String } from "effect"
+import { LinkMetadataServiceLive } from "./link-metadata/layer"
 import { Config } from "./pipeline-config"
 import { PostBuilder, PostBuilderLive } from "./post-pipeline"
 
@@ -156,7 +159,18 @@ export function makePipelineLayer(config: {
     Config.of(config),
   )
 
-  const postBuilderLayer = PostBuilderLive
+  const linkMetadataLayer = LinkMetadataServiceLive.pipe(
+    Layer.provide(
+      NodeSqlite.SqliteClient.layer({
+        filename: path.join(config.outDir, "og.sqlite"),
+      }),
+    ),
+    Layer.provide(NodeHttpClient.layer),
+  )
+
+  const postBuilderLayer = PostBuilderLive.pipe(
+    Layer.provide(linkMetadataLayer),
+  )
 
   return PipelineLive.pipe(
     Layer.provide(postBuilderLayer),

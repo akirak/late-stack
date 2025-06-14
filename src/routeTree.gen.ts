@@ -60,7 +60,6 @@ const BlogArchivePostLangIndexRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '': typeof BlogArchiveRouteRouteWithChildren
   '/about/$lang': typeof AboutLangRoute
   '/about': typeof AboutIndexRoute
   '/post/$lang/$slug': typeof BlogPostLangSlugRoute
@@ -69,7 +68,6 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '': typeof BlogArchiveRouteRouteWithChildren
   '/about/$lang': typeof AboutLangRoute
   '/about': typeof AboutIndexRoute
   '/post/$lang/$slug': typeof BlogPostLangSlugRoute
@@ -91,7 +89,6 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | ''
     | '/about/$lang'
     | '/about'
     | '/post/$lang/$slug'
@@ -100,7 +97,6 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | ''
     | '/about/$lang'
     | '/about'
     | '/post/$lang/$slug'
@@ -127,13 +123,6 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_blog': {
       id: '/_blog'
       path: ''
@@ -141,18 +130,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_blog/_archive': {
-      id: '/_blog/_archive'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof BlogArchiveRouteRouteImport
-      parentRoute: typeof BlogRouteRoute
-    }
-    '/about/$lang': {
-      id: '/about/$lang'
-      path: '/about/$lang'
-      fullPath: '/about/$lang'
-      preLoaderRoute: typeof AboutLangRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about/': {
@@ -162,11 +144,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_blog/post/$lang/$slug': {
-      id: '/_blog/post/$lang/$slug'
-      path: '/post/$lang/$slug'
-      fullPath: '/post/$lang/$slug'
-      preLoaderRoute: typeof BlogPostLangSlugRouteImport
+    '/about/$lang': {
+      id: '/about/$lang'
+      path: '/about/$lang'
+      fullPath: '/about/$lang'
+      preLoaderRoute: typeof AboutLangRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_blog/_archive': {
+      id: '/_blog/_archive'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof BlogArchiveRouteRouteImport
       parentRoute: typeof BlogRouteRoute
     }
     '/_blog/_archive/post/': {
@@ -175,6 +164,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/post'
       preLoaderRoute: typeof BlogArchivePostIndexRouteImport
       parentRoute: typeof BlogArchiveRouteRoute
+    }
+    '/_blog/post/$lang/$slug': {
+      id: '/_blog/post/$lang/$slug'
+      path: '/post/$lang/$slug'
+      fullPath: '/post/$lang/$slug'
+      preLoaderRoute: typeof BlogPostLangSlugRouteImport
+      parentRoute: typeof BlogRouteRoute
     }
     '/_blog/_archive/post/$lang/': {
       id: '/_blog/_archive/post/$lang/'
