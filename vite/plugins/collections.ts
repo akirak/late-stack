@@ -1,6 +1,7 @@
 import type { PlatformError } from "@effect/platform/Error"
 import type { ConfigError } from "effect/ConfigError"
 import type { Plugin } from "vite"
+import * as fs from "node:fs"
 import { Effect, ManagedRuntime, pipe, String } from "effect"
 import { makePipelineLayer, Pipeline } from "../../src/dev/collections-pipeline"
 
@@ -29,6 +30,8 @@ export function collections({ contentDir, outDir }: Options): Plugin {
       mode = env.command
 
       const production = mode === "build"
+
+      fs.mkdirSync(outDir, { recursive: true })
 
       runtime = pipe(
         makePipelineLayer({
