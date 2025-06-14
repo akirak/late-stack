@@ -60,7 +60,6 @@ const BlogArchivePostLangIndexRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '': typeof BlogArchiveRouteRouteWithChildren
   '/about/$lang': typeof AboutLangRoute
   '/about': typeof AboutIndexRoute
   '/post/$lang/$slug': typeof BlogPostLangSlugRoute
@@ -69,7 +68,6 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '': typeof BlogArchiveRouteRouteWithChildren
   '/about/$lang': typeof AboutLangRoute
   '/about': typeof AboutIndexRoute
   '/post/$lang/$slug': typeof BlogPostLangSlugRoute
@@ -91,7 +89,6 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | ''
     | '/about/$lang'
     | '/about'
     | '/post/$lang/$slug'
@@ -100,7 +97,6 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | ''
     | '/about/$lang'
     | '/about'
     | '/post/$lang/$slug'
