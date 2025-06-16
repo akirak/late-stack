@@ -5,15 +5,17 @@ function formatDate(date: Date): string {
 }
 
 export function DateFormat({ date }: { date: Option.Option<Date> }) {
-  const dateString = pipe(
+  const value = pipe(
     date,
-    Option.map(formatDate),
     Option.getOrUndefined,
   )
 
+  if (!value)
+    return null
+
   return (
-    <span>
-      {dateString}
-    </span>
+    <time dateTime={value.toISOString()}>
+      {formatDate(value)}
+    </time>
   )
 }
