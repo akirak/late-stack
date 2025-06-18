@@ -5,6 +5,7 @@ import { Header } from "react-aria-components"
 import { getLanguageById } from "@/collections/languages"
 import { getPostList } from "@/collections/posts"
 import { Container } from "@/components/layout/Container"
+import { DocumentTitle } from "@/components/layout/DocumentTitle"
 import { PostListTable } from "@/features/blog/components/PostListTable"
 
 export const Route = createFileRoute("/_blog/_archive/post/$lang/")({
@@ -31,6 +32,7 @@ function PostArchiveComponent() {
   return (
     <Container>
       <Header>
+        <DocumentTitle title={`Blog Archive [${language.englishName}]`} />
         <h1>
           List of posts in
           {" "}

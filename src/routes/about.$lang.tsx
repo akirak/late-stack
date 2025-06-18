@@ -3,6 +3,7 @@ import { createFileRoute, notFound } from "@tanstack/react-router"
 import { Option, pipe } from "effect"
 import { getLocalProfile } from "@/collections/about"
 import { Container } from "@/components/layout/Container"
+import { DocumentTitle } from "@/components/layout/DocumentTitle"
 import { Header } from "@/components/layout/Header"
 
 export const Route = createFileRoute("/about/$lang")({
@@ -19,6 +20,7 @@ export const Route = createFileRoute("/about/$lang")({
 
 function AboutComponent() {
   const { localProfile: { fullName } } = Route.useLoaderData()
+  const { lang } = Route.useParams()
 
   // Generate unique IDs for aria-labelledby
   const profileHeadingId = "profile-heading"
@@ -36,6 +38,7 @@ function AboutComponent() {
     <Container>
       <Header>
         <h1 id="page-heading">About the author</h1>
+        <DocumentTitle title={`${fullName} [${lang}]`} />
       </Header>
 
       <main aria-labelledby="page-heading">

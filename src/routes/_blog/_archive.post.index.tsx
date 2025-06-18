@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router"
 import { getPostList } from "@/collections/posts"
 import { Container } from "@/components/layout/Container"
+import { DocumentTitle } from "@/components/layout/DocumentTitle"
 import { Header } from "@/components/layout/Header"
 import { PostListTable } from "@/features/blog/components/PostListTable"
 
@@ -17,6 +18,7 @@ function PostArchiveComponent() {
     <Container>
       <Header>
         <h1>List of posts</h1>
+        <DocumentTitle title="Blog Archive" />
       </Header>
 
       <main>

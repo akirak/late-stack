@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router"
 import { getPost } from "@/collections/posts"
 import { Container } from "@/components/layout/Container"
+import { DocumentTitle } from "@/components/layout/DocumentTitle"
 import { Header } from "@/components/layout/Header"
 import { hastToJsx } from "@/utils/hast"
 
@@ -22,6 +23,7 @@ function PostComponent() {
         <h1>
           {post.title}
         </h1>
+        <DocumentTitle title={post.title} />
       </Header>
 
       <main>
