@@ -166,7 +166,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           <div aria-label="License of this site">
             <a
               href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
-              aria-label="Read the license"
+              aria-label="Read the license of this site content"
             >
               CC BY-NC-SA 4.0
             </a>

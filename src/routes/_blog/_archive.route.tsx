@@ -6,12 +6,6 @@ export const Route = createFileRoute("/_blog/_archive")({
 
 function ArchiveLayout() {
   return (
-    <>
-      <header>
-        Archive
-      </header>
-
-      <Outlet />
-    </>
+    <Outlet />
   )
 }

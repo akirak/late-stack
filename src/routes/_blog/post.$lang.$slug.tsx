@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router"
 import { getPost } from "@/collections/posts"
+import { Container } from "@/components/layout/Container"
+import { Header } from "@/components/layout/Header"
 import { hastToJsx } from "@/utils/hast"
 
 export const Route = createFileRoute("/_blog/post/$lang/$slug")({
@@ -15,14 +17,16 @@ function PostComponent() {
   const { post } = Route.useLoaderData()
 
   return (
-    <main>
-      <h1>
-        {post.title}
-      </h1>
+    <Container>
+      <Header>
+        <h1>
+          {post.title}
+        </h1>
+      </Header>
 
-      <div>
+      <main>
         {hastToJsx(post.hastBody)}
-      </div>
-    </main>
+      </main>
+    </Container>
   )
 }
