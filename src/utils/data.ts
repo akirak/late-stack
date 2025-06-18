@@ -12,7 +12,7 @@ import { isRunningInBrowser, isRunningInDeno } from "./env"
  * Returns a path to the data directory for SSR. Data files are only available
  * on the server, so this value is set to null on browser.
  */
-function getDataDir() {
+export function getDataDir() {
   if (isRunningInBrowser()) {
     throw new Error(`Server data is not available inside browser`)
   }

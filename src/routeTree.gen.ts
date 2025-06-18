@@ -8,6 +8,8 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
+import { createServerRootRoute } from '@tanstack/react-start/server'
+
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as BlogRouteRouteImport } from './routes/_blog/route'
 import { Route as IndexRouteImport } from './routes/index'
@@ -17,6 +19,9 @@ import { Route as BlogArchiveRouteRouteImport } from './routes/_blog/_archive.ro
 import { Route as BlogArchivePostIndexRouteImport } from './routes/_blog/_archive.post.index'
 import { Route as BlogPostLangSlugRouteImport } from './routes/_blog/post.$lang.$slug'
 import { Route as BlogArchivePostLangIndexRouteImport } from './routes/_blog/_archive.post.$lang.index'
+import { ServerRoute as SitemapDotxmlServerRouteImport } from './routes/sitemap[.]xml'
+
+const rootServerRouteImport = createServerRootRoute()
 
 const BlogRouteRoute = BlogRouteRouteImport.update({
   id: '/_blog',
@@ -57,6 +62,11 @@ const BlogArchivePostLangIndexRoute =
     path: '/post/$lang/',
     getParentRoute: () => BlogArchiveRouteRoute,
   } as any)
+const SitemapDotxmlServerRoute = SitemapDotxmlServerRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootServerRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -120,6 +130,27 @@ export interface RootRouteChildren {
   AboutLangRoute: typeof AboutLangRoute
   AboutIndexRoute: typeof AboutIndexRoute
 }
+export interface FileServerRoutesByFullPath {
+  '/sitemap.xml': typeof SitemapDotxmlServerRoute
+}
+export interface FileServerRoutesByTo {
+  '/sitemap.xml': typeof SitemapDotxmlServerRoute
+}
+export interface FileServerRoutesById {
+  __root__: typeof rootServerRouteImport
+  '/sitemap.xml': typeof SitemapDotxmlServerRoute
+}
+export interface FileServerRouteTypes {
+  fileServerRoutesByFullPath: FileServerRoutesByFullPath
+  fullPaths: '/sitemap.xml'
+  fileServerRoutesByTo: FileServerRoutesByTo
+  to: '/sitemap.xml'
+  id: '__root__' | '/sitemap.xml'
+  fileServerRoutesById: FileServerRoutesById
+}
+export interface RootServerRouteChildren {
+  SitemapDotxmlServerRoute: typeof SitemapDotxmlServerRoute
+}
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
@@ -181,6 +212,17 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+declare module '@tanstack/react-start/server' {
+  interface ServerFileRoutesByPath {
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlServerRouteImport
+      parentRoute: typeof rootServerRouteImport
+    }
+  }
+}
 
 interface BlogArchiveRouteRouteChildren {
   BlogArchivePostIndexRoute: typeof BlogArchivePostIndexRoute
@@ -218,3 +260,9 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+const rootServerRouteChildren: RootServerRouteChildren = {
+  SitemapDotxmlServerRoute: SitemapDotxmlServerRoute,
+}
+export const serverRouteTree = rootServerRouteImport
+  ._addFileChildren(rootServerRouteChildren)
+  ._addFileTypes<FileServerRouteTypes>()
