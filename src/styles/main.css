@@ -182,7 +182,7 @@
   h6 {
     font-weight: var(--font-semibold);
     line-height: var(--leading-tight);
-    color: var(--color-text);
+    color: var(--accent-primary);
     margin-bottom: var(--space-md);
   }
 
