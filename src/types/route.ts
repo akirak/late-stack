@@ -1,3 +1,4 @@
 export interface AppRouteContext {
-  userId?: string
+  titleSuffix: string
+  // userId?: string
 }

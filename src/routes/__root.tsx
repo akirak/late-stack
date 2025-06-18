@@ -1,5 +1,6 @@
+import type { AppRouteContext } from "@/types/route"
 import {
-  createRootRoute,
+  createRootRouteWithContext,
   HeadContent,
   Link,
   Outlet,
@@ -37,7 +38,7 @@ const setServerTheme = createServerFn({ method: "POST" })
     },
   )
 
-export const Route = createRootRoute({
+export const Route = createRootRouteWithContext<AppRouteContext>()({
   loader: async () => {
     const theme = await getServerTheme()
     return {

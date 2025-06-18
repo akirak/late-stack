@@ -3,6 +3,9 @@ import { routeTree } from "./routeTree.gen"
 
 export function createRouter() {
   const router = createTanStackRouter({
+    context: {
+      titleSuffix: ` — jingsi.space`,
+    },
     routeTree,
     defaultStaleTime: Infinity,
     defaultPreload: "intent",
