@@ -47,10 +47,16 @@ The call of the pipeline is build-time only. Effect services are defined in
 `src/dev` directory. Use `@effect/platform` and `@effect/platform-node`
 libraries where possible, which are available at build time.
 
+To get a list of contents, prefer using functions from src/collections.
+
 #### OGP Integration
 
 In the MDAST pipeline, the OGP metadata of linked sources are fetched.
 See <src/contents/posts/effect-ogp.md>.
+
+#### Feeds
+
+For RSS feeds, prefer the Atom 1.0 format.
 
 ### Data Fetching API
 
