@@ -1,10 +1,10 @@
 import path from "node:path"
 import { notFound } from "@tanstack/react-router"
 import { createServerFn } from "@tanstack/react-start"
-import { Option, Schema } from "effect"
+import { Option, pipe, Schema } from "effect"
 import { LanguageIdSchema } from "@/schemas/common"
 import { PostSchema, PostSlugSchema } from "@/schemas/post"
-import { readJsonDataFile } from "@/utils/data"
+import { readJsonDataFile, readJsonDataFileSync } from "@/utils/data"
 
 export type PostSlug = typeof PostSlugSchema.Type
 
@@ -31,4 +31,14 @@ const getPostFn = createServerFn({ method: "GET" })
 
 export function getPost(data: typeof PostSpec.Encoded) {
   return getPostFn({ data }).then(Schema.decodeUnknownSync(PostSchema))
+}
+
+export function getPostOnServer({ slug, lang }: typeof PostSpec.Type) {
+  return pipe(
+    readJsonDataFileSync<typeof PostSchema.Encoded>(
+      path.join(PostDir, `${slug}.${lang}.json`),
+    ),
+    Option.getOrThrow,
+    Schema.decodeUnknownSync(PostSchema),
+  )
 }

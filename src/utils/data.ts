@@ -49,6 +49,20 @@ export async function readJsonDataFile<T>(filePath: string): Promise<Option.Opti
   }
 }
 
+export function readJsonDataFileSync<T>(filePath: string): Option.Option<T> {
+  const fullPath = path.join(getDataDir(), filePath)
+  if (fs.existsSync(fullPath)) {
+    return pipe(
+      fs.readFileSync(fullPath, "utf-8"),
+      JSON.parse,
+      Option.some,
+    )
+  }
+  else {
+    return Option.none()
+  }
+}
+
 export async function readJsonDataFileWithSchema<A, I>(
   schema: Schema.Schema<A, I>,
   filePath: string,

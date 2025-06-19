@@ -20,6 +20,7 @@ import { Route as BlogArchivePostIndexRouteImport } from './routes/_blog/_archiv
 import { Route as BlogPostLangSlugRouteImport } from './routes/_blog/post.$lang.$slug'
 import { Route as BlogArchivePostLangIndexRouteImport } from './routes/_blog/_archive.post.$lang.index'
 import { ServerRoute as SitemapDotxmlServerRouteImport } from './routes/sitemap[.]xml'
+import { ServerRoute as FeedsDefaultDotxmlServerRouteImport } from './routes/feeds.default[.]xml'
 
 const rootServerRouteImport = createServerRootRoute()
 
@@ -67,6 +68,12 @@ const SitemapDotxmlServerRoute = SitemapDotxmlServerRouteImport.update({
   path: '/sitemap.xml',
   getParentRoute: () => rootServerRouteImport,
 } as any)
+const FeedsDefaultDotxmlServerRoute =
+  FeedsDefaultDotxmlServerRouteImport.update({
+    id: '/feeds/default.xml',
+    path: '/feeds/default.xml',
+    getParentRoute: () => rootServerRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -132,24 +139,28 @@ export interface RootRouteChildren {
 }
 export interface FileServerRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlServerRoute
+  '/feeds/default.xml': typeof FeedsDefaultDotxmlServerRoute
 }
 export interface FileServerRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlServerRoute
+  '/feeds/default.xml': typeof FeedsDefaultDotxmlServerRoute
 }
 export interface FileServerRoutesById {
   __root__: typeof rootServerRouteImport
   '/sitemap.xml': typeof SitemapDotxmlServerRoute
+  '/feeds/default.xml': typeof FeedsDefaultDotxmlServerRoute
 }
 export interface FileServerRouteTypes {
   fileServerRoutesByFullPath: FileServerRoutesByFullPath
-  fullPaths: '/sitemap.xml'
+  fullPaths: '/sitemap.xml' | '/feeds/default.xml'
   fileServerRoutesByTo: FileServerRoutesByTo
-  to: '/sitemap.xml'
-  id: '__root__' | '/sitemap.xml'
+  to: '/sitemap.xml' | '/feeds/default.xml'
+  id: '__root__' | '/sitemap.xml' | '/feeds/default.xml'
   fileServerRoutesById: FileServerRoutesById
 }
 export interface RootServerRouteChildren {
   SitemapDotxmlServerRoute: typeof SitemapDotxmlServerRoute
+  FeedsDefaultDotxmlServerRoute: typeof FeedsDefaultDotxmlServerRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -221,6 +232,13 @@ declare module '@tanstack/react-start/server' {
       preLoaderRoute: typeof SitemapDotxmlServerRouteImport
       parentRoute: typeof rootServerRouteImport
     }
+    '/feeds/default.xml': {
+      id: '/feeds/default.xml'
+      path: '/feeds/default.xml'
+      fullPath: '/feeds/default.xml'
+      preLoaderRoute: typeof FeedsDefaultDotxmlServerRouteImport
+      parentRoute: typeof rootServerRouteImport
+    }
   }
 }
 
@@ -262,6 +280,7 @@ export const routeTree = rootRouteImport
   ._addFileTypes<FileRouteTypes>()
 const rootServerRouteChildren: RootServerRouteChildren = {
   SitemapDotxmlServerRoute: SitemapDotxmlServerRoute,
+  FeedsDefaultDotxmlServerRoute: FeedsDefaultDotxmlServerRoute,
 }
 export const serverRouteTree = rootServerRouteImport
   ._addFileChildren(rootServerRouteChildren)
