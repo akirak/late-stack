@@ -1,7 +1,7 @@
-import type { Envelope, Kvs } from "../service-utils/kvs"
-import type { KvsError } from "../service-utils/kvs"
+import type { LinkMetadata } from "../../schemas/link-metadata"
+import type { Envelope, Kvs, KvsError } from "../service-utils/kvs"
 import { Context, Data, Effect, Layer, Option, Schema } from "effect"
-import { type LinkMetadata, LinkMetadataSchema } from "../../schemas/link-metadata"
+import { LinkMetadataSchema } from "../../schemas/link-metadata"
 import { initSqliteKvs } from "../service-utils/sqlite-kvs"
 
 export class MetadataKvs extends Context.Tag("MetadataKvs")<

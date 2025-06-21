@@ -1,5 +1,4 @@
-import { Schema } from "effect"
-import { ParseResult } from "effect"
+import { ParseResult, Schema } from "effect"
 
 export class YoutubeVideoSource extends Schema.TaggedClass<YoutubeVideoSource>()("app/YoutubeVideoSource", {
   id: Schema.String,
