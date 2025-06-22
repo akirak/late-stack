@@ -48,7 +48,3 @@ const getPostListFn = createServerFn({ method: "GET" })
 export function getPostList(data: typeof PostListSpec.Encoded): Promise<readonly PostMetadata[]> {
   return getPostListFn({ data }).then(Schema.decodeUnknownSync(Schema.Array(PostMetadataSchema)))
 }
-
-export function getPostListOnServer(args: typeof PostListSpec.Type) {
-  return getPostListInternal(args).then(Schema.decodeUnknownSync(Schema.Array(PostMetadataSchema)))
-}
