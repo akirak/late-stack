@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router"
-import { getPostList } from "@/collections/posts"
+import { getPostList } from "@/collections/posts.client"
 import { Container } from "@/components/layout/Container"
 import { DocumentTitle } from "@/components/layout/DocumentTitle"
 import { Header } from "@/components/layout/Header"

@@ -1,10 +1,8 @@
 import type { NonEmptyArray } from "effect/Array"
-import * as fs from "node:fs"
-import path from "node:path"
+import type { PostMetadataSchema } from "@/schemas/post"
 import { createServerFileRoute } from "@tanstack/react-start/server"
-import { Option, pipe, Schema } from "effect"
-import { PostMetadataSchema, PostSchema } from "@/schemas/post"
-import { getDataDir, readJsonDataFileSync } from "@/utils/data"
+import { Option, pipe } from "effect"
+import { getPostListAsync, getPostSync } from "@/collections/posts.server"
 import { hastToHtml } from "@/utils/hast"
 import { generateAtomFeed } from "@/utils/rss"
 
@@ -14,20 +12,7 @@ export const ServerRoute = createServerFileRoute("/feeds/default.xml").methods({
   GET: async () => {
     try {
       // Get latest 10 posts metadata
-      const dataPath = path.resolve(getDataDir(), "posts.index.jsonl")
-
-      if (!fs.existsSync(dataPath)) {
-        console.warn("posts.index.jsonl not found. Running build first to generate post data.")
-        return []
-      }
-
-      const fileContent = fs.readFileSync(dataPath, "utf-8")
-      const postList = fileContent
-        .trim()
-        .split("\n")
-        .filter(Boolean)
-        .map(line => JSON.parse(line))
-        .map((post: unknown) => Schema.decodeUnknownSync(PostMetadataSchema)(post))
+      const postList = await getPostListAsync({})
 
       if (postList.length === 0) {
         return new Response("No posts available", {
@@ -46,13 +31,10 @@ export const ServerRoute = createServerFileRoute("/feeds/default.xml").methods({
           Option.getOrElse(() => new Date()),
         ),
         toEntry: (post: typeof PostMetadataSchema.Type) => {
-          const data = pipe(
-            readJsonDataFileSync<typeof PostSchema.Encoded>(
-              path.join("post", `${post.slug}.${post.language}.json`),
-            ),
-            Option.getOrThrow,
-            Schema.decodeUnknownSync(PostSchema),
-          )
+          const data = getPostSync({
+            lang: post.language,
+            slug: post.slug,
+          })
           const _cdata = hastToHtml(data.hastBody)
           return {
             title: post.title,

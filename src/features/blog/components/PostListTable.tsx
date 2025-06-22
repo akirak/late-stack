@@ -1,4 +1,4 @@
-import type { PostMetadata } from "@/collections/posts"
+import type { PostMetadata } from "@/collections/posts.client"
 import { Link } from "@tanstack/react-router"
 import { DateFormat } from "@/components/inline/DateFormat"
 

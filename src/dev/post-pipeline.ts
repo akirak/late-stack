@@ -1,6 +1,6 @@
 import type { ConfigError } from "effect/ConfigError"
-import type { PostMetadata } from "../collections/posts"
 import type { LinkMetadataService } from "./link-metadata/layer"
+import type { PostMetadata } from "@/collections/posts/list/types"
 import { TextEncoder } from "node:util"
 import { FileSystem, Path } from "@effect/platform"
 import { pluginCollapsibleSections } from "@expressive-code/plugin-collapsible-sections"
