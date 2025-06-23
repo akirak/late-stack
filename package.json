@@ -25,6 +25,7 @@
     "@tanstack/react-router": "^1.121.34",
     "@tanstack/react-router-devtools": "^1.121.34",
     "@tanstack/react-start": "^1.121.34",
+    "@terrastruct/d2": "^0.1.23",
     "browserslist": "^4.25.0",
     "effect": "^3.16.8",
     "hast-util-to-jsx-runtime": "^2.3.6",
