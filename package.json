@@ -10,7 +10,7 @@
     "start": "cd .output && deno run --allow-all server/index.ts",
     "deploy": "cd .output && deno run --allow-all jsr:@deno/deployctl deploy --project=tanstack-blog server/index.ts",
     "typecheck": "tsc --noEmit",
-    "serve-laddle": "pnpm ladle serve",
+    "dev-ladle": "pnpm ladle dev --viteConfig vite.config.ladle.ts",
     "lint": "eslint .",
     "lint-fix": "eslint --fix .",
     "lint-staged": "lint-staged",

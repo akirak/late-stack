@@ -112,3 +112,5 @@ Markdown content here...
 - All data fetching is type-safe using Effect Schema validation
 - Tests run against both dev (port 3000) and production (port 8000) servers
 - Nix flake provides reproducible development environment
+- When you update `vite.config.ts`, also update `vite.config.ladle.ts` to keep
+  it in sync.
