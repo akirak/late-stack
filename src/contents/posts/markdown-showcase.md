@@ -158,6 +158,44 @@ Content here.
 
 ::link[https://www.youtube.com/watch?v=l7OPFjPjtGs]
 
+## Diagrams
+
+Supported via `diagram` custom directive.
+
+### Simple diagram
+
+:::diagram
+
+```d2
+x -> y -> z
+```
+
+:::
+
+### More complex diagram
+
+:::diagram
+
+```d2
+# Network Architecture
+api: API Gateway {
+  shape: hexagon
+}
+lambda: Lambda Function {
+  shape: oval
+}
+db: Database {
+  shape: cylinder
+}
+
+api -> lambda: HTTP Request
+lambda -> db: Query
+db -> lambda: Result
+lambda -> api: Response
+```
+
+:::
+
 ## Conclusion
 
 This showcase demonstrates the rich Markdown support available in this TanStack Start blog. The content pipeline processes all these elements seamlessly from Markdown to the final rendered output.
