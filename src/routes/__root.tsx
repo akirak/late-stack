@@ -1,9 +1,5 @@
 import type { AppRouteContext } from "@/types/route"
 import {
-  QueryClient,
-  QueryClientProvider,
-} from "@tanstack/react-query"
-import {
   createRootRouteWithContext,
   HeadContent,
   Link,
@@ -41,8 +37,6 @@ const setServerTheme = createServerFn({ method: "POST" })
       })
     },
   )
-
-const queryClient = new QueryClient()
 
 export const Route = createRootRouteWithContext<AppRouteContext>()({
   loader: async () => {
@@ -161,9 +155,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           </ul>
         </nav>
 
-        <QueryClientProvider client={queryClient}>
-          {children}
-        </QueryClientProvider>
+        {children}
 
         <footer className="root-footer">
           <div aria-label="Copyright of this site">
