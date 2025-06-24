@@ -28,6 +28,7 @@
     "@terrastruct/d2": "^0.1.23",
     "browserslist": "^4.25.0",
     "effect": "^3.16.8",
+    "expressive-code": "^0.41.2",
     "hast-util-to-jsx-runtime": "^2.3.6",
     "html-rewriter-wasm": "^0.4.1",
     "lightningcss": "^1.30.1",

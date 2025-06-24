@@ -4,7 +4,7 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-pnpmfileChecksum: sha256-E81OpuDs1cHOzUWrBMKOrdbgB3xT7HcHAtynq6ahlY0=
+pnpmfileChecksum: sha256-1UYZbdwG7Ra72UkrD4hRIOmxufZ0Ov4wzA0vg8mE2Jw=
 
 importers:
 
@@ -34,6 +34,9 @@ importers:
       effect:
         specifier: ^3.16.8
         version: 3.16.8
+      expressive-code:
+        specifier: ^0.41.2
+        version: 0.41.2
       hast-util-to-jsx-runtime:
         specifier: ^2.3.6
         version: 2.3.6
