@@ -14,8 +14,10 @@ import remarkParse from "remark-parse"
 import remarkRehype from "remark-rehype"
 import { unified } from "unified"
 import { PostMetadataSchema, PostSchema } from "../schemas/post"
+import { PostError, RemarkPluginDataError } from "./error"
 import { Config } from "./pipeline-config"
 import remarkAdmonitions from "./unified/remarkAdmonitions"
+import remarkDiagram from "./unified/remarkDiagram"
 import remarkLink from "./unified/remarkLink"
 
 type FileHandler = (filePath: string) => Effect.Effect<void, Error, never>
@@ -92,6 +94,7 @@ export const PostBuilderLive: Layer.Layer<
       .use(remarkGfm)
       .use(remarkDirective)
       .use(remarkAdmonitions)
+      .use(remarkDiagram)
       .use(remarkLink, { runtime })
       .use(remarkRehype)
       .use(rehypeSanitize, {
@@ -100,10 +103,12 @@ export const PostBuilderLive: Layer.Layer<
           ...(defaultSchema.tagNames ?? []),
           "video",
           "iframe",
+          "diagram",
         ],
         attributes: {
           ...defaultSchema.attributes,
           div: [["className", "admonition", /^admonition-/], ["className", "youtube-embed"], ["style"]],
+          diagram: ["type", "source"],
           iframe: [
             "src",
             "width",
@@ -132,7 +137,19 @@ export const PostBuilderLive: Layer.Layer<
       const doc = matter.read(filePath)
 
       const mdast = postProcessor.parse(doc.content)
-      const hast = yield* Effect.promise(() => postProcessor.run(mdast))
+      const hast = yield* Effect.tryPromise({
+        try: () => postProcessor.run(mdast),
+        catch: e => e instanceof RemarkPluginDataError
+          ? new PostError({
+            filePath,
+            loc: e.loc,
+            message: `In remark plugin ${e.plugin}: ${e.message}`,
+          })
+          : new PostError({
+            filePath,
+            message: (e instanceof Error ? e.message : String(e)),
+          }),
+      })
 
       try {
         const metadata = yield* Schema.decodeUnknown(PostMetadataSchema)({
@@ -158,12 +175,24 @@ export const PostBuilderLive: Layer.Layer<
         throw new Error(`Validation failed for file: ${filePath}\n${JSON.stringify(e, null, 2)}`)
       }
     }).pipe(
-      Effect.tapErrorCause(Effect.logError),
       Effect.catchTags({
+        PostError: error => config.production
+          ? Effect.fail(new Error(
+              `Error while processing a post: ${error.filePath}: ${error.message}`,
+            ))
+          : Console.warn(
+              `Error: ${error.filePath}${
+                error.loc ? `:${error.loc.line}:${error.loc.column}` : ""
+              }: ${error.message}\n`
+              + `Errors on posts are ignored in development, but will fail the build in production.`,
+            ).pipe(
+              Effect.as(Option.none() as Option.Option<PostMetadata>),
+            ),
         BadArgument: _E => Effect.fail(new Error(`Error while processing a post: BadArgument`)),
         SystemError: _E => Effect.fail(new Error(`Error while processing a post: SystemError`)),
         ParseError: _E => Effect.fail(new Error(`Error while processing a post: ParseError`)),
       }),
+      Effect.tapErrorCause(Effect.logError),
     )
 
     const buildAllPosts = Effect.gen(function* () {
@@ -204,20 +233,24 @@ export const PostBuilderLive: Layer.Layer<
     return {
       buildNewPost: filePath => Effect.gen(function* () {
         const postMetadata = Option.getOrNull(yield* processPost(filePath))!
-        const index = postList.findIndex(post => post.fileName === postMetadata.fileName)
-        // This method can be run multiple times because of how filesystem
-        // events work, so check if the operation has not been done yet.
-        if (!index) {
-          postList.push(postMetadata)
-          yield* writePostList
+        if (postMetadata) {
+          const index = postList.findIndex(post => post.fileName === postMetadata.fileName)
+          // This method can be run multiple times because of how filesystem
+          // events work, so check if the operation has not been done yet.
+          if (!index) {
+            postList.push(postMetadata)
+            yield* writePostList
+          }
         }
       }),
 
       rebuildPost: filePath => Effect.gen(function* () {
         const postMetadata = Option.getOrNull(yield* processPost(filePath))!
-        const index = postList.findIndex(post => post.fileName === postMetadata.fileName)
-        postList[index] = postMetadata
-        yield* writePostList
+        if (postMetadata) {
+          const index = postList.findIndex(post => post.fileName === postMetadata.fileName)
+          postList[index] = postMetadata
+          yield* writePostList
+        }
       }),
 
       deletePost: filePath => Effect.gen(function* () {

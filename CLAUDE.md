@@ -49,6 +49,12 @@ libraries where possible, which are available at build time.
 
 To get a list of contents, prefer using functions from src/collections.
 
+#### Custom Remark plugins
+
+There are custom remark plugins that are defined for this project.
+They reside in `src/dev/unified`.
+Examples should be added to `src/contents/posts/markdown-showcase.md`.
+
 #### OGP Integration
 
 In the MDAST pipeline, the OGP metadata of linked sources are fetched.
