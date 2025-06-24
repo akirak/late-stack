@@ -48,7 +48,6 @@
     "@ladle/react": "^5.0.3",
     "@playwright/test": "^1.53.1",
     "@tanstack/eslint-plugin-router": "^1.121.21",
-    "@terrastruct/d2": "^0.1.23",
     "@types/node": "^22.15.32",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",

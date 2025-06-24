@@ -1,4 +1,5 @@
 import type { ConfigError } from "effect/ConfigError"
+import type { D2Service } from "./d2/layer"
 import type { LinkMetadataService } from "./link-metadata/layer"
 import type { PostMetadata } from "@/collections/posts/list/types"
 import { TextEncoder } from "node:util"
@@ -38,8 +39,7 @@ const byOptionalDateDescending = Option.getOrder(
 export const PostBuilderLive: Layer.Layer<
   PostBuilder,
   Error | ConfigError,
-  Config | Path.Path | FileSystem.FileSystem | LinkMetadataService
-
+  Config | Path.Path | FileSystem.FileSystem | LinkMetadataService | D2Service
 > = Layer.effect(
   PostBuilder,
   Effect.gen(function* (_) {
@@ -48,7 +48,10 @@ export const PostBuilderLive: Layer.Layer<
     const path = yield* Path.Path
 
     // Create OGP runtime
-    const runtime = yield* Effect.runtime<LinkMetadataService>()
+    const ogpRuntime = yield* Effect.runtime<LinkMetadataService>()
+
+    // Create D2 runtime
+    const d2Runtime = yield* Effect.runtime<D2Service>()
 
     const postContentDir = path.join(config.contentDir, "posts")
     const postOutDir = path.join(config.outDir, "posts")
@@ -94,8 +97,8 @@ export const PostBuilderLive: Layer.Layer<
       .use(remarkGfm)
       .use(remarkDirective)
       .use(remarkAdmonitions)
-      .use(remarkDiagram)
-      .use(remarkLink, { runtime })
+      .use(remarkDiagram, { runtime: d2Runtime })
+      .use(remarkLink, { runtime: ogpRuntime })
       .use(remarkRehype)
       .use(rehypeSanitize, {
         ...defaultSchema,

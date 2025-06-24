@@ -1,7 +1,12 @@
 import type { Loc } from "../error"
-import { D2 } from "@terrastruct/d2"
+import { Effect, Runtime } from "effect"
 import { visit } from "unist-util-visit"
+import { D2Service } from "../d2/layer"
 import { RemarkPluginDataError } from "../error"
+
+export interface RemarkDiagramOptions {
+  runtime?: Runtime.Runtime<D2Service>
+}
 
 function setDiagramSvg(node: any, { svg, codeLanguage, code }: { svg: string, codeLanguage: string, code: string }) {
   const data = node.data || (node.data = {})
@@ -15,7 +20,9 @@ function setDiagramSvg(node: any, { svg, codeLanguage, code }: { svg: string, co
   data.hChildren = []
 }
 
-function remarkDiagram() {
+function remarkDiagram(options?: RemarkDiagramOptions) {
+  const { runtime } = options || {}
+
   return async (tree: any) => {
     const contexts: Array<{ node: any, lang: string, code: string, loc: Loc }> = []
 
@@ -53,17 +60,19 @@ function remarkDiagram() {
       }
     })
 
-    if (contexts.length > 0) {
-      const d2 = new D2()
+    if (contexts.length > 0 && runtime) {
       for (const context of contexts) {
         try {
           switch (context.lang) {
             case "d2": {
-              const result = await d2.compile(context.code)
-              const svg = await d2.render(result.diagram, {
-                ...result.renderOptions,
-                noXMLTag: true,
-              })
+              const svg = await Runtime.runPromise(runtime)(
+                D2Service.pipe(
+                  Effect.andThen(service =>
+                    service.render(context.code, { noXMLTag: true }),
+                  ),
+                  Effect.scoped,
+                ),
+              )
               setDiagramSvg(context.node, {
                 svg,
                 codeLanguage: context.lang,
@@ -83,6 +92,12 @@ function remarkDiagram() {
           })
         }
       }
+    }
+    else if (contexts.length > 0 && !runtime) {
+      throw new RemarkPluginDataError({
+        plugin: "diagram",
+        message: "D2 runtime not provided but diagrams found",
+      })
     }
   }
 }
