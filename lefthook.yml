@@ -10,3 +10,5 @@ pre-push:
       run: pnpm run typecheck
     lint:
       run: pnpm run lint-fix
+    pnpm-lock:
+      run: pnpm install --frozen-lockfile
