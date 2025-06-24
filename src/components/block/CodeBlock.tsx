@@ -3,19 +3,16 @@ import { useEffect, useState } from "react"
 import { ExpressiveCodeEngine } from "rehype-expressive-code"
 import { hastToJsx } from "@/utils/hast"
 
-const engine = new ExpressiveCodeEngine({
-  defaultProps: {
-  },
-})
+const engine = new ExpressiveCodeEngine({})
 
-export function CodeBlock({ lang, source }: { lang: string, source: string }) {
+export function CodeBlock({ language, code }: { language: string, code: string }) {
   const [ast, setAst] = useState<null | Element>(null)
 
   useEffect(() => {
     const update = async () => {
       const obj = await engine.render({
-        code: source,
-        language: lang,
+        code,
+        language,
         props: {
           frame: "code",
         },
@@ -23,7 +20,7 @@ export function CodeBlock({ lang, source }: { lang: string, source: string }) {
       setAst(obj.renderedGroupAst)
     }
     update()
-  }, [lang, source])
+  }, [language, code])
 
   if (!ast) {
     return null

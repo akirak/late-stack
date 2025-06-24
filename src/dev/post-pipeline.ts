@@ -104,11 +104,12 @@ export const PostBuilderLive: Layer.Layer<
           "video",
           "iframe",
           "diagram",
+          "svg",
         ],
         attributes: {
           ...defaultSchema.attributes,
           div: [["className", "admonition", /^admonition-/], ["className", "youtube-embed"], ["style"]],
-          diagram: ["type", "source"],
+          diagram: ["codeLanguage", "code", "__html"],
           iframe: [
             "src",
             "width",
