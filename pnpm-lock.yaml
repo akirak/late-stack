@@ -89,9 +89,6 @@ importers:
       '@tanstack/eslint-plugin-router':
         specifier: ^1.121.21
         version: 1.121.21(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3)
-      '@terrastruct/d2':
-        specifier: ^0.1.23
-        version: 0.1.23
       '@types/node':
         specifier: ^22.15.32
         version: 22.15.32
@@ -2208,9 +2205,6 @@ packages:
   '@tanstack/virtual-file-routes@1.121.21':
     resolution: {integrity: sha512-3nuYsTyaq6ZN7jRZ9z6Gj3GXZqBOqOT0yzd/WZ33ZFfv4yVNIvsa5Lw+M1j3sgyEAxKMqGu/FaNi7FCjr3yOdw==}
     engines: {node: '>=12'}
-
-  '@terrastruct/d2@0.1.23':
-    resolution: {integrity: sha512-c2ewbgmEbTnAN6Na4R0MCNIpP3F+Kp5oOxZ1savI+qFBQVsm7S9ssoAk6QU4n1CZrSStV9soObs9a2f1Lr7/9Q==}
 
   '@types/babel__code-frame@7.0.6':
     resolution: {integrity: sha512-Anitqkl3+KrzcW2k77lRlg/GfLZLWXBuNgbEcIOU6M92yw42vsd3xV/Z/yAHEj8m+KUjL6bWOVOFqX8PFPJ4LA==}
@@ -9568,8 +9562,6 @@ snapshots:
   '@tanstack/store@0.7.1': {}
 
   '@tanstack/virtual-file-routes@1.121.21': {}
-
-  '@terrastruct/d2@0.1.23': {}
 
   '@types/babel__code-frame@7.0.6': {}
 
