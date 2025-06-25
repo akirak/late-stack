@@ -111,6 +111,22 @@ draft: false # optional, defaults to false
 Markdown content here...
 ```
 
+### SEO
+
+Make sure the following `head` is specified with `pageMeta` (from `@/utils/seo`)
+in each individual route, except for the top `index.tsx`, e.g.:
+
+```typescript
+head: ({ loaderData }) => ({
+  meta: pageMeta({
+    ogType: "article",
+    title: loaderData!.post.title,
+  }),
+})
+```
+
+`title` and `ogType` are mandatory. `description` is optional but recommended.
+
 ### Development Notes
 
 - Content changes trigger hot reload via the collections pipeline

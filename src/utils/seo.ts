@@ -1,25 +1,34 @@
-export function seo({
-  title,
-  description,
-  keywords,
-  image,
-}: {
+import type { OgType } from "@/schemas/link-metadata"
+
+const TitleSuffix = ` — jingsi.space`
+
+interface Seo {
+  ogType: typeof OgType.Type
   title: string
   description?: string
   image?: string
   keywords?: string
-}) {
-  const tags = [
-    { title },
-    { name: "description", content: description },
-    { name: "keywords", content: keywords },
-    { name: "twitter:title", content: title },
-    { name: "twitter:description", content: description },
-    { name: "twitter:creator", content: "@tannerlinsley" },
-    { name: "twitter:site", content: "@tannerlinsley" },
-    { name: "og:type", content: "website" },
-    { name: "og:title", content: title },
-    { name: "og:description", content: description },
+}
+
+function internalMeta({
+  description,
+  keywords,
+  image,
+  ogType,
+}: Omit<Seo, "title">) {
+  return [
+    ...(description
+      ? [
+          { name: "description", content: description },
+          { name: "twitter:description", content: description },
+          { name: "og:description", content: description },
+        ]
+      : []),
+    ...(keywords
+      ? [
+          { name: "keywords", content: keywords },
+        ]
+      : []),
     ...(image
       ? [
           { name: "twitter:image", content: image },
@@ -27,7 +36,40 @@ export function seo({
           { name: "og:image", content: image },
         ]
       : []),
+    ...(ogType
+      ? [
+          { name: "og:type", content: "website" },
+        ]
+      : []),
+    // { name: "twitter:creator", content: "@tannerlinsley" },
+    // { name: "twitter:site", content: "@tannerlinsley" },
   ]
+}
 
-  return tags
+function ogTitle(title: string) {
+  return [
+    { name: "twitter:title", content: title },
+    { name: "og:title", content: title },
+  ]
+}
+
+export function pageMeta({
+  title,
+  ...args
+}: Seo) {
+  return [
+    { title: `${title}${TitleSuffix}` },
+    ...ogTitle(title),
+    ...internalMeta(args),
+  ]
+}
+export function siteMeta({
+  title,
+  ...args
+}: Seo) {
+  return [
+    { title },
+    ...ogTitle(title),
+    ...internalMeta(args),
+  ]
 }

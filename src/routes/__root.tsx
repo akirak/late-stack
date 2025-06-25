@@ -11,7 +11,6 @@ import { createServerFn } from "@tanstack/react-start"
 import { getCookie, setCookie } from "@tanstack/react-start/server"
 import * as React from "react"
 import appCss from "@/styles/main.css?url"
-import { seo } from "@/utils/seo"
 import "@/types/css"
 
 const getServerTheme = createServerFn({ method: "GET" }).handler(
@@ -55,10 +54,6 @@ export const Route = createRootRouteWithContext<AppRouteContext>()({
         name: "viewport",
         content: "width=device-width, initial-scale=1",
       },
-      ...seo({
-        title: "jingsi.space",
-        description: `Akira Komamura (@akirak)'s personal blog`,
-      }),
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
