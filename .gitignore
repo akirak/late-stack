@@ -32,4 +32,4 @@ yarn.lock
 app.config.timestamp_*.*
 
 /data
-.claude
+.claude/settings.local.json
