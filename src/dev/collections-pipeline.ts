@@ -4,7 +4,7 @@ import { FileSystem, Path } from "@effect/platform"
 import { NodeCommandExecutor, NodeFileSystem, NodeHttpClient, NodePath } from "@effect/platform-node"
 import * as NodeSqlite from "@effect/sql-sqlite-node"
 import { Console, Context, Effect, Layer, Match, pipe, Queue, Ref, Stream, String } from "effect"
-import { D2ServiceLayer } from "./d2/layer"
+import { D2 } from "./commands/d2"
 import { LinkMetadataServiceLive } from "./link-metadata/layer"
 import { Config } from "./pipeline-config"
 import { PostBuilder, PostBuilderLive } from "./post-pipeline"
@@ -171,7 +171,7 @@ export function makePipelineLayer(config: {
 
   const postBuilderLayer = PostBuilderLive.pipe(
     Layer.provide(linkMetadataLayer),
-    Layer.provide(D2ServiceLayer),
+    Layer.provide(D2.Default),
   )
 
   return PipelineLive.pipe(

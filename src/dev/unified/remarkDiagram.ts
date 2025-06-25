@@ -1,11 +1,11 @@
 import type { Loc } from "../error"
 import { Effect, Runtime } from "effect"
 import { visit } from "unist-util-visit"
-import { D2Service } from "../d2/layer"
+import { D2 } from "../commands/d2"
 import { RemarkPluginDataError } from "../error"
 
 export interface RemarkDiagramOptions {
-  runtime?: Runtime.Runtime<D2Service>
+  runtime?: Runtime.Runtime<D2>
 }
 
 function setDiagramSvg(node: any, { svg, codeLanguage, code }: { svg: string, codeLanguage: string, code: string }) {
@@ -66,9 +66,9 @@ function remarkDiagram(options?: RemarkDiagramOptions) {
           switch (context.lang) {
             case "d2": {
               const svg = await Runtime.runPromise(runtime)(
-                D2Service.pipe(
+                D2.pipe(
                   Effect.andThen(service =>
-                    service.render(context.code, { noXMLTag: true }),
+                    service.renderSvg(context.code, { noXMLTag: true }),
                   ),
                   Effect.scoped,
                 ),

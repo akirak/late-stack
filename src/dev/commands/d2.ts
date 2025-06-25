@@ -1,20 +1,10 @@
-import type { Scope } from "effect/Scope"
 import { Command, CommandExecutor } from "@effect/platform"
-import { Context, Data, Effect, Layer, pipe, Stream, String } from "effect"
+import { NodeCommandExecutor, NodeFileSystem } from "@effect/platform-node"
+import { Data, Effect, pipe, Stream, String } from "effect"
 
 export interface D2RenderOptions {
   readonly noXMLTag?: boolean
 }
-
-export class D2Service extends Context.Tag("app/D2Service")<
-  D2Service,
-  {
-    readonly render: (
-      source: string,
-      options?: D2RenderOptions,
-    ) => Effect.Effect<string, D2Error, Scope>
-  }
->() {}
 
 export class D2Error extends Data.TaggedError("app/D2Error")<{
   readonly message: string
@@ -27,13 +17,12 @@ function runString<E, R>(stream: Stream.Stream<Uint8Array, E, R>): Effect.Effect
   )
 }
 
-export const D2ServiceLive = Layer.effect(
-  D2Service,
-  Effect.gen(function* () {
+export class D2 extends Effect.Service<D2>()("app/D2", {
+  effect: Effect.gen(function* () {
     const command = yield* CommandExecutor.CommandExecutor
 
     return {
-      render: (source: string, options: D2RenderOptions = {}) =>
+      renderSvg: (source: string, options: D2RenderOptions = {}) =>
         Effect.gen(function* () {
           // Create a command to run d2 CLI
           // d2 accepts input from stdin and outputs SVG to stdout
@@ -77,4 +66,8 @@ export const D2ServiceLive = Layer.effect(
         ),
     } as const
   }),
-)
+  dependencies: [
+    NodeCommandExecutor.layer,
+    NodeFileSystem.layer,
+  ],
+}) {}

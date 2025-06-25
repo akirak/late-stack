@@ -1,5 +1,5 @@
 import type { ConfigError } from "effect/ConfigError"
-import type { D2Service } from "./d2/layer"
+import type { D2 } from "./commands/d2"
 import type { LinkMetadataService } from "./link-metadata/layer"
 import type { PostMetadata } from "@/collections/posts/list/types"
 import { TextEncoder } from "node:util"
@@ -39,7 +39,7 @@ const byOptionalDateDescending = Option.getOrder(
 export const PostBuilderLive: Layer.Layer<
   PostBuilder,
   Error | ConfigError,
-  Config | Path.Path | FileSystem.FileSystem | LinkMetadataService | D2Service
+  Config | Path.Path | FileSystem.FileSystem | LinkMetadataService | D2
 > = Layer.effect(
   PostBuilder,
   Effect.gen(function* (_) {
@@ -51,7 +51,7 @@ export const PostBuilderLive: Layer.Layer<
     const ogpRuntime = yield* Effect.runtime<LinkMetadataService>()
 
     // Create D2 runtime
-    const d2Runtime = yield* Effect.runtime<D2Service>()
+    const d2Runtime = yield* Effect.runtime<D2>()
 
     const postContentDir = path.join(config.contentDir, "posts")
     const postOutDir = path.join(config.outDir, "posts")
