@@ -1,15 +1,21 @@
 import { createFileRoute } from "@tanstack/react-router"
 import { getPostList } from "@/collections/posts.client"
 import { Container } from "@/components/layout/Container"
-import { DocumentTitle } from "@/components/layout/DocumentTitle"
 import { Header } from "@/components/layout/Header"
 import { PostListTable } from "@/features/blog/components/PostListTable"
+import { pageMeta } from "@/utils/seo"
 
 export const Route = createFileRoute("/_blog/_archive/post/")({
   component: PostArchiveComponent,
   loader: async () => {
     return { posts: await getPostList({}) }
   },
+  head: () => ({
+    meta: pageMeta({
+      ogType: "website",
+      title: "Blog Archive",
+    }),
+  }),
 })
 
 function PostArchiveComponent() {
@@ -18,7 +24,6 @@ function PostArchiveComponent() {
     <Container>
       <Header>
         <h1>List of posts</h1>
-        <DocumentTitle title="Blog Archive" />
       </Header>
 
       <main>

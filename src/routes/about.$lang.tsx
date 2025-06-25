@@ -3,8 +3,8 @@ import { createFileRoute, notFound } from "@tanstack/react-router"
 import { Option, pipe } from "effect"
 import { getLocalProfile } from "@/collections/about"
 import { Container } from "@/components/layout/Container"
-import { DocumentTitle } from "@/components/layout/DocumentTitle"
 import { Header } from "@/components/layout/Header"
+import { pageMeta } from "@/utils/seo"
 
 export const Route = createFileRoute("/about/$lang")({
   component: AboutComponent,
@@ -16,11 +16,16 @@ export const Route = createFileRoute("/about/$lang")({
       ),
     }
   },
+  head: ({ loaderData, params }) => ({
+    meta: pageMeta({
+      ogType: "article",
+      title: `${loaderData!.localProfile.fullName} [${params.lang}]`,
+    }),
+  }),
 })
 
 function AboutComponent() {
   const { localProfile: { fullName } } = Route.useLoaderData()
-  const { lang } = Route.useParams()
 
   // Generate unique IDs for aria-labelledby
   const profileHeadingId = "profile-heading"
@@ -38,7 +43,6 @@ function AboutComponent() {
     <Container>
       <Header>
         <h1 id="page-heading">About the author</h1>
-        <DocumentTitle title={`${fullName} [${lang}]`} />
       </Header>
 
       <main aria-labelledby="page-heading">
