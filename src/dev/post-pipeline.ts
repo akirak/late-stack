@@ -180,22 +180,28 @@ export const PostBuilderLive: Layer.Layer<
       }
     }).pipe(
       Effect.catchTags({
-        PostError: error => config.production
+        BadArgument: _E => Effect.fail(new Error(`Error while processing a post: BadArgument`)),
+        SystemError: _E => Effect.fail(new Error(`Error while processing a post: SystemError`)),
+        ParseError: error => Effect.fail(new PostError({
+          filePath,
+          message: `${error._tag}\n${error.message}`,
+        })),
+      }),
+      Effect.catchTag(
+        "PostError",
+        error => config.production
           ? Effect.fail(new Error(
-              `Error while processing a post: ${error.filePath}: ${error.message}`,
+              `Failed to process a post: ${error.filePath}: ${error.message}`,
             ))
           : Console.warn(
-              `Error: ${error.filePath}${
+              `Error: Failed to process a post: ${error.filePath}${
                 error.loc ? `:${error.loc.line}:${error.loc.column}` : ""
               }: ${error.message}\n`
               + `Errors on posts are ignored in development, but will fail the build in production.`,
             ).pipe(
               Effect.as(Option.none() as Option.Option<PostMetadata>),
             ),
-        BadArgument: _E => Effect.fail(new Error(`Error while processing a post: BadArgument`)),
-        SystemError: _E => Effect.fail(new Error(`Error while processing a post: SystemError`)),
-        ParseError: _E => Effect.fail(new Error(`Error while processing a post: ParseError`)),
-      }),
+      ),
       Effect.tapErrorCause(Effect.logError),
     )
 
