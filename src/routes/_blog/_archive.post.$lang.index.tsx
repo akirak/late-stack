@@ -44,7 +44,7 @@ function PostArchiveComponent() {
     <Container>
       <Header>
         <h1>
-          List of posts in
+          List of Posts in
           {" "}
           {
             language.englishName

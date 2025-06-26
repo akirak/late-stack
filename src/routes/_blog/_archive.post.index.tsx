@@ -24,7 +24,7 @@ function PostArchiveComponent() {
   return (
     <Container>
       <Header>
-        <h1>List of posts</h1>
+        <h1>List of Posts</h1>
       </Header>
 
       <main>
