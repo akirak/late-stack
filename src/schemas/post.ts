@@ -13,6 +13,14 @@ export const PostSchema = Schema.Struct({
   slug: PostSlugSchema,
   title: Schema.String,
   language: LanguageIdSchema,
+  description: Schema.optionalWith(
+    Schema.String,
+    {
+      as: "Option",
+      nullable: true,
+      onNoneEncoding: () => Option.some(null),
+    },
+  ),
   // category: Schema.optional(Schema.String),
   // tags: Schema.Array(Schema.String),
   publicationDate: OptionalDateSchema,
@@ -32,6 +40,12 @@ export const PostSchema = Schema.Struct({
 export const PostMetadataSchema = PostSchema.omit("hastBody").pipe(
   Schema.filter(
     (meta) => {
+      if (!meta.draft && Option.isNone(meta.description)) {
+        return {
+          path: ["description"],
+          message: "A non-draft post must have a description metadata. Set the metadata, or set the draft status to true",
+        }
+      }
       if (!meta.draft && Option.isNone(meta.publicationDate)) {
         return {
           path: ["publicationDate"],

@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router"
+import { Option } from "effect"
 import { getPost } from "@/collections/posts.client"
 import { Container } from "@/components/layout/Container"
 import { Header } from "@/components/layout/Header"
@@ -16,6 +17,9 @@ export const Route = createFileRoute("/_blog/post/$lang/$slug")({
     meta: pageMeta({
       ogType: "article",
       title: loaderData!.post.title,
+      description: Option.getOrUndefined(
+        loaderData!.post.description,
+      ),
     }),
   }),
 })
