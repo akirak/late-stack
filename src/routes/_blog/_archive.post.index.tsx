@@ -14,6 +14,7 @@ export const Route = createFileRoute("/_blog/_archive/post/")({
     meta: pageMeta({
       ogType: "website",
       title: "Blog Archive",
+      description: "View the archive of all blog posts on jingsi.space.",
     }),
   }),
 })

@@ -28,6 +28,11 @@ export const Route = createFileRoute("/_blog/_archive/post/$lang/")({
     meta: pageMeta({
       ogType: "website",
       title: `Blog Archive [${loaderData!.language.englishName}]`,
+      description: `View the archive of ${
+        loaderData!.language.localName
+          ? `${loaderData!.language.englishName} (${loaderData!.language.localName})`
+          : loaderData!.language.englishName
+      } blog posts on jingsi.space.`,
     }),
   }),
 })
