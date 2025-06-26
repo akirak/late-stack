@@ -127,6 +127,25 @@ head: ({ loaderData }) => ({
 
 `title` and `ogType` are mandatory. `description` is optional but recommended.
 
+### Optimize loading
+
+Load only necessary font sets.
+
+System Font (--font-system: "Manrope", system-ui, ...):
+
+- 400 (--font-normal) - Used for body text
+- 500 (--font-medium) - Used for tags and buttons
+- 600 (--font-semibold) - Used for strong/bold text and headings
+
+Serif Font (--font-serif: "Source Serif 4", serif):
+
+- 600 (--font-semibold) - Used for all headings (h1, h2, h3, h4, h5, h6)
+
+Mono Font (--font-mono: "DM Mono", "Monaco", "Menlo", "Consolas", monospace):
+
+- 400 (default/normal) - Used for code blocks and inline code (no explicit
+ font-weight specified, so it uses the default weight)
+
 ### Development Notes
 
 - Content changes trigger hot reload via the collections pipeline

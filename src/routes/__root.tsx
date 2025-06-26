@@ -58,7 +58,7 @@ export const Route = createRootRouteWithContext<AppRouteContext>()({
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400;1,500&family=Manrope:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400;1,8..60,500;1,8..60,600&display=swap" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=DM+Mono:wght@400&family=Manrope:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,600&display=swap" },
       { rel: "stylesheet", href: appCss },
       { rel: "alternate", type: "application/atom+xml", title: "RSS", href: "/feeds/default.xml" },
     ],
