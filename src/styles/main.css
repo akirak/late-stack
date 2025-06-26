@@ -196,7 +196,11 @@
     margin-bottom: var(--space-sm);
   }
 
-  h2, h3, h4, h5, h6 {
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     /* font-style: italic; */
     font-weight: var(--font-semibold);
   }

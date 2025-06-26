@@ -144,7 +144,7 @@ Serif Font (--font-serif: "Source Serif 4", serif):
 Mono Font (--font-mono: "DM Mono", "Monaco", "Menlo", "Consolas", monospace):
 
 - 400 (default/normal) - Used for code blocks and inline code (no explicit
- font-weight specified, so it uses the default weight)
+  font-weight specified, so it uses the default weight)
 
 ### Development Notes
 
