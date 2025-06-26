@@ -184,15 +184,21 @@
   h4,
   h5,
   h6 {
-    font-weight: var(--font-semibold);
+    font-family: var(--font-serif);
     line-height: var(--leading-tight);
     color: var(--accent-primary);
     margin-bottom: var(--space-md);
   }
 
   h1 {
+    font-weight: var(--font-semibold);
     font-size: clamp(var(--text-3xl), 4vw, var(--text-5xl));
     margin-bottom: var(--space-sm);
+  }
+
+  h2, h3, h4, h5, h6 {
+    /* font-style: italic; */
+    font-weight: var(--font-semibold);
   }
 
   h2 {
@@ -218,7 +224,6 @@
   h6 {
     font-size: var(--text-base);
     margin-top: var(--space-md);
-    font-weight: var(--font-medium);
   }
 
   /* Paragraphs and text */
