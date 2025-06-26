@@ -15,8 +15,8 @@ export type LanguageId = typeof LanguageIdSchema.Type
  */
 export const LanguagePropertiesSchema = Schema.Struct({
   id: LanguageIdSchema,
-  localName: Schema.String,
-  englishName: Schema.optional(Schema.String),
+  localName: Schema.optional(Schema.String),
+  englishName: Schema.String,
 })
 
 /**

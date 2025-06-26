@@ -9,7 +9,7 @@ const UsedLanguages: readonly LanguageProperties[]
       = Schema.decodeUnknownSync(Schema.Array(LanguagePropertiesSchema))([
         {
           id: "en",
-          localName: "English",
+          englishName: "English",
         },
         {
           id: "ja",
