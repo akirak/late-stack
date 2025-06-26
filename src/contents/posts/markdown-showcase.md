@@ -8,8 +8,6 @@ draft: true
 Most part of this content is AI-generated.
 :::
 
-# Markdown Showcase
-
 This post demonstrates various Markdown features and how they render in the blog.
 
 ## Text Formatting
