@@ -114,6 +114,7 @@ interface LinkMetadata {
 ```
 
 Supported `OgType` values include:
+
 - `"article"`, `"website"`, `"book"`, `"profile"`
 - `"video.movie"`, `"video.episode"`, `"video.tv_show"`, `"video.other"`
 
@@ -134,8 +135,8 @@ The system uses `OgpMetadataFromHtml` transformer that parses raw HTML meta tags
 
 ```typescript
 interface LinkMetadataService {
-  readonly get: (url: string) => 
-    Effect<Option<LinkMetadata>, KvsError | MetadataSchemaError>
+  readonly get: (url: string) =>
+  Effect<Option<LinkMetadata>, KvsError | MetadataSchemaError>
 }
 ```
 
@@ -252,6 +253,7 @@ type FetchError
 ```
 
 **URL resolution:**
+
 - Uses `URL` constructor for robust relative-to-absolute URL conversion
 - Handles edge cases like malformed URLs gracefully
 - Validates image URLs before including in metadata
