@@ -92,7 +92,6 @@ Routes use type-safe loaders and server-side data fetching.
 
 - **TanStack Start**: Full-stack React framework
 - **Effect**: Functional programming for robust data pipelines
-- **Vinxi**: Build tool (successor to Vite for full-stack apps)
 - **Lightning CSS**: Fast CSS processing
 - **Playwright**: E2E testing across browsers
 
