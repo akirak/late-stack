@@ -97,51 +97,58 @@ These services live only during the build. At runtime the blog simply reads the 
 
 ### 2. Data model
 
-The `LinkMetadata` schema captures essential OGP fields:
+The `LinkMetadata` schema is defined in `src/schemas/link-metadata.ts` and captures essential OGP fields:
 
 ```typescript
 interface LinkMetadata {
-  canonical?: string // Canonical URL from <link rel="canonical">
+  canonical?: string // Canonical URL from og:url, twitter:url, or <link rel="canonical">
   title?: string // From og:title, twitter:title, or <title>
-  description?: string // From og:description or twitter:description
-  image?: string // From og:image or twitter:image
-  imageAlt?: string // From og:image:alt or twitter:image:alt
-  imageWidth?: number // From og:image:width
-  imageHeight?: number // From og:image:height
+  description?: string // From og:description, twitter:description, or meta description
+  image?: string // From og:image or twitter:image (resolved to absolute URL)
+  imageAlt?: string // From og:image:alt
+  imageWidth?: number // From og:image:width (parsed as integer)
+  imageHeight?: number // From og:image:height (parsed as integer)
   siteName?: string // From og:site_name
-  ogType?: OgType // From og:type (e.g., "article", "website")
+  ogType?: OgType // From og:type
 }
 ```
 
-The cache stores metadata wrapped in an `Envelope` with creation timestamp:
+Supported `OgType` values include:
+- `"article"`, `"website"`, `"book"`, `"profile"`
+- `"video.movie"`, `"video.episode"`, `"video.tv_show"`, `"video.other"`
+
+The cache stores metadata wrapped in an envelope with creation timestamp:
 
 ```typescript
-interface Envelope {
+interface Envelope<T> {
   createdAt: Date
-  data: LinkMetadata
+  data: T
 }
 ```
 
-This timestamp enables a simple TTL-based cache invalidation strategy (60 days) without complex invalidation rules.
+The system uses `OgpMetadataFromHtml` transformer that parses raw HTML meta tags and provides intelligent fallbacks from Open Graph to Twitter Card metadata, ensuring robust data extraction.
 
 ### 3. Service interfaces
 
-**LinkMetadataService** provides a simple API:
+**LinkMetadataService** (`src/dev/link-metadata/layer.ts`) provides a simple API:
 
 ```typescript
-declare function get(url: string): Effect<Option<LinkMetadata>, never, LinkMetadataService>
-```
-
-**MetadataCache** handles persistence:
-
-```typescript
-interface MetadataCache {
-  get: (url: string) => Effect<Option<Envelope<LinkMetadata>>, KvsError>
-  set: (url: string, metadata: LinkMetadata) => Effect<void, KvsError>
+interface LinkMetadataService {
+  readonly get: (url: string) => 
+    Effect<Option<LinkMetadata>, KvsError | MetadataSchemaError>
 }
 ```
 
-**MetadataFetcher** handles HTTP and parsing:
+**MetadataCache** (`src/dev/link-metadata/cache.ts`) handles persistence:
+
+```typescript
+interface MetadataCache {
+  get: (url: string) => Effect<Option<Envelope<LinkMetadata>>, KvsError | MetadataSchemaError>
+  set: (url: string, metadata: LinkMetadata) => Effect<void, KvsError | MetadataSchemaError>
+}
+```
+
+**MetadataFetcher** (`src/dev/link-metadata/fetcher.ts`) handles HTTP and parsing:
 
 ```typescript
 interface MetadataFetcher {
@@ -151,25 +158,36 @@ interface MetadataFetcher {
 
 The `get` method implements smart caching:
 
+:::diagram
+
 ```d2
-sequence: get(url)
-Client->LinkMetadataService: get(url)
-LinkMetadataService->MetadataCache: get(url)
-MetadataCache->LinkMetadataService: cached data
-LinkMetadataService: check TTL (60 days)
-LinkMetadataService->MetadataFetcher: fetch(url) [if stale]
-MetadataFetcher->Internet: HTTP GET
-Internet->MetadataFetcher: HTML
-MetadataFetcher->LinkMetadataService: metadata
-LinkMetadataService->MetadataCache: set(url, metadata)
-LinkMetadataService->Client: Option<LinkMetadata>
+shape: sequence_diagram
+
+Client
+LinkMetadataService
+MetadataCache
+MetadataFetcher
+Internet
+
+Client -> LinkMetadataService: get(url)
+LinkMetadataService -> MetadataCache: get(url)
+MetadataCache -> LinkMetadataService: cached data
+LinkMetadataService -> LinkMetadataService: check TTL (60 days)
+LinkMetadataService -> MetadataFetcher: "fetch(url) [if stale]"
+MetadataFetcher -> Internet: HTTP GET
+Internet -> MetadataFetcher: HTML
+MetadataFetcher -> LinkMetadataService: metadata
+LinkMetadataService -> MetadataCache: set(url, metadata)
+LinkMetadataService -> Client: Option<LinkMetadata>
 ```
+
+:::
 
 The service returns `Option<LinkMetadata>` and never throws. On fetch failure with stale cache, it returns the stale data. This ensures the pipeline continues even if external providers are down.
 
 ### 4. Storage layer
 
-The storage uses a generic key-value store abstraction (`MetadataKvs`) implemented with SQLite:
+The storage uses a generic key-value store abstraction implemented with SQLite (`src/dev/service-utils/sqlite-kvs.ts`):
 
 ```typescript
 interface Kvs<V> {
@@ -186,13 +204,15 @@ SQLite was chosen because:
 - Single-file, zero-config, battle-tested
 - Native JSON column support for structured queries
 - Works identically on developer laptops, CI runners, and production
-- Located at `data/link-metadata.sqlite` (git-ignored)
+- Located at `data/og.sqlite` (git-ignored)
 
 The implementation uses:
 
+- `@effect/sql-sqlite-node` for database operations
 - JSON serialization for `Envelope<LinkMetadata>` values
 - Effect Schema for type-safe encoding/decoding
-- Simple key-value table structure
+- Single `metadata` table with `url` (TEXT) and `data` (JSON) columns
+- Automatic table creation on first use
 
 <!--
 Need Redis or Postgres?  Just implement the three Store functions and wire a new
@@ -201,23 +221,25 @@ layer – no changes required elsewhere.
 
 ### 5. Fetcher implementation
 
-The `MetadataFetcher` implements robust HTML metadata extraction:
+The `MetadataFetcher` (`src/dev/link-metadata/fetcher.ts`) implements robust HTML metadata extraction:
 
 **HTTP handling:**
 
 - Maximum 5 redirects
 - 10-second timeout
-- 1MB response size limit
+- 1 MiB response size limit
 - Up to 5 retries with exponential backoff
 - Only accepts HTTP(S) URLs
+- Uses `@effect/platform` HTTP client
 
 **HTML parsing with `html-rewriter-wasm`:**
 
 1. Extract Open Graph tags (`og:*`)
 2. Fall back to Twitter Card tags (`twitter:*`)
-3. Final fallback to `<title>` element
+3. Extract `<title>` element and meta description
 4. Extract canonical URL from `<link rel="canonical">`
-5. Resolve all relative URLs against the base URL
+5. Resolve all relative URLs to absolute URLs using base URL
+6. Parse numeric values (image dimensions) with proper validation
 
 **Error handling:**
 
@@ -226,30 +248,46 @@ type FetchError
   = | { _tag: "InvalidUrl" }
     | { _tag: "NetworkError", error: unknown }
     | { _tag: "Timeout" }
-    | { _tag: "ResponseTooLarge" }
-    | { _tag: "TooManyRedirects" }
-    | { _tag: "InvalidContentType" }
+    | { _tag: "TooLarge" }
 ```
+
+**URL resolution:**
+- Uses `URL` constructor for robust relative-to-absolute URL conversion
+- Handles edge cases like malformed URLs gracefully
+- Validates image URLs before including in metadata
 
 All errors are typed, allowing the pipeline to gracefully handle failures without crashing the build.
 
 ### 6. Integration with Remark
 
-The `remarkLink` plugin integrates OGP fetching into the Markdown pipeline:
+The `remarkLink` plugin (`src/dev/unified/remarkLink.ts`) integrates OGP fetching into the Markdown pipeline:
 
 **Processing flow:**
 
-1. Collect all `::link` directives during AST traversal
-2. Batch fetch metadata with concurrency limit of 5
-3. Transform directives based on type:
-   - **Block-level** (container/leaf): Generate rich link cards or YouTube embeds
-   - **Text-level**: Simple links (no OGP fetching)
+1. Collect all `::link[url]` directives during AST traversal
+2. Parse URLs using `ExternalUrlParser` to classify YouTube vs generic links
+3. Batch fetch metadata with concurrency limit of 5
+4. Transform directives based on URL type and directive type:
+   - **YouTube URLs**: Generate embedded iframe players with proper dimensions
+   - **Generic URLs**: Create rich link cards with OGP metadata
+   - **Text directives**: Create external links with styling
+
+**URL classification (`src/schemas/external-url.ts`):**
+
+- **YouTube detection**: Supports `youtube.com/watch`, `youtu.be`, `youtube.com/embed`, `m.youtube.com` formats
+- **Generic fallback**: All non-YouTube URLs treated as generic external sources
 
 **Link card generation:**
 
-- YouTube URLs → Embedded video players
-- Other URLs → Rich preview cards with title, description, and image
-- Failed fetches → Graceful fallback to plain links
+- YouTube URLs → Embedded iframe with `width="560" height="315"`
+- Generic URLs → Rich preview cards with title, description, image, and site name
+- Failed metadata fetches → Graceful fallback to simple external links
+- All external links get `target="_blank" rel="noopener noreferrer"`
+
+**Integration points:**
+
+- `src/dev/post-pipeline.ts:104` - remarkLink plugin with OGP runtime
+- `src/dev/collections-pipeline.ts:163-170` - Layer setup with SQLite and HTTP clients
 
 The plugin runs only at build time. All metadata is embedded in the post JSON, eliminating runtime network requests.
 
@@ -257,21 +295,24 @@ The plugin runs only at build time. All metadata is embedded in the post JSON, e
 
 **Local development:**
 
-- Database location: `data/link-metadata.sqlite` (git-ignored)
+- Database location: `data/og.sqlite` (git-ignored)
 - Persistent across dev server restarts
 - 60-day TTL minimizes redundant fetches
+- Automatic database creation on first link processing
 
 **CI/CD (GitHub Actions):**
 
-- Cache database with `actions/cache`
+- Cache database with `actions/cache` using `data/og.sqlite` as cache key
 - TTL ensures most builds use cached data
-- Reduces API rate limit risks
+- Reduces external API rate limit risks
+- Graceful fallback to stale data if external sites are down
 
 **Production (Deno Deploy):**
 
 - Database copied to build output during `pnpm build`
 - Read-only access at runtime
 - No runtime fetching or writes
+- All metadata pre-embedded in post JSON files
 
 <!--
 ### 8. Roadmap
