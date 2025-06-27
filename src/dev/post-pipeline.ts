@@ -15,6 +15,7 @@ import remarkParse from "remark-parse"
 import remarkRehype from "remark-rehype"
 import { unified } from "unified"
 import { PostMetadataSchema, PostSchema } from "../schemas/post"
+import * as EC from "../styles/expressive-code"
 import { PostError, RemarkPluginDataError } from "./error"
 import { Config } from "./pipeline-config"
 import remarkAdmonitions from "./unified/remarkAdmonitions"
@@ -92,6 +93,8 @@ export const PostBuilderLive: Layer.Layer<
     const getSlug = (filename: string) =>
       path.basename(filename, path.extname(filename))
 
+    const ecConfig = yield* Effect.promise(() => EC.loadConfig())
+
     const postProcessor = unified()
       .use(remarkParse)
       .use(remarkGfm)
@@ -125,10 +128,7 @@ export const PostBuilderLive: Layer.Layer<
         },
       })
       .use(rehypeExpressiveCode, {
-        styleOverrides: {
-          codeFontFamily: "DM Mono, Monaco, Menlo, Consolas, monospace",
-          uiFontFamily: "Manrope, system-ui, Roboto, sans-serif",
-        },
+        ...ecConfig,
         plugins: [
           pluginCollapsibleSections(),
         ],
