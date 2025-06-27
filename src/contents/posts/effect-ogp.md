@@ -38,43 +38,53 @@ frontend application.
 
 ### 1. Bird's-eye view
 
+:::diagram
+
 ```d2
 direction: right
 
-Markdown["Markdown posts"] -> Pipeline[
-  shape: component
-  label: "Collections Pipeline"
-]
-Pipeline -> Extract[
-  shape: note
-  label: "extract external links"
-]
-Pipeline -> LinkMetadataService[
-  shape: component
-  label: "LinkMetadataService"
-]
-LinkMetadataService -> MetadataCache[
-  shape: component
-  label: "MetadataCache"
-]
-MetadataCache -> MetadataKvs[
-  label: "SQLite KVS"
-]
-LinkMetadataService -> MetadataFetcher[
-  shape: component
-  label: "MetadataFetcher"
-]
-MetadataFetcher -> Internet[
+Markdown: Markdown posts {
+  shape: document
+}
+Pipeline: Collections Pipeline {
+  shape: package
+}
+Extract: extract external links {
+  shape: page
+}
+LinkMetadataService: LinkMetadataService {
+  shape: hexagon
+}
+MetadataCache: MetadataCache {
+  shape: hexagon
+}
+MetadataKvs: SQLite KVS {
+  shape: cylinder
+}
+MetadataFetcher: MetadataFetcher {
+  shape: hexagon
+}
+Internet: {
   shape: cloud
-]
+}
+PostJson: Post JSON artefacts {
+  shape: cylinder
+}
+
+Markdown -> Pipeline
+Pipeline -> Extract
+Pipeline -> LinkMetadataService
+LinkMetadataService -> MetadataCache
+MetadataCache -> MetadataKvs
+LinkMetadataService -> MetadataFetcher
+MetadataFetcher -> Internet
 MetadataFetcher -> MetadataCache
 MetadataCache -> LinkMetadataService
 LinkMetadataService -> Pipeline
-Pipeline -> PostJson[
-  shape: database
-  label: "Post JSON artefacts"
-]
+Pipeline -> PostJson
 ```
+
+:::
 
 The system follows a layered architecture using Effect's service pattern:
 
