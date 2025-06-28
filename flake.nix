@@ -37,8 +37,6 @@
 
               # For e2e testing
               playwright-browsers
-
-              pkgs.cocogitto
             ];
 
             # Based on https://discourse.nixos.org/t/running-playwright-tests/25655/50
