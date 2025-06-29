@@ -186,7 +186,6 @@
   h6 {
     font-family: var(--font-serif);
     line-height: var(--leading-tight);
-    color: var(--accent-primary);
     margin-bottom: var(--space-md);
   }
 
@@ -263,18 +262,20 @@
 
   /* Links */
   a {
-    color: var(--color-accent);
-    text-decoration: none;
     transition: color var(--transition-fast);
   }
 
-  a:hover {
-    color: var(--color-accent-hover);
+  :where(main, aside) a, a:hover {
     text-decoration: underline;
+    text-underline-offset: 0.2rem;
+  }
+
+  a:hover {
+    color: var(--color-link);
   }
 
   a:focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--color-link);
     outline-offset: 2px;
     border-radius: var(--radius-sm);
   }
