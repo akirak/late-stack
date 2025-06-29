@@ -265,7 +265,8 @@
     transition: color var(--transition-fast);
   }
 
-  :where(main, aside) a, a:hover {
+  :where(main, aside) a,
+  a:hover {
     text-decoration: underline;
     text-underline-offset: 0.2rem;
   }
