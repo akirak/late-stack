@@ -5,6 +5,7 @@ import { Container } from "@/components/layout/Container"
 import { Header } from "@/components/layout/Header"
 import { hastToJsx } from "@/utils/hast"
 import { pageMeta } from "@/utils/seo"
+import { useSticky } from "@/utils/sticky"
 
 export const Route = createFileRoute("/_blog/post/$lang/$slug")({
   component: PostComponent,
@@ -26,6 +27,8 @@ export const Route = createFileRoute("/_blog/post/$lang/$slug")({
 
 function PostComponent() {
   const { post } = Route.useLoaderData()
+
+  useSticky("main :where(h2, h3, h4, h5, h6)")
 
   return (
     <Container>

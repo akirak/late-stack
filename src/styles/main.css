@@ -357,6 +357,7 @@
     /* Variables that are specific to the blog layout */
     --logo-height: 2.5rem;
     --header-padding: 0.5rem;
+    --header-height: calc(var(--logo-height) + 2 * var(--header-padding));
 
     --footer-height: 6rem;
   }
@@ -375,7 +376,6 @@
   :where(.root-header, .root-nav) {
     top: 0;
 
-    --header-height: calc(var(--logo-height) + 2 * var(--header-padding));
     padding: var(--header-padding);
     height: var(--header-height);
 
@@ -468,6 +468,18 @@
   }
 
   /* Layout Components */
+
+  .sticky-active {
+    position: sticky;
+    top: 0;
+    padding: var(--space-xs) 0;
+    color: var(--text-secondary);
+    background: var(--bg-primary);
+    /* border-bottom: thin solid var(--color-border); */
+    box-shadow: 0 2px 2px var(--border-subtle);
+    /* border-radius: var(--space-xs); */
+    z-index: 5;
+  }
 
   .container {
     max-width: 800px;
