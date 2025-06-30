@@ -368,72 +368,76 @@
     }
   }
 
-  .root-header {
-    position: sticky;
+  :where(.root-header, .root-nav) {
     top: 0;
-    left: 0;
-    /* z-index: 100; */
 
-    padding: var(--header-padding);
     --header-height: calc(var(--logo-height) + 2 * var(--header-padding));
+    padding: var(--header-padding);
     height: var(--header-height);
 
-    /* Keep the position even if the content is centered */
-    width: 100vw;
+    z-index: 10;
 
-    svg {
-      border: medium solid;
-      box-shadow:
-        0 10px 15px -3px rgba(0, 0, 0, 0.5),
-        0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    &.root-header {
+      left: 0;
+      position: sticky;
+      align-self: flex-start;
+
+      /* Keep the position even if the content is centered */
+      width: calc(var(--logo-height) + 2 * var(--header-padding));
+
+      svg {
+        border: medium solid;
+        box-shadow:
+          0 10px 15px -3px rgba(0, 0, 0, 0.5),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      }
+
+      a:hover > svg {
+        color: var(--accent-hover) !important;
+        opacity: 0.7;
+      }
     }
 
-    a:hover > svg {
-      color: var(--accent-hover) !important;
-      opacity: 0.7;
-    }
-  }
+    &.root-nav {
+      right: 0;
+      position: fixed;
+      align-self: flex-end;
+      padding-right: calc(var(--header-padding) * 2);
 
-  .root-nav {
-    position: absolute;
-    top: 0;
-    right: 0;
+      background-color: var(--color-bg);
 
-    height: var(--logo-height);
-    margin: var(--header-padding);
-    margin-right: calc(var(--header-padding) * 2);
+      & > ul {
+        padding: calc(var(--logo-height) * 0.125);
+        display: flex;
+        flex-direction: row;
+        align-items: center;
 
-    & > ul {
-      padding: calc(var(--logo-height) * 0.125);
-      display: flex;
-      flex-direction: row;
-      align-items: center;
+        gap: calc(var(--logo-height) * 0.5);
 
-      gap: calc(var(--logo-height) * 0.5);
+        & > li {
+          font-size: var(--text-lg);
 
-      & > li {
-        font-size: var(--text-lg);
-
-        :where(svg, button) {
-          display: block;
-          --icon-size: calc(var(--text-lg) * 1.25);
-          height: var(--icon-size);
-          width: var(--icon-size);
-          object-fit: contain;
-
-          &[aria-label="Toggle theme"] {
+          :where(svg, button) {
+            display: block;
+            --icon-size: calc(var(--text-lg) * 1.25);
             height: var(--icon-size);
             width: var(--icon-size);
-            background-color: var(--text-secondary);
-            mask-image: var(--theme-button-image);
-            mask-repeat: no-repeat;
-            mask-size: contain;
-            mask-position: center;
-            line-height: 1;
+            object-fit: contain;
 
-            &:hover {
-              /* Same as links */
-              background-color: var(--color-accent-hover);
+            &[aria-label="Toggle theme"] {
+              height: var(--icon-size);
+              width: var(--icon-size);
+              background-color: var(--text-secondary);
+              mask-image: var(--theme-button-image);
+              mask-repeat: no-repeat;
+              mask-size: contain;
+              mask-position: center;
+              line-height: 1;
+
+              &:hover {
+                /* Same as links */
+                background-color: var(--color-accent-hover);
+              }
             }
           }
         }
