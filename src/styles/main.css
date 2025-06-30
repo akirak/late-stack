@@ -10,23 +10,17 @@
     --text-primary: oklch(20% 0.01 70); /* Dark gray for main text */
     --text-secondary: oklch(45% 0.01 70); /* Medium gray for secondary text */
     --accent-primary: oklch(35% 0.08 240); /* Navy blue accent */
-    --accent-secondary: oklch(65% 0.12 30); /* Warm coral/orange secondary accent */
     --border-subtle: oklch(90% 0.005 70); /* Very light gray-brown for borders */
     --color-link: var(--accent-primary); /* Links use primary accent color */
     --accent-hover: oklch(30% 0.1 240); /* Darker navy on hover */
-    --accent-secondary-hover: oklch(60% 0.14 30); /* Darker coral/orange on hover */
-    /* --bg-secondary: oklch(97% 0.02 65); */
-    /* --border-strong: oklch(77% 0.08 65); */
 
     /* Semantic color mappings */
     --color-bg: var(--bg-primary);
-    /* --color-surface: var(--bg-secondary); */
     --color-text: var(--text-primary);
     --color-text-muted: var(--text-secondary);
     --accent-primary: var(--accent-primary);
     --color-accent-hover: var(--accent-hover);
     --border-subtle: var(--border-subtle);
-    /* --color-border-strong: var(--border-strong); */
 
     /* Transitions */
     --transition-fast: 0.2s ease;
