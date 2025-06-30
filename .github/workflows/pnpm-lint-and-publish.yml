@@ -26,6 +26,8 @@ jobs:
         with:
           commit_message: "chore(deps): Freeze the lock file"
           file_pattern: pnpm-lock.yaml
+          # Disable the pre-push hook which requires pnpm
+          push_options: --no-verify
 
       - name: Check TypeScript types
         run: nix develop -L .#node-build -c pnpm run typecheck
