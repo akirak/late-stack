@@ -41,7 +41,6 @@
     --dark-color-link: var(--dark-accent-primary); /* Links use primary accent color */
     --dark-accent-hover: oklch(75% 0.1 70); /* Lighter for hover state */
 
-
     &[data-theme="dark"] {
       /* --- Dark Theme --- */
       --bg-primary: var(--dark-bg-primary);
