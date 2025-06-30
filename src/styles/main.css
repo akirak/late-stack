@@ -39,15 +39,14 @@
     /* Color variables for the dark theme.
      * All the tokens are prefixed with --dark
      * and then applied to the dark mode */
-    --dark-bg-primary: oklch(12% 0.01 240); /* Very dark navy-tinted background */
-    --dark-text-primary: oklch(92% 0.005 70); /* Light gray for main text */
-    --dark-text-secondary: oklch(70% 0.01 70); /* Medium light gray for secondary text */
-    --dark-accent-primary: oklch(65% 0.06 240); /* Muted but accessible navy blue accent */
-    --dark-accent-secondary: oklch(50% 0.08 30); /* Muted coral/orange secondary accent */
-    --dark-border-subtle: oklch(25% 0.01 240); /* Dark gray-blue for borders */
+    --dark-bg-primary: oklch(20% 0.05 240); /* Very dark navy-tinted background */
+    --dark-text-primary: oklch(95% 0 0); /* Near-white for main content */
+    --dark-text-secondary: oklch(75% 0 0); /* Medium gray for secondary info, captions */
+    --dark-accent-primary: oklch(70% 0.1 70); /* A vibrant but not overpowering magenta/purple */
+    --dark-border-subtle: oklch(25% 0.03 240); /* For outlines, etc. */
     --dark-color-link: var(--dark-accent-primary); /* Links use primary accent color */
-    --dark-accent-hover: oklch(75% 0.08 240); /* Brighter muted navy on hover */
-    --dark-accent-secondary-hover: oklch(60% 0.1 30); /* Slightly brighter muted coral/orange on hover */
+    --dark-accent-hover: oklch(75% 0.1 70); /* Lighter for hover state */
+
 
     &[data-theme="dark"] {
       /* --- Dark Theme --- */
