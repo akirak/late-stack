@@ -34,4 +34,4 @@ runs:
 
     - name: Install npm dependencies
       shell: bash
-      run: nix develop -L .#node-build -c pnpm install
+      run: nix develop -L .#node-build -c pnpm install --no-frozen-lockfile

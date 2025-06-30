@@ -22,6 +22,11 @@ jobs:
         with:
           cache-key: ""
 
+      - uses: stefanzweifel/git-auto-commit-action@v6
+        with:
+          commit_message: "chore(deps): Freeze the lock file"
+          file_pattern: pnpm-lock.yaml
+
       - name: Check TypeScript types
         run: nix develop -L .#node-build -c pnpm run typecheck
 
