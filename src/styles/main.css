@@ -1,4 +1,5 @@
 @import url("./reset.css") layer(reset);
+@import url("./fonts.css") layer(theme);
 
 @layer reset, theme, utilities, typography, components;
 
@@ -145,9 +146,13 @@
 @layer typography {
   /* Font family definitions */
   :root {
-    --font-system: "Manrope", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    --font-serif: "Source Serif 4", serif;
-    --font-mono: "DM Mono", "Monaco", "Menlo", "Consolas", monospace;
+    --font-system:
+      "Manrope", "Manrope Fallback", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-serif: "Source Serif 4", "Source Serif 4 Fallback", Georgia, "Times New Roman", serif;
+    --font-mono:
+      "DM Mono", "DM Mono Fallback", /* Modern System Monospace */ Menlo, Monaco, Consolas,
+      /* Apple & Android/ChromeOS */ "SF Mono", "Roboto Mono", /* The Ultimate Fallback */ "Courier New",
+      /* Generic Keyword */ monospace;
 
     /* Font size scale */
     --text-xs: 0.75rem;
