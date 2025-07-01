@@ -10,13 +10,13 @@ Most part of this content is AI-generated.
 
 This post demonstrates various Markdown features and how they render in the blog.
 
-## Text Formatting
+## Text Formatting {#text-formatting}
 
 Regular text with **bold text**, _italic text_, and **_bold italic text_**.
 
 You can also use ~~strikethrough~~ text.
 
-### Code
+### Code {#code}
 
 Inline `code` looks like this.
 
@@ -46,9 +46,9 @@ print(fibonacci(10))
 +pnpm run dev
 ```
 
-## Lists
+## Lists {#lists}
 
-### Unordered Lists
+### Unordered Lists {#unordered-lists}
 
 - First item
 - Second item
@@ -56,7 +56,7 @@ print(fibonacci(10))
   - Another nested item
 - Third item
 
-### Ordered Lists
+### Ordered Lists {#ordered-lists}
 
 1. First step
 2. Second step
@@ -64,13 +64,13 @@ print(fibonacci(10))
    2. Sub-step B
 3. Third step
 
-## Links and Images
+## Links and Images {#links-and-images}
 
 [External link to TanStack](https://tanstack.com)
 
 [Internal link to about page](/about)
 
-## Blockquotes
+## Blockquotes {#blockquotes}
 
 > This is a blockquote. It can contain multiple paragraphs.
 >
@@ -78,7 +78,7 @@ print(fibonacci(10))
 
 > **Note**: Blockquotes can also contain other formatting like **bold** and _italic_ text.
 
-## Tables
+## Tables {#tables}
 
 | Feature     | Support | Notes               |
 | ----------- | ------- | ------------------- |
@@ -88,7 +88,7 @@ print(fibonacci(10))
 | Tables      | ✅      | Markdown tables     |
 | Math        | ❓      | To be tested        |
 
-## Horizontal Rules
+## Horizontal Rules {#horizontal-rules}
 
 I don't plan on using horizontal rules in my blog.
 
@@ -106,18 +106,18 @@ Alpha[^micromark], bravo[^micromark], and charlie[^remark].
 
 [^micromark]: things about micromark
 
-## Mixed Content Example
+## Mixed Content Example {#mixed-content}
 
 Here's a more complex example combining multiple elements:
 
-### Task List
+### Task List {#task-list}
 
 - [x] Set up blog structure
 - [x] Add Markdown support
 - [ ] Add comment system
 - [ ] Implement search
 
-### Code Example with Explanation
+### Code Example with Explanation {#code-example}
 
 The following TypeScript code demonstrates a simple utility function:
 
@@ -144,19 +144,19 @@ console.log(formatUser(user)) // Output: John Doe <john@example.com>
 
 > **Tip**: This pattern is commonly used in TypeScript applications for type-safe data formatting.
 
-## Admonitions
+## Admonitions {#admonitions}
 
 :::info[My Custom Title]
 Content here.
 :::
 
-## Embedded contents
+## Embedded contents {#embedded}
 
-### YouTube
+### YouTube {#youtube}
 
 ::link[https://www.youtube.com/watch?v=l7OPFjPjtGs]
 
-## Diagrams
+## Diagrams {#diagrams}
 
 Supported via `diagram` custom directive.
 
@@ -194,7 +194,7 @@ lambda -> api: Response
 
 :::
 
-## Conclusion
+## Conclusion {#conclusion}
 
 This showcase demonstrates the rich Markdown support available in this TanStack Start blog. The content pipeline processes all these elements seamlessly from Markdown to the final rendered output.
 

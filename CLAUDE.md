@@ -110,6 +110,10 @@ draft: false # optional, defaults to false
 Markdown content here...
 ```
 
+### Heading links
+
+All headings in posts should have a unique ID, so fragment links work.
+
 ### SEO
 
 Make sure the following `head` is specified with `pageMeta` (from `@/utils/seo`)

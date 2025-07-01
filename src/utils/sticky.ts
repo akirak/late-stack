@@ -49,4 +49,34 @@ export function useSticky(selector: string) {
       observer.disconnect()
     }
   }, [selector])
+
+  // If the user clicks on the anchor of the sticky element, scroll to the
+  // beginning of the next element
+  useEffect(() => {
+    function handleClick(event: MouseEvent) {
+      const parent = (event.target as HTMLElement)?.parentNode as HTMLElement | null
+      if (parent) {
+        const headingId = parent.getAttribute("data-heading-id")
+        if (sticky.current?.id === headingId) {
+          const sibling = sticky.current.nextElementSibling
+          if (sibling) {
+            event.preventDefault()
+            const upper = sticky.current.getBoundingClientRect().bottom
+            const top = sibling.getBoundingClientRect().top
+            const dx = top - upper - 15 // Add margin
+            window.scrollBy({
+              top: dx,
+              behavior: "smooth",
+            })
+          }
+        }
+      }
+    }
+
+    document.addEventListener("click", handleClick)
+
+    return () => {
+      document.removeEventListener("click", handleClick, false)
+    }
+  }, [])
 }

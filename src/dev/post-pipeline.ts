@@ -7,8 +7,11 @@ import { FileSystem, Path } from "@effect/platform"
 import { pluginCollapsibleSections } from "@expressive-code/plugin-collapsible-sections"
 import { Array, Console, Context, Effect, Layer, Option, Order, pipe, Schema, Stream } from "effect"
 import matter from "gray-matter"
+import rehypeAutoLinkHeadings from "rehype-autolink-headings"
 import rehypeExpressiveCode from "rehype-expressive-code"
 import rehypeSanitize, { defaultSchema } from "rehype-sanitize"
+import rehypeSlug from "rehype-slug"
+import remarkCustomHeaderId from "remark-custom-header-id"
 import remarkDirective from "remark-directive"
 import remarkGfm from "remark-gfm"
 import remarkParse from "remark-parse"
@@ -99,12 +102,16 @@ export const PostBuilderLive: Layer.Layer<
       .use(remarkParse)
       .use(remarkGfm)
       .use(remarkDirective)
+      .use(remarkCustomHeaderId)
       .use(remarkAdmonitions)
       .use(remarkDiagram, { runtime: d2Runtime })
       .use(remarkLink, { runtime: ogpRuntime })
       .use(remarkRehype)
+      .use(rehypeSlug)
       .use(rehypeSanitize, {
         ...defaultSchema,
+        // Don't prepend "user-content-" to every fragment ID
+        clobberPrefix: "",
         tagNames: [
           ...(defaultSchema.tagNames ?? []),
           "video",
@@ -125,6 +132,18 @@ export const PostBuilderLive: Layer.Layer<
             "allowfullscreen",
             "style",
           ],
+        },
+      })
+      .use(rehypeAutoLinkHeadings, {
+        behavior: "prepend",
+        headingProperties: {
+          className: ["linked-heading"],
+        },
+        properties(element) {
+          return {
+            "className": "heading-anchor",
+            "data-heading-id": element.properties?.id,
+          }
         },
       })
       .use(rehypeExpressiveCode, {
