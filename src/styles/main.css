@@ -36,6 +36,8 @@
     --theme-button-image: url("/theme/light-mode.svg");
     --dark-theme-button-image: url("/theme/dark-mode.svg");
 
+    --theme-link-image: url("/theme/link.svg");
+
     /* Color variables for the dark theme.
      * All the tokens are prefixed with --dark
      * and then applied to the dark mode */
@@ -486,6 +488,39 @@
     z-index: 5;
   }
 
+  .linked-heading {
+    &:not(.sticky-active) {
+      /* .sticky-active sets sticky position, so don't override it */
+      position: relative;
+    }
+
+    .heading-anchor {
+      visibility: hidden;
+    }
+
+    &:hover .heading-anchor {
+      visibility: visible;
+    }
+
+    .heading-anchor {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      transform: translateX(-100%);
+      display: flex;
+      align-items: center;
+
+      .icon {
+        background-color: var(--text-secondary);
+        line-height: 1;
+        width: 1em;
+        height: 0.8em;
+        padding: 0.1rem;
+      }
+    }
+  }
+
   .container {
     max-width: 800px;
     margin: 0 auto;
@@ -495,6 +530,19 @@
   .tagline {
     font-style: italic;
     margin-top: var(--space-sm);
+  }
+
+  /* icons */
+  .icon {
+    display: inline-block;
+    mask-repeat: no-repeat;
+    mask-size: contain;
+    mask-position: center;
+    background-color: currentColor;
+
+    &.icon-link {
+      mask-image: var(--theme-link-image);
+    }
   }
 
   /* Card Component */
