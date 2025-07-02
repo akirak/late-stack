@@ -142,12 +142,30 @@ const user: User = {
 console.log(formatUser(user)) // Output: John Doe <john@example.com>
 ```
 
-> **Tip**: This pattern is commonly used in TypeScript applications for type-safe data formatting.
+:::tip
+This pattern is commonly used in TypeScript applications for type-safe data formatting.
+:::
 
 ## Admonitions {#admonitions}
 
-:::info[My Custom Title]
-Content here.
+:::tip
+Use keyboard shortcuts to boost your productivity! Try `Ctrl+Shift+P` (or `Cmd+Shift+P` on Mac) to open the command palette in VS Code.
+:::
+
+:::important
+Always backup your database before running migration scripts in production. This simple step can save you from hours of recovery work.
+:::
+
+:::warning
+The `dangerouslySetInnerHTML` prop bypasses React's built-in XSS protection. Only use it with trusted content that you have sanitized yourself.
+:::
+
+:::error
+Missing environment variable `DATABASE_URL`. Make sure to set this in your `.env` file before starting the application.
+:::
+
+:::info[Performance optimization (info with a custom title)]
+Consider using `React.memo()` for components that receive the same props frequently. This can significantly reduce unnecessary re-renders in your application.
 :::
 
 ## Embedded contents {#embedded}
