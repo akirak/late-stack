@@ -23,17 +23,23 @@
     /* Dedicated colors for inline code */
     --color-inline-code-bg: oklch(92% 0.015 70);
     --color-inline-code-text: var(--text-primary);
+    /* --color-blockquote-bg: oklch(96% 0.012 75); /\* Slightly more saturated and darker than --bg-primary, still subtle *\/ */
+    --color-blockquote-bg: oklch(100% 0 0); /* Slightly more saturated and darker than --bg-primary, still subtle */
+    --color-blockquote-border: oklch(80% 0.01 70); /* Light gray, subtle sepia tint */
 
     /* Semantic color mappings */
     --color-bg: var(--bg-primary);
     --color-bg-secondary: var(--bg-secondary);
     --color-bg-inline-code: var(--color-inline-code-bg);
+    --color-bg-blockquote: var(--color-blockquote-bg);
     --color-text: var(--text-primary);
     --color-text-muted: var(--text-secondary);
     --color-text-inline-code: var(--color-inline-code-text);
+    --color-accent: var(--accent-primary);
     --accent-primary: var(--accent-primary);
     --color-accent-hover: var(--accent-hover);
     --border-subtle: var(--border-subtle);
+    --border-blockquote: var(--color-blockquote-border);
     --color-bg-information: var(--color-information);
     --color-bg-success: var(--color-success);
     --color-bg-warning: var(--color-warning);
@@ -67,17 +73,22 @@
     --dark-color-success: oklch(60% 0.15 150); /* Green for success messages */
     --dark-color-warning: oklch(70% 0.15 90); /* Yellow for warnings */
     --dark-color-error: oklch(60% 0.15 20); /* Red for error messages */
+    --dark-color-blockquote-bg: oklch(22% 0.06 240);
+    --dark-color-blockquote-border: oklch(45% 0.04 240); /* Darker gray, subtle navy tint */
 
     &[data-theme="dark"] {
       /* --- Dark Theme --- */
       --bg-primary: var(--dark-bg-primary);
       --bg-secondary: var(--dark-bg-secondary);
       --color-bg-inline-code: var(--dark-color-inline-code-bg);
+      --color-bg-blockquote: var(--dark-color-blockquote-bg);
       --text-primary: var(--dark-text-primary);
       --text-secondary: var(--dark-text-secondary);
       --color-text-inline-code: var(--dark-color-inline-code-text);
+      --color-accent: var(--dark-accent-primary);
       --accent-primary: var(--dark-accent-primary);
       --border-subtle: var(--dark-border-subtle);
+      --border-blockquote: var(--dark-color-blockquote-border);
       --color-link: var(--dark-color-link);
       --accent-hover: var(--dark-accent-hover);
       --theme-button-image: var(--dark-theme-button-image);
@@ -93,11 +104,14 @@
         --bg-primary: var(--dark-bg-primary);
         --bg-secondary: var(--dark-bg-secondary);
         --color-bg-inline-code: var(--dark-color-inline-code-bg);
+        --color-bg-blockquote: var(--dark-color-blockquote-bg);
         --text-primary: var(--dark-text-primary);
         --text-secondary: var(--dark-text-secondary);
         --color-text-inline-code: var(--dark-color-inline-code-text);
+        --color-accent: var(--dark-accent-primary);
         --accent-primary: var(--dark-accent-primary);
         --border-subtle: var(--dark-border-subtle);
+        --border-blockquote: var(--dark-color-blockquote-border);
         --color-link: var(--dark-color-link);
         --accent-hover: var(--dark-accent-hover);
         --theme-button-image: var(--dark-theme-button-image);
@@ -346,12 +360,49 @@
   }
 
   /* Blockquotes */
+  /* Base Blockquote Styles (for light theme primarily) */
   blockquote {
-    border-left: 4px solid var(--color-accent);
-    padding-left: var(--space-md);
-    margin: var(--space-lg) 0;
+    position: relative; /* Essential for pseudo-elements */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+
+    /* Generous Vertical and Horizontal Margins for separation */
+    margin: var(--space-xl) 0; /* 2rem (32px) top/bottom margin for good separation */
+
+    /* Padding for inner content - more generous for aesthetic appeal */
+    /* top & bottom: space-lg (24px)
+       left: space-xl (32px) + border-width (4px)
+       right: space-xl (32px) */
+    padding: var(--space-lg) var(--space-xl) var(--space-sm) calc(var(--space-xl) + 4px);
+
+    /* Background and Border - designed for subtle elegance */
+    background-color: var(--color-bg-blockquote);
+    border-left: 4px solid var(--border-blockquote); /* Your accent line */
+    border-radius: var(--radius-md); /* Softer, more pleasing corners (8px) */
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.05); /* Very subtle shadow for depth */
+
+    /* Typography - distinct and readable */
+    font-family: var(--font-serif); /* Source Serif 4 - assuming 400 weight is now loaded */
+    font-size: var(--text-xl); /* 1.25rem (20px) - larger than base text for emphasis */
+    line-height: var(--leading-relaxed); /* 1.625 - more generous line spacing for readability */
     font-style: italic;
-    color: var(--color-text-muted);
+    font-weight: var(--font-normal); /* 400 */
+    color: var(--color-text-muted); /* Muted color to indicate secondary content */
+
+    /* Decorative Quote Marks (Large and impactful) */
+    &::before {
+      content: "“"; /* Unicode left double quotation mark */
+      position: absolute;
+      left: var(--space-sm); /* Positions it to the left of the text content */
+      top: var(--space-sm); /* Adjust vertically to sit nicely above the first line */
+      font-size: var(--text-5xl); /* 3rem (48px) - very large for strong visual impact */
+      line-height: 1; /* Prevents it from affecting text line height */
+      color: var(--border-blockquote); /* Use the same gray border color */
+      opacity: 0.7;
+      font-family: var(--font-serif); /* Ensure consistent font for the quote mark itself */
+      pointer-events: none; /* Allows text selection underneath */
+      user-select: none; /* Prevents text selection on the pseudo-element itself */
+      z-index: 0; /* Ensures it's behind the actual text */
+    }
   }
 
   /* Lists (only inside main contents) */
