@@ -6,6 +6,7 @@ import { TextEncoder } from "node:util"
 import { FileSystem, Path } from "@effect/platform"
 import { pluginCollapsibleSections } from "@expressive-code/plugin-collapsible-sections"
 import { Array, Console, Context, Effect, Layer, Option, Order, pipe, Schema, Stream } from "effect"
+import GithubSlugger from "github-slugger"
 import matter from "gray-matter"
 import rehypeAutoLinkHeadings from "rehype-autolink-headings"
 import rehypeExpressiveCode from "rehype-expressive-code"
@@ -98,12 +99,14 @@ export const PostBuilderLive: Layer.Layer<
 
     const ecConfig = yield* Effect.promise(() => EC.loadConfig())
 
+    const admonitionSlugger = new GithubSlugger()
+
     const postProcessor = unified()
       .use(remarkParse)
       .use(remarkGfm)
       .use(remarkDirective)
       .use(remarkCustomHeaderId)
-      .use(remarkAdmonitions)
+      .use(remarkAdmonitions, { slugger: admonitionSlugger })
       .use(remarkDiagram, { runtime: d2Runtime })
       .use(remarkLink, { runtime: ogpRuntime })
       .use(remarkRehype)
@@ -118,10 +121,20 @@ export const PostBuilderLive: Layer.Layer<
           "iframe",
           "diagram",
           "svg",
+          "span",
         ],
         attributes: {
           ...defaultSchema.attributes,
-          div: [["className", "admonition", /^admonition-/], ["className", "youtube-embed"], ["style"]],
+          div: [
+            ["className", /^admonition/],
+            ["className", "youtube-embed"],
+            ["style"],
+            ["aria-labelledby"],
+          ],
+          span: [
+            ["className"],
+            ["aria-hidden"],
+          ],
           diagram: ["codeLanguage", "code", "__html"],
           iframe: [
             "src",
@@ -158,6 +171,9 @@ export const PostBuilderLive: Layer.Layer<
      */
     const processPost = (filePath: string) => Effect.gen(function* () {
       const doc = matter.read(filePath)
+
+      // Reset the slugger for each post
+      admonitionSlugger.reset()
 
       const mdast = postProcessor.parse(doc.content)
       const hast = yield* Effect.tryPromise({
