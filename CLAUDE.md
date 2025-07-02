@@ -142,6 +142,7 @@ System Font (--font-system: "Manrope", system-ui, ...):
 
 Serif Font (--font-serif: "Source Serif 4", serif):
 
+- 400 (--font-normal) - Used for blockquote (italicized)
 - 600 (--font-semibold) - Used for all headings (h1, h2, h3, h4, h5, h6)
 
 Mono Font (--font-mono: "DM Mono", "Monaco", "Menlo", "Consolas", monospace):
