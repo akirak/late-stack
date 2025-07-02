@@ -16,6 +16,7 @@
     --border-subtle: oklch(90% 0.005 70); /* Very light gray-brown for borders */
     --color-link: var(--accent-primary); /* Links use primary accent color */
     --accent-hover: oklch(30% 0.1 240); /* Darker navy on hover */
+    --color-information: oklch(50% 0.12 250); /* Blue for information messages */
     --color-success: oklch(50% 0.12 150); /* Green for success messages */
     --color-warning: oklch(60% 0.12 90); /* Yellow for warnings */
     --color-error: oklch(50% 0.12 20); /* Red for error messages */
@@ -27,6 +28,10 @@
     --accent-primary: var(--accent-primary);
     --color-accent-hover: var(--accent-hover);
     --border-subtle: var(--border-subtle);
+    --color-bg-information: var(--color-information);
+    --color-bg-success: var(--color-success);
+    --color-bg-warning: var(--color-warning);
+    --color-bg-error: var(--color-error);
 
     /* Transitions */
     --transition-fast: 0.2s ease;
@@ -50,6 +55,7 @@
     --dark-border-subtle: oklch(25% 0.03 240); /* For outlines, etc. */
     --dark-color-link: var(--dark-accent-primary); /* Links use primary accent color */
     --dark-accent-hover: oklch(75% 0.1 70); /* Lighter for hover state */
+    --dark-color-information: oklch(72% 0.15 250); /* Blue for information messages */
     --dark-color-success: oklch(60% 0.15 150); /* Green for success messages */
     --dark-color-warning: oklch(70% 0.15 90); /* Yellow for warnings */
     --dark-color-error: oklch(60% 0.15 20); /* Red for error messages */
@@ -65,6 +71,10 @@
       --color-link: var(--dark-color-link);
       --accent-hover: var(--dark-accent-hover);
       --theme-button-image: var(--dark-theme-button-image);
+      --color-bg-information: var(--dark-color-information);
+      --color-bg-success: var(--dark-color-success);
+      --color-bg-warning: var(--dark-color-warning);
+      --color-bg-error: var(--dark-color-error);
     }
 
     @media (prefers-color-scheme: dark) {
@@ -79,6 +89,10 @@
         --color-link: var(--dark-color-link);
         --accent-hover: var(--dark-accent-hover);
         --theme-button-image: var(--dark-theme-button-image);
+        --color-bg-information: var(--dark-color-information);
+        --color-bg-success: var(--dark-color-success);
+        --color-bg-warning: var(--dark-color-warning);
+        --color-bg-error: var(--dark-color-error);
       }
     }
   }
@@ -679,6 +693,57 @@
 
     .theme-toggle {
       border-width: 2px;
+    }
+  }
+
+  /* Admonition Components */
+  .admonition {
+    border: 1px solid var(--border-subtle);
+    border-left: 4px solid var(--color-admonition-status);
+    border-radius: var(--radius-md);
+    margin: var(--space-lg) 0;
+    background: var(--bg-secondary);
+    overflow: hidden;
+
+    &.admonition-tip {
+      --color-admonition-status: var(--color-bg-success);
+    }
+
+    &.admonition-info {
+      --color-admonition-status: var(--color-bg-information);
+    }
+
+    &.admonition-warning,
+    &.admonition-important {
+      --color-admonition-status: var(--color-bg-warning);
+    }
+
+    &.admonition-error {
+      --color-admonition-status: var(--color-bg-error);
+    }
+
+    .admonition-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: var(--space-sm) var(--space-lg);
+      font-weight: var(--font-semibold);
+
+      color: color-mix(in oklch, var(--color-admonition-status) 70%, var(--color-text));
+      background: color-mix(in oklch, var(--color-admonition-status) 15%, transparent);
+
+      .admonition-icon {
+        font-size: var(--text-lg);
+        flex-shrink: 0;
+      }
+    }
+
+    .admonition-content {
+      padding: var(--space-md) var(--space-lg);
+
+      & > :last-child {
+        margin-bottom: 0;
+      }
     }
   }
 
