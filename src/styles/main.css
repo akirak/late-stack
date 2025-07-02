@@ -354,23 +354,34 @@
     color: var(--color-text-muted);
   }
 
-  /* Lists */
-  ul,
-  ol {
-    margin-bottom: var(--space-md);
-    padding-left: var(--space-lg);
-  }
+  /* Lists (only inside main contents) */
+  .typography {
+    :where(ul, ol) {
+      /* Remove default browser margins if not desired, or set specific top/bottom */
+      margin-top: var(--space-md); /* Space above a list when it follows content */
+      margin-bottom: var(--space-md); /* Space below a list */
+      padding-left: var(--space-lg); /* Indentation for bullets/numbers */
+      /* Remove default list-style-position: outside; if you want custom bullets positioned inside padding-left */
+    }
 
-  ul {
-    list-style-type: disc;
-  }
+    li > :where(ul, ol) {
+      margin-top: var(--space-xs); /* Smaller margin for nested lists, or even 0 */
+      margin-bottom: 0; /* Nested lists typically don't need their own bottom margin pushing against parent's content */
+    }
 
-  ol {
-    list-style-type: decimal;
-  }
+    /* Spacing between list items */
+    /* Apply margin-top to all list items *except the first one* in a list */
+    li + li {
+      margin-top: var(--space-xs); /* Space between sibling list items */
+    }
 
-  li {
-    margin-bottom: var(--space-xs);
+    ul > li {
+      list-style-type: disc;
+    }
+
+    ol > li {
+      list-style-type: decimal;
+    }
   }
 
   /* Responsive typography adjustments */
@@ -645,6 +656,21 @@
   .btn-primary:hover {
     background: var(--color-accent-hover);
     border-color: var(--color-accent-hover);
+  }
+
+  .task-list-item {
+    list-style-type: none !important;
+
+    & > input:first-child {
+      margin-right: var(--space-sm);
+      width: 1.25em;
+      height: 1.25em;
+      vertical-align: middle;
+    }
+
+    :where(ul, ol):has(> &) {
+      padding-left: 0 !important;
+    }
   }
 
   /* Responsive Design */
