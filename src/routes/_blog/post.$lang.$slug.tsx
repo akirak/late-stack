@@ -38,7 +38,7 @@ function PostComponent() {
         </h1>
       </Header>
 
-      <main>
+      <main className="typography">
         {hastToJsx(post.hastBody)}
       </main>
     </Container>
