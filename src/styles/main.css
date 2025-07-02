@@ -20,11 +20,17 @@
     --color-success: oklch(50% 0.12 150); /* Green for success messages */
     --color-warning: oklch(60% 0.12 90); /* Yellow for warnings */
     --color-error: oklch(50% 0.12 20); /* Red for error messages */
+    /* Dedicated colors for inline code */
+    --color-inline-code-bg: oklch(92% 0.015 70);
+    --color-inline-code-text: var(--text-primary);
 
     /* Semantic color mappings */
     --color-bg: var(--bg-primary);
+    --color-bg-secondary: var(--bg-secondary);
+    --color-bg-inline-code: var(--color-inline-code-bg);
     --color-text: var(--text-primary);
     --color-text-muted: var(--text-secondary);
+    --color-text-inline-code: var(--color-inline-code-text);
     --accent-primary: var(--accent-primary);
     --color-accent-hover: var(--accent-hover);
     --border-subtle: var(--border-subtle);
@@ -50,6 +56,8 @@
     --dark-bg-secondary: oklch(25% 0.06 245); /* Slightly lighter, more saturated background for components */
     --dark-text-primary: oklch(95% 0 0); /* Near-white for main content */
     --dark-text-secondary: oklch(75% 0 0); /* Medium gray for secondary info, captions */
+    --dark-color-inline-code-bg: oklch(28% 0.06 245); /* Slightly lighter than dark-bg-secondary */
+    --dark-color-inline-code-text: oklch(75% 0.1 150); /* A subtle, desaturated green for code text */
     --dark-accent-primary: oklch(70% 0.1 70); /* A vibrant but not overpowering magenta/purple */
     --dark-accent-secondary: oklch(55% 0.08 300); /* Muted blue/violet secondary accent */
     --dark-border-subtle: oklch(25% 0.03 240); /* For outlines, etc. */
@@ -64,8 +72,10 @@
       /* --- Dark Theme --- */
       --bg-primary: var(--dark-bg-primary);
       --bg-secondary: var(--dark-bg-secondary);
+      --color-bg-inline-code: var(--dark-color-inline-code-bg);
       --text-primary: var(--dark-text-primary);
       --text-secondary: var(--dark-text-secondary);
+      --color-text-inline-code: var(--dark-color-inline-code-text);
       --accent-primary: var(--dark-accent-primary);
       --border-subtle: var(--dark-border-subtle);
       --color-link: var(--dark-color-link);
@@ -82,8 +92,10 @@
         /* --- Dark Theme --- */
         --bg-primary: var(--dark-bg-primary);
         --bg-secondary: var(--dark-bg-secondary);
+        --color-bg-inline-code: var(--dark-color-inline-code-bg);
         --text-primary: var(--dark-text-primary);
         --text-secondary: var(--dark-text-secondary);
+        --color-text-inline-code: var(--dark-color-inline-code-text);
         --accent-primary: var(--dark-accent-primary);
         --border-subtle: var(--dark-border-subtle);
         --color-link: var(--dark-color-link);
@@ -310,7 +322,8 @@
   code {
     font-family: var(--font-mono);
     font-size: 0.9em;
-    background: var(--color-border);
+    background: var(--color-bg-inline-code);
+    color: var(--color-text-inline-code);
     padding: var(--space-xs) var(--space-sm);
     border-radius: var(--radius-sm);
     font-feature-settings:
