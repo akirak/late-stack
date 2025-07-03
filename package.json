@@ -35,6 +35,7 @@
     "react-dom": "^19.1.0",
     "rehype-autolink-headings": "^7.1.0",
     "rehype-expressive-code": "^0.41.2",
+    "remark-captions": "^2.2.4",
     "remark-custom-header-id": "^1.0.0",
     "xml": "^1.0.1"
   },

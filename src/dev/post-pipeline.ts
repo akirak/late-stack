@@ -12,6 +12,7 @@ import rehypeAutoLinkHeadings from "rehype-autolink-headings"
 import rehypeExpressiveCode from "rehype-expressive-code"
 import rehypeSanitize, { defaultSchema } from "rehype-sanitize"
 import rehypeSlug from "rehype-slug"
+import remarkCaptions from "remark-captions"
 import remarkCustomHeaderId from "remark-custom-header-id"
 import remarkDirective from "remark-directive"
 import remarkGfm from "remark-gfm"
@@ -109,6 +110,11 @@ export const PostBuilderLive: Layer.Layer<
       .use(remarkAdmonitions, { slugger: admonitionSlugger })
       .use(remarkDiagram, { runtime: d2Runtime })
       .use(remarkLink, { runtime: ogpRuntime })
+      .use(remarkCaptions, {
+        external: {
+          table: "Table:",
+        },
+      })
       .use(remarkRehype)
       .use(rehypeSlug)
       .use(rehypeSanitize, {
@@ -122,6 +128,8 @@ export const PostBuilderLive: Layer.Layer<
           "diagram",
           "svg",
           "span",
+          "figure",
+          "figcaption",
         ],
         attributes: {
           ...defaultSchema.attributes,
@@ -134,6 +142,12 @@ export const PostBuilderLive: Layer.Layer<
           span: [
             ["className"],
             ["aria-hidden"],
+          ],
+          figure: [
+            ["className"],
+          ],
+          figcaption: [
+            ["className"],
           ],
           diagram: ["codeLanguage", "code", "__html"],
           iframe: [
