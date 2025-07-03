@@ -1,7 +1,8 @@
 ---
-title: Markdown Showcase
+title: Content Style Guide
 language: en
-draft: true
+publicationDate: "1970-01-01T12:00:00+09:00"
+description: Guide to content styles on jingsi.space.
 ---
 
 :::warning
