@@ -100,7 +100,7 @@ Content before hr
 Content after hr
 -->
 
-## Footnotes
+## Footnote references
 
 Alpha[^micromark], bravo[^micromark], and charlie[^remark].
 
