@@ -25,6 +25,7 @@ const makeLinkBlock = Match.type<typeof ExternalUrlParser.Type>().pipe(
         hName: "iframe",
         hProperties: {
           src: source.embedUrl,
+          title: metadata?.title,
           width: "560",
           height: "315",
           frameborder: "0",
