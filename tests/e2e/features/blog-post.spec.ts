@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test"
 
-const TEST_PATH = "/post/en/styleguide"
+const TEST_PATH = "/post/en/style-guide"
 
 test("post", async ({ page }) => {
   await page.goto(TEST_PATH)
@@ -9,7 +9,7 @@ test("post", async ({ page }) => {
 })
 
 test("display the document title", async ({ page }) => {
-  await page.goto("/post/en/styleguide")
+  await page.goto("/post/en/style-guide")
 
   // Check that the document title includes both the post title and site suffix
   await expect(page).toHaveTitle("Content Style Guide — jingsi.space")
