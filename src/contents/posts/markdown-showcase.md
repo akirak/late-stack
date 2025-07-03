@@ -88,6 +88,7 @@ print(fibonacci(10))
 | Tables      | ✅      | Markdown tables     |
 | Math        | ❓      | To be tested        |
 
+<!--
 ## Horizontal Rules {#horizontal-rules}
 
 I don't plan on using horizontal rules in my blog.
@@ -97,6 +98,7 @@ Content before hr
 ---
 
 Content after hr
+-->
 
 ## Footnotes
 
@@ -215,7 +217,3 @@ lambda -> api: Response
 ## Conclusion {#conclusion}
 
 This showcase demonstrates the rich Markdown support available in this TanStack Start blog. The content pipeline processes all these elements seamlessly from Markdown to the final rendered output.
-
----
-
-_Last updated: December 9, 2024_
