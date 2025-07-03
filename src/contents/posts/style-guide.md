@@ -201,6 +201,10 @@ Consider using `React.memo()` for components that receive the same props frequen
 
 ## Embedded contents {#embedded}
 
+### OGP Links
+
+::link[https://effect.website]
+
 ### YouTube {#youtube}
 
 ::link[https://www.youtube.com/watch?v=l7OPFjPjtGs]
