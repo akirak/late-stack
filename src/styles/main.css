@@ -435,6 +435,90 @@
     }
   }
 
+  /* Tables in main contents */
+  .typography {
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: var(--space-lg) 0;
+      font-size: var(--text-base);
+      line-height: var(--leading-normal);
+      color: var(--color-text);
+      background-color: var(--color-bg);
+    }
+
+    tr:hover {
+      background-color: color-mix(in oklch, var(--bg-secondary) 30%, transparent);
+
+      thead > & {
+        background-color: var(--bg-secondary);
+      }
+    }
+
+    :where(th, td) {
+      padding: var(--space-sm) var(--space-md);
+      text-align: left;
+      vertical-align: top;
+      border-bottom: 1px solid var(--border-subtle);
+
+      tbody tr:last-child & {
+        border-bottom: none;
+      }
+    }
+
+    th {
+      font-family: var(--font-system);
+      font-weight: var(--font-semibold);
+      color: var(--color-text);
+      background-color: var(--bg-secondary);
+      border-bottom: 2px solid var(--border-subtle);
+    }
+
+    /* Responsive table handling with container queries */
+    @container (max-width: 500px) {
+      table {
+        font-size: var(--text-sm);
+        overflow-x: auto;
+        display: block;
+        white-space: nowrap;
+      }
+
+      th,
+      td {
+        padding: var(--space-xs) var(--space-sm);
+      }
+    }
+
+    /* Captions */
+    figure:has(table) {
+      margin: var(--space-lg) 0;
+      container-type: inline-size;
+    }
+
+    figure > table {
+      margin: 0;
+    }
+
+    figcaption {
+      font-family: var(--font-serif);
+      font-size: var(--text-sm); /* Keep it slightly smaller than body text, e.g., 0.875rem / 14px */
+      line-height: var(--leading-normal); /* Standard line height for readability */
+      color: var(--color-text-muted); /* A slightly muted color helps it feel less like main text */
+      text-align: left; /* Left-align captions for readability. Center-alignment is harder to read for multi-line text. */
+      margin-top: var(--space-sm); /* Space between figure/table and caption */
+      margin-bottom: var(--space-lg); /* Space after caption before next content */
+      padding: 0 var(--space-md); /* Add a little horizontal padding if your figures span full width,
+                                    or align it with your main text column */
+    }
+
+    @container (max-width: 500px) {
+      figcaption {
+        font-size: var(--text-xs);
+        margin-top: var(--space-xs);
+      }
+    }
+  }
+
   /* Responsive typography adjustments */
   @media (max-width: 768px) {
     :root {

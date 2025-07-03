@@ -80,6 +80,8 @@ print(fibonacci(10))
 
 ## Tables {#tables}
 
+Basic table with headers:
+
 | Feature     | Support | Notes               |
 | ----------- | ------- | ------------------- |
 | Headers     | ✅      | Full support        |
@@ -87,6 +89,32 @@ print(fibonacci(10))
 | Images      | ✅      | Local and remote    |
 | Tables      | ✅      | Markdown tables     |
 | Math        | ❓      | To be tested        |
+
+Table: Blog feature support status
+
+More complex table with alignment:
+
+| Framework | Language | Performance | Learning Curve | Ecosystem |
+| :-------- | :------: | ----------: | :------------: | :-------- |
+| React     |  JS/TS   |        High |     Medium     | Excellent |
+| Vue       |  JS/TS   |        High |      Easy      | Good      |
+| Angular   |    TS    |        High |      Hard      | Good      |
+| Svelte    |  JS/TS   |   Very High |      Easy      | Growing   |
+
+Table: JavaScript framework comparison with column alignment
+
+Table with longer content:
+
+| HTTP Status | Name                  | Description                                                                       |
+| ----------- | --------------------- | --------------------------------------------------------------------------------- |
+| 200         | OK                    | The request has succeeded. The meaning of the success depends on the HTTP method. |
+| 201         | Created               | The request has been fulfilled and resulted in a new resource being created.      |
+| 400         | Bad Request           | The server could not understand the request due to invalid syntax.                |
+| 401         | Unauthorized          | Authentication is required and has failed or has not yet been provided.           |
+| 404         | Not Found             | The server can not find the requested resource.                                   |
+| 500         | Internal Server Error | The server has encountered a situation it doesn't know how to handle.             |
+
+Table: Common HTTP status codes and their meanings
 
 <!--
 ## Horizontal Rules {#horizontal-rules}
