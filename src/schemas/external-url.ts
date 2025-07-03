@@ -8,13 +8,21 @@ export class YoutubeVideoSource extends Schema.TaggedClass<YoutubeVideoSource>()
   }
 
   get videoUrl() {
-    return `https://www.youtube.com/v/${this.id}`
+    return `https://www.youtube.com/watch?v=${this.id}`
+  }
+
+  get metadataUrl() {
+    return `https://www.youtube.com/watch?v=${this.id}`
   }
 }
 
 export class GenericExternalSource extends Schema.TaggedClass<GenericExternalSource>()("app/GenericExternalSource", {
   url: Schema.String,
-}) { }
+}) {
+  get metadataUrl() {
+    return this.url
+  }
+}
 
 const YoutubeVideoUrlParser = Schema.transformOrFail(
   Schema.String,
@@ -75,6 +83,8 @@ const GenericExternalUrlParser = Schema.transformOrFail(
   },
 )
 
+// All subtypes should have a field named `metadataUrl` which is used to fetch
+// OGP metadata
 export const ExternalUrlParser = Schema.Union(
   YoutubeVideoUrlParser,
   GenericExternalUrlParser,

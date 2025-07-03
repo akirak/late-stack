@@ -9,7 +9,7 @@ interface Options {
 }
 
 const makeLinkBlock = Match.type<typeof ExternalUrlParser.Type>().pipe(
-  Match.tag("app/YoutubeVideoSource", source => (node: any) => {
+  Match.tag("app/YoutubeVideoSource", source => (node: any, _options?: Options, metadata?: LinkMetadata) => {
     const data = node.data || (node.data = {})
     data.hName = "div"
     data.hProperties = {
@@ -148,7 +148,7 @@ function remarkLink(options?: RemarkLinkOptions) {
 
   return async (tree: any) => {
     // Collect all link directives that need OGP metadata
-    const linkNodes: Array<{ node: any, headingLevel: number, url: string }> = []
+    const linkNodes: Array<{ node: any, headingLevel: number, source: typeof ExternalUrlParser.Type }> = []
 
     visit(tree, (node) => {
       // Track the depth of the current heading to set the heading level
@@ -178,9 +178,8 @@ function remarkLink(options?: RemarkLinkOptions) {
 
         // Store node info for OGP fetching (only for block-level directives)
         if ((node.type === "leafDirective" || node.type === "containerDirective")
-          && source._tag === "app/GenericExternalSource"
           && runtime) {
-          linkNodes.push({ node, headingLevel: parentDepth + 1, url: source.url })
+          linkNodes.push({ node, headingLevel: parentDepth + 1, source })
         }
 
         switch (node.type) {
@@ -196,15 +195,13 @@ function remarkLink(options?: RemarkLinkOptions) {
             break
           }
           case "leafDirective": {
-            // For non-generic sources or when no runtime, process immediately
-            if (source._tag !== "app/GenericExternalSource" || !runtime) {
+            if (!runtime) {
               makeLinkBlock(source)(node, { headingLevel: parentDepth + 1 })
             }
             break
           }
           case "containerDirective": {
-            // For non-generic sources or when no runtime, process immediately
-            if (source._tag !== "app/GenericExternalSource" || !runtime) {
+            if (!runtime) {
               makeLinkBlock(source)(node, { headingLevel: parentDepth + 1 })
             }
             break
@@ -215,12 +212,12 @@ function remarkLink(options?: RemarkLinkOptions) {
 
     // Fetch OGP metadata for all collected links
     if (runtime && linkNodes.length > 0) {
-      const effects = linkNodes.map(({ url }) =>
+      const effects = linkNodes.map(({ source }) =>
         LinkMetadataService.pipe(
           Effect.andThen(
             service =>
-              service.get(url).pipe(
-                Effect.map(result => ({ url, result })),
+              service.get(source.metadataUrl).pipe(
+                Effect.map(result => ({ url: source.metadataUrl, result })),
               ),
           ),
         ),
@@ -239,9 +236,8 @@ function remarkLink(options?: RemarkLinkOptions) {
       })
 
       // Apply OGP metadata to nodes
-      linkNodes.forEach(({ node, headingLevel, url }) => {
-        const source = { _tag: "app/GenericExternalSource" as const, url }
-        const ogpMetadata = ogpMap.get(url)
+      linkNodes.forEach(({ node, headingLevel, source }) => {
+        const ogpMetadata = ogpMap.get(source.metadataUrl)
         makeLinkBlock(source)(node, { headingLevel }, ogpMetadata)
       })
     }
