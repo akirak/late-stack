@@ -4,6 +4,10 @@ import { visit } from "unist-util-visit"
 import { ExternalUrlParser } from "../../schemas/external-url"
 import { LinkMetadataService } from "../link-metadata/layer"
 
+interface Options {
+  headingLevel: number
+}
+
 const makeLinkBlock = Match.type<typeof ExternalUrlParser.Type>().pipe(
   Match.tag("app/YoutubeVideoSource", source => (node: any) => {
     const data = node.data || (node.data = {})
@@ -31,7 +35,7 @@ const makeLinkBlock = Match.type<typeof ExternalUrlParser.Type>().pipe(
       },
     })
   }),
-  Match.tag("app/GenericExternalSource", source => (node: any, metadata?: LinkMetadata) => {
+  Match.tag("app/GenericExternalSource", source => (node: any, options?: Options, metadata?: LinkMetadata) => {
     const data = node.data || (node.data = {})
     data.hName = "div"
     data.hProperties = {
@@ -79,7 +83,7 @@ const makeLinkBlock = Match.type<typeof ExternalUrlParser.Type>().pipe(
                 metadata.title && {
                   type: "paragraph",
                   data: {
-                    hName: "h3",
+                    hName: `h${options?.headingLevel || 3}`,
                     hProperties: {
                       className: "link-card-title",
                     },
@@ -136,14 +140,25 @@ export interface RemarkLinkOptions {
   runtime?: Runtime.Runtime<LinkMetadataService>
 }
 
+// Heading level
+let parentDepth = 1
+
 function remarkLink(options?: RemarkLinkOptions) {
   const { runtime } = options || {}
 
   return async (tree: any) => {
     // Collect all link directives that need OGP metadata
-    const linkNodes: Array<{ node: any, url: string }> = []
+    const linkNodes: Array<{ node: any, headingLevel: number, url: string }> = []
 
     visit(tree, (node) => {
+      // Track the depth of the current heading to set the heading level
+      // correctly
+      if (node.type === "heading") {
+        // Reset parent depth for headings
+        parentDepth = node.depth
+        return
+      }
+
       if (
         node.type === "containerDirective"
         || node.type === "leafDirective"
@@ -165,7 +180,7 @@ function remarkLink(options?: RemarkLinkOptions) {
         if ((node.type === "leafDirective" || node.type === "containerDirective")
           && source._tag === "app/GenericExternalSource"
           && runtime) {
-          linkNodes.push({ node, url: source.url })
+          linkNodes.push({ node, headingLevel: parentDepth + 1, url: source.url })
         }
 
         switch (node.type) {
@@ -183,14 +198,14 @@ function remarkLink(options?: RemarkLinkOptions) {
           case "leafDirective": {
             // For non-generic sources or when no runtime, process immediately
             if (source._tag !== "app/GenericExternalSource" || !runtime) {
-              makeLinkBlock(source)(node)
+              makeLinkBlock(source)(node, { headingLevel: parentDepth + 1 })
             }
             break
           }
           case "containerDirective": {
             // For non-generic sources or when no runtime, process immediately
             if (source._tag !== "app/GenericExternalSource" || !runtime) {
-              makeLinkBlock(source)(node)
+              makeLinkBlock(source)(node, { headingLevel: parentDepth + 1 })
             }
             break
           }
@@ -224,10 +239,10 @@ function remarkLink(options?: RemarkLinkOptions) {
       })
 
       // Apply OGP metadata to nodes
-      linkNodes.forEach(({ node, url }) => {
+      linkNodes.forEach(({ node, headingLevel, url }) => {
         const source = { _tag: "app/GenericExternalSource" as const, url }
         const ogpMetadata = ogpMap.get(url)
-        makeLinkBlock(source)(node, ogpMetadata)
+        makeLinkBlock(source)(node, { headingLevel }, ogpMetadata)
       })
     }
   }
