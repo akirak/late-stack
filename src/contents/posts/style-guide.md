@@ -141,12 +141,18 @@ Alpha[^micromark], bravo[^micromark], and charlie[^remark].
 
 Here's a more complex example combining multiple elements:
 
+<!--
+
+Task lists are unsupported for now.
+
 ### Task List {#task-list}
 
 - [x] Set up blog structure
 - [x] Add Markdown support
 - [ ] Add comment system
 - [ ] Implement search
+
+-->
 
 ### Code Example with Explanation {#code-example}
 
