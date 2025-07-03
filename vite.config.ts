@@ -30,4 +30,9 @@ export default defineConfig({
     cssMinify: "lightningcss",
     sourcemap: true,
   },
+  server: {
+    watch: {
+      ignored: ["**/playwright-report/**", "**/data/**"],
+    },
+  },
 })
