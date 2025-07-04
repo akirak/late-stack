@@ -10,7 +10,7 @@ const iconMap: Record<string, string> = {
   info: "ℹ️",
   warning: "⚠️",
   error: "❌",
-  important: "⚠️",
+  important: "❗️",
 }
 
 function remarkAdmonitions({ slugger }: RemarkAdmonitionsOptions) {
