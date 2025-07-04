@@ -65,6 +65,24 @@ This is a **Warning** box. It alerts readers to potential risks or advises cauti
 This is an **Error** box. It indicates something that is incorrect or will cause a problem.
 :::
 
+Besides the basic callout box types illustrated above, there can be variants with custom emojis and titles.
+
+:::info[Favorite: Key takeaway for the reader]{emoji="⭐"}
+Use this to call out **key points** or takeaways.
+:::
+
+:::info[Tip: A helpful piece of advice]{emoji="💡"}
+Provide a **helpful suggestion** or a shortcut here.
+:::
+
+:::info[Reminder: Don't forget this]{emoji="📌"}
+A gentle nudge about something **important to remember**.
+:::
+
+:::error[Fatal error: A critical warning]{emoji="💥"}
+This signifies a **critical issue** that needs immediate attention.
+:::
+
 ### Embedded Content
 
 Sometimes content from other websites is embedded directly in an article.
