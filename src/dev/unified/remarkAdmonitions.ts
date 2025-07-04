@@ -28,6 +28,10 @@ function remarkAdmonitions({ slugger }: RemarkAdmonitionsOptions) {
         const title = hasTitle && titleElement.children[0].value
         const content = hasTitle ? node.children.slice(1) : node.children
 
+        // Extract custom emoji from attributes
+        const customEmoji = node.attributes?.emoji
+        const emoji = customEmoji || iconMap[node.name]
+
         const id = `admonition-${slugger.slug(title || node.name)}`
 
         const data = node.data || (node.data = {})
@@ -63,7 +67,7 @@ function remarkAdmonitions({ slugger }: RemarkAdmonitionsOptions) {
                 },
               },
               children: [
-                { type: "text", value: iconMap[node.name] },
+                { type: "text", value: emoji },
               ],
             },
             {
