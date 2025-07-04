@@ -28,6 +28,7 @@ export const Route = createFileRoute("/_blog/post/$lang/$slug")({
 function PostComponent() {
   const { post } = Route.useLoaderData()
 
+  // Make the headings sticky. Exclude link cards.
   useSticky("main :where(h2, h3, h4, h5, h6)")
 
   return (
