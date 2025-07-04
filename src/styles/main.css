@@ -17,7 +17,7 @@
     --color-link: var(--accent-primary); /* Links use primary accent color */
     --accent-hover: oklch(30% 0.1 240); /* Darker navy on hover */
     --color-information: oklch(50% 0.12 250); /* Blue for information messages */
-    --color-success: oklch(50% 0.12 150); /* Green for success messages */
+    /* --color-success: oklch(50% 0.12 150); /\* Green for success messages *\/ */
     --color-warning: oklch(60% 0.12 90); /* Yellow for warnings */
     --color-error: oklch(50% 0.12 20); /* Red for error messages */
     /* Dedicated colors for inline code */
@@ -41,7 +41,7 @@
     --border-subtle: var(--border-subtle);
     --border-blockquote: var(--color-blockquote-border);
     --color-bg-information: var(--color-information);
-    --color-bg-success: var(--color-success);
+    /* --color-bg-success: var(--color-success); */
     --color-bg-warning: var(--color-warning);
     --color-bg-error: var(--color-error);
 
@@ -70,7 +70,7 @@
     --dark-color-link: var(--dark-accent-primary); /* Links use primary accent color */
     --dark-accent-hover: oklch(75% 0.1 70); /* Lighter for hover state */
     --dark-color-information: oklch(72% 0.15 250); /* Blue for information messages */
-    --dark-color-success: oklch(60% 0.15 150); /* Green for success messages */
+    /* --dark-color-success: oklch(60% 0.15 150); /\* Green for success messages *\/ */
     --dark-color-warning: oklch(70% 0.15 90); /* Yellow for warnings */
     --dark-color-error: oklch(60% 0.15 20); /* Red for error messages */
     --dark-color-blockquote-bg: oklch(22% 0.06 240);
@@ -93,7 +93,7 @@
       --accent-hover: var(--dark-accent-hover);
       --theme-button-image: var(--dark-theme-button-image);
       --color-bg-information: var(--dark-color-information);
-      --color-bg-success: var(--dark-color-success);
+      /* --color-bg-success: var(--dark-color-success); */
       --color-bg-warning: var(--dark-color-warning);
       --color-bg-error: var(--dark-color-error);
     }
@@ -116,7 +116,7 @@
         --accent-hover: var(--dark-accent-hover);
         --theme-button-image: var(--dark-theme-button-image);
         --color-bg-information: var(--dark-color-information);
-        --color-bg-success: var(--dark-color-success);
+        /* --color-bg-success: var(--dark-color-success); */
         --color-bg-warning: var(--dark-color-warning);
         --color-bg-error: var(--dark-color-error);
       }
