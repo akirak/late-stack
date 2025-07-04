@@ -53,16 +53,8 @@ To make content more dynamic and helpful, a variety of special blocks are used t
 
 These boxes draw attention to specific types of information. Each color and title has a different purpose.
 
-:::tip
-This is a **Tip** box. It offers helpful advice or a useful shortcut.
-:::
-
 :::info
 This is an **Info** box. It provides additional, nice-to-know information that supplements the main text.
-:::
-
-:::important
-This is an **Important** box. It contains key information that should not be missed.
 :::
 
 :::warning

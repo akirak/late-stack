@@ -879,16 +879,11 @@
     background: var(--bg-secondary);
     overflow: hidden;
 
-    &.admonition-tip {
-      --color-admonition-status: var(--color-bg-success);
-    }
-
     &.admonition-info {
       --color-admonition-status: var(--color-bg-information);
     }
 
-    &.admonition-warning,
-    &.admonition-important {
+    &.admonition-warning {
       --color-admonition-status: var(--color-bg-warning);
     }
 

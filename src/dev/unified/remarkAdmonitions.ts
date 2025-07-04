@@ -5,12 +5,13 @@ export interface RemarkAdmonitionsOptions {
   slugger: GithubSlugger
 }
 
+/**
+ * Default icon mapping for each admonition type.
+ */
 const iconMap: Record<string, string> = {
-  tip: "💡",
   info: "ℹ️",
   warning: "⚠️",
   error: "❌",
-  important: "❗️",
 }
 
 function remarkAdmonitions({ slugger }: RemarkAdmonitionsOptions) {
@@ -19,7 +20,7 @@ function remarkAdmonitions({ slugger }: RemarkAdmonitionsOptions) {
       if (
         node.type === "containerDirective"
       ) {
-        if (!/^(?:tip|info|warning|error|important)$/.test(node.name))
+        if (!/^(?:info|warning|error)$/.test(node.name))
           return
 
         const titleElement = node.children[0]
