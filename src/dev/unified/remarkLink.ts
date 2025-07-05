@@ -37,102 +37,24 @@ const makeLinkBlock = Match.type<typeof ExternalUrlParser.Type>().pipe(
     })
   }),
   Match.tag("app/GenericExternalSource", source => (node: any, options?: Options, metadata?: LinkMetadata) => {
+    const url = metadata?.canonical || source.url
+
     const data = node.data || (node.data = {})
     data.hName = "div"
     data.hProperties = {
-      ...data.hProperties,
-      className: "link-card",
+      className: "link-card-container",
     }
-
-    // If we have OGP metadata, create a rich link card
-    if (metadata) {
-      node.children = [
-        {
-          type: "paragraph",
-          data: {
-            hName: "a",
-            hProperties: {
-              href: source.url,
-              className: "link-card-container",
-              target: "_blank",
-              rel: "noopener noreferrer",
-            },
-          },
-          children: [
-            metadata.image && {
-              type: "image",
-              url: metadata.image,
-              alt: metadata.title || "Link preview",
-              data: {
-                hName: "img",
-                hProperties: {
-                  className: "link-card-image",
-                  src: metadata.image,
-                  alt: metadata.title || "Link preview",
-                },
-              },
-            },
-            {
-              type: "paragraph",
-              data: {
-                hName: "div",
-                hProperties: {
-                  className: "link-card-content",
-                },
-              },
-              children: [
-                metadata.title && {
-                  type: "paragraph",
-                  data: {
-                    hName: `h${options?.headingLevel || 3}`,
-                    hProperties: {
-                      className: "link-card-title",
-                    },
-                  },
-                  children: [{ type: "text", value: metadata.title }],
-                },
-                metadata.description && {
-                  type: "paragraph",
-                  data: {
-                    hName: "p",
-                    hProperties: {
-                      className: "link-card-description",
-                    },
-                  },
-                  children: [{ type: "text", value: metadata.description }],
-                },
-                {
-                  type: "paragraph",
-                  data: {
-                    hName: "span",
-                    hProperties: {
-                      className: "link-card-url",
-                    },
-                  },
-                  children: [{ type: "text", value: new URL(source.url).hostname }],
-                },
-              ].filter(Boolean),
-            },
-          ].filter(Boolean),
+    node.children = [{
+      type: "paragraph",
+      data: {
+        hName: "link-card",
+        hProperties: {
+          url,
+          headingLevel: options?.headingLevel || 3,
+          ...(metadata ?? {}),
         },
-      ]
-    }
-    else {
-      // Fallback to simple link
-      node.children.unshift({
-        type: "link",
-        url: source.url,
-        children: [{ type: "text", value: source.url }],
-        data: {
-          hName: "a",
-          hProperties: {
-            href: source.url,
-            target: "_blank",
-            rel: "noopener noreferrer",
-          },
-        },
-      })
-    }
+      },
+    }]
   }),
   Match.exhaustive,
 )

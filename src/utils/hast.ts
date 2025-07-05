@@ -2,6 +2,7 @@ import type { JsxElement } from "node_modules/hast-util-to-jsx-runtime/lib/types
 import { toJsxRuntime } from "hast-util-to-jsx-runtime"
 import { Fragment, jsx, jsxs } from "react/jsx-runtime"
 import { Diagram } from "@/components/block/Diagram"
+import { LinkCard } from "@/components/block/LinkCard"
 
 export function hastToJsx(hastTree: any): JsxElement {
   return toJsxRuntime(hastTree, {
@@ -9,7 +10,8 @@ export function hastToJsx(hastTree: any): JsxElement {
     jsxs,
     jsx,
     components: {
-      diagram: Diagram,
+      "diagram": Diagram,
+      "link-card": LinkCard,
     },
   })
 }

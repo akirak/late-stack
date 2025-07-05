@@ -126,6 +126,7 @@ export const PostBuilderLive: Layer.Layer<
           "video",
           "iframe",
           "diagram",
+          "link-card",
           "svg",
           "span",
           "figure",
@@ -133,24 +134,32 @@ export const PostBuilderLive: Layer.Layer<
         ],
         attributes: {
           ...defaultSchema.attributes,
-          div: [
+          "div": [
             ["className", /^admonition/],
             ["className", "youtube-embed"],
             ["style"],
             ["aria-labelledby"],
           ],
-          span: [
+          "span": [
             ["className"],
             ["aria-hidden"],
           ],
-          figure: [
+          "figure": [
             ["className"],
           ],
-          figcaption: [
+          "figcaption": [
             ["className"],
           ],
-          diagram: ["codeLanguage", "code", "__html"],
-          iframe: [
+          "diagram": ["codeLanguage", "code", "__html"],
+          "link-card": [
+            ["url", /^https?:\/\//],
+            ["headingLevel"],
+            ["title"],
+            ["image", /^https?:\/\//],
+            ["imageAlt"],
+            ["description"],
+          ],
+          "iframe": [
             "src",
             "width",
             "height",
