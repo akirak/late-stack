@@ -1,7 +1,8 @@
+import type { LinkMetadataSchema } from "../../schemas/link-metadata"
 import { HttpClient } from "@effect/platform"
 import { Context, Data, Effect, Layer, Schema } from "effect"
 import { HTMLRewriter } from "html-rewriter-wasm"
-import { LinkMetadataSchema } from "../../schemas/link-metadata"
+import { OgpMetadataFromHtml } from "../../schemas/link-metadata"
 
 export class FetchError extends Data.TaggedError("FetchError")<{
   readonly url: string
@@ -108,7 +109,7 @@ export const MetadataFetcherLive = Layer.effect(
         rewriter.free()
       }
 
-      const metadata = Schema.decodeSync(LinkMetadataSchema)(rawMetadata)
+      const metadata = Schema.decodeSync(OgpMetadataFromHtml)(rawMetadata)
 
       const title = metadata.title || fallbackTitle
 
