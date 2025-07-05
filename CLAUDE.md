@@ -150,6 +150,8 @@ Mono Font (--font-mono: "DM Mono", "Monaco", "Menlo", "Consolas", monospace):
 - 400 (default/normal) - Used for code blocks and inline code (no explicit
   font-weight specified, so it uses the default weight)
 
+To reflect these settings, update `src/routes/__root.tsx` and `.ladle/head.html`.
+
 ### Development Notes
 
 - Content changes trigger hot reload via the collections pipeline
