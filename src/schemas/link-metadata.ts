@@ -1,14 +1,10 @@
 import { Option, ParseResult, pipe, Schema } from "effect"
 
-export const OgType = Schema.Literal(
-  "article" as const,
-  "website" as const,
-  "book" as const,
-  "profile" as const,
-  "video.movie" as const,
-  "video.episode" as const,
-  "video.tv_show" as const,
-  "video.other" as const,
+export const OgType = Schema.String.pipe(
+  Schema.pattern(
+    // Reject malicious inputs
+    /^[a-z][\w-]{0,49}(?:\.[a-z][\w-]{0,49}){0,4}$/i,
+  ),
 )
 
 /**
