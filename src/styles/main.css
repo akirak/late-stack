@@ -9,6 +9,7 @@
     /* Light Theme Colors */
     --bg-primary: oklch(98% 0.005 70); /* Very light, subtle sepia/beige */
     --bg-secondary: oklch(95% 0.008 75); /* Slightly darker, warmer background for components */
+    --bg-highlight: oklch(100% 0 0); /* Slightly more saturated and darker than --bg-primary, still subtle */
     --text-primary: oklch(20% 0.01 70); /* Dark gray for main text */
     --text-secondary: oklch(45% 0.01 70); /* Medium gray for secondary text */
     --accent-primary: oklch(35% 0.08 240); /* Navy blue accent */
@@ -24,12 +25,13 @@
     --color-inline-code-bg: oklch(92% 0.015 70);
     --color-inline-code-text: var(--text-primary);
     /* --color-blockquote-bg: oklch(96% 0.012 75); /\* Slightly more saturated and darker than --bg-primary, still subtle *\/ */
-    --color-blockquote-bg: oklch(100% 0 0); /* Slightly more saturated and darker than --bg-primary, still subtle */
+    --color-blockquote-bg: var(--bg-highlight);
     --color-blockquote-border: oklch(80% 0.01 70); /* Light gray, subtle sepia tint */
 
     /* Semantic color mappings */
     --color-bg: var(--bg-primary);
     --color-bg-secondary: var(--bg-secondary);
+    --color-bg-highlight: var(--bg-highlight);
     --color-bg-inline-code: var(--color-inline-code-bg);
     --color-bg-blockquote: var(--color-blockquote-bg);
     --color-text: var(--text-primary);
@@ -60,6 +62,7 @@
      * and then applied to the dark mode */
     --dark-bg-primary: oklch(20% 0.05 240); /* Very dark navy-tinted background */
     --dark-bg-secondary: oklch(25% 0.06 245); /* Slightly lighter, more saturated background for components */
+    --dark-bg-highlight: oklch(15% 0.02 70); /* Darker, more saturated background for components */
     --dark-text-primary: oklch(95% 0 0); /* Near-white for main content */
     --dark-text-secondary: oklch(75% 0 0); /* Medium gray for secondary info, captions */
     --dark-color-inline-code-bg: oklch(28% 0.06 245); /* Slightly lighter than dark-bg-secondary */
@@ -73,13 +76,14 @@
     /* --dark-color-success: oklch(60% 0.15 150); /\* Green for success messages *\/ */
     --dark-color-warning: oklch(70% 0.15 90); /* Yellow for warnings */
     --dark-color-error: oklch(60% 0.15 20); /* Red for error messages */
-    --dark-color-blockquote-bg: oklch(22% 0.06 240);
+    --dark-color-blockquote-bg: var(--dark-bg-highlight);
     --dark-color-blockquote-border: oklch(45% 0.04 240); /* Darker gray, subtle navy tint */
 
     &[data-theme="dark"] {
       /* --- Dark Theme --- */
       --bg-primary: var(--dark-bg-primary);
       --bg-secondary: var(--dark-bg-secondary);
+      --bg-highlight: var(--dark-bg-highlight);
       --color-bg-inline-code: var(--dark-color-inline-code-bg);
       --color-bg-blockquote: var(--dark-color-blockquote-bg);
       --text-primary: var(--dark-text-primary);
@@ -103,6 +107,7 @@
         /* --- Dark Theme --- */
         --bg-primary: var(--dark-bg-primary);
         --bg-secondary: var(--dark-bg-secondary);
+        --bg-highlight: var(--dark-bg-highlight);
         --color-bg-inline-code: var(--dark-color-inline-code-bg);
         --color-bg-blockquote: var(--dark-color-blockquote-bg);
         --text-primary: var(--dark-text-primary);
@@ -182,6 +187,14 @@
 
   .flex-col {
     flex-direction: column;
+  }
+
+  .truncate-single-line {
+    whitespace: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 1.5em;
+    width: 100%;
   }
 }
 
@@ -921,6 +934,90 @@
       & > :last-child {
         margin-bottom: 0;
       }
+    }
+  }
+
+  /* LinkCard component */
+  .link-card {
+    background-color: var(--color-bg-highlight);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    transition:
+      background-color var(--transition-normal),
+      border-color var(--transition-normal);
+
+    &:hover {
+      border-color: var(--color-border-strong);
+      background-color: color-mix(in oklch, var(--bg-secondary) 5%, transparent);
+    }
+
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-items: stretch;
+
+    text-decoration: none;
+
+    --image-width: 120px;
+    --image-height: 120px;
+
+    height: var(--image-height);
+
+    & > .link-card-image {
+      flex-basis: var(--image-width);
+      flex-grow: 0;
+      flex-shrink: 0;
+
+      width: var(--image-width);
+      height: 100%;
+
+      img {
+        width: 100%;
+        height: 100%;
+        border-radius: var(--radius-md) 0 0 var(--radius-md);
+        object-fit: cover;
+      }
+    }
+
+    & > :last-child {
+      flex-grow: 1;
+
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: space-evenly;
+
+      padding: var(--space-md);
+    }
+
+    .link-card-site {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: var(--space-xs);
+      color: var(--color-text-muted);
+
+      & > img {
+        width: 1em;
+        height: 1em;
+      }
+
+      font-size: var(--text-xs);
+    }
+
+    :where(h2, h3, h4, h5, h6).link-card-title {
+      font-size: var(--text-lg);
+      font-weight: var(--font-semibold);
+      color: var(--color-text);
+      margin: 0;
+      text-overflow: clip;
+    }
+
+    .link-card-description {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      margin: 0;
+      /* Also use .truncate-single-line */
     }
   }
 
