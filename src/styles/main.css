@@ -543,7 +543,9 @@
   }
 
   /* Layout specific */
-  body {
+  /* Require a class so prevent development tools (e.g. ladle) to not get affected
+   by this style */
+  body.site {
     display: flex;
     flex-direction: column;
     align-items: center;

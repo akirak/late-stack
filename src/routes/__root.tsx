@@ -89,7 +89,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <head>
         <HeadContent />
       </head>
-      <body>
+      <body className="site">
         <header className="root-header">
           <a href="/" aria-label="Go to home page of jingsi.space">
             <span className="hidden">
