@@ -1030,6 +1030,51 @@
       /* Format the tab list */
       display: flex;
       flex-direction: row;
+      gap: var(--space-xs);
+      margin-bottom: var(--space-md);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: var(--space-xs);
+    }
+
+    .react-aria-Tab {
+      padding: var(--space-sm) var(--space-md);
+      border: none;
+      background: transparent;
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+      font-weight: var(--font-medium);
+      border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+      cursor: pointer;
+      transition:
+        color var(--transition-fast),
+        background-color var(--transition-fast),
+        border-color var(--transition-fast);
+      position: relative;
+
+      &:hover {
+        color: var(--color-text);
+        background-color: color-mix(in oklch, var(--bg-secondary) 30%, transparent);
+      }
+
+      &[data-selected="true"] {
+        color: var(--color-accent);
+        background-color: var(--bg-secondary);
+
+        &::after {
+          content: "";
+          position: absolute;
+          bottom: -1px;
+          left: 0;
+          right: 0;
+          height: 2px;
+          background-color: var(--color-accent);
+        }
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--color-accent);
+        outline-offset: 2px;
+      }
     }
 
     .react-aria-TabPanel {
