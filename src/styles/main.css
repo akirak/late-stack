@@ -1238,6 +1238,18 @@
       --diagram-width: 90vw;
       --diagram-height: 90vh;
 
+      /* Zoom transition for the modal */
+      figure {
+        transform: scale(1);
+        transition:
+          transform var(--transition-fast);
+
+        /* Modal entering animation - zoom in */
+        [data-entering] & {
+          transform: scale(0.7);
+        }
+      }
+
       .close-modal {
         position: absolute;
         top: 0;
