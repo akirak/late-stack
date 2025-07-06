@@ -1241,8 +1241,7 @@
       /* Zoom transition for the modal */
       figure {
         transform: scale(1);
-        transition:
-          transform var(--transition-fast);
+        transition: transform var(--transition-fast);
 
         /* Modal entering animation - zoom in */
         [data-entering] & {
