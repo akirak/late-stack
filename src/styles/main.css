@@ -351,11 +351,15 @@
     font-size: 0.9em;
     background: var(--color-bg-inline-code);
     color: var(--color-text-inline-code);
-    padding: var(--space-xs) var(--space-sm);
+    padding: calc(var(--space-xs) * 0.5) var(--space-xs);
     border-radius: var(--radius-sm);
     font-feature-settings:
       "liga" on,
       "calt" on;
+
+    :not(pre) & {
+      border: 1px solid var(--border-subtle);
+    }
   }
 
   pre {
