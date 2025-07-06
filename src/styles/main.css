@@ -1013,6 +1013,10 @@
       text-overflow: clip;
     }
 
+    :hover .link-card-title {
+      text-decoration: underline;
+    }
+
     .link-card-description {
       font-size: var(--text-sm);
       color: var(--color-text-muted);
