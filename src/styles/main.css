@@ -1113,15 +1113,14 @@
           justify-content: center;
           width: 2rem;
           height: 2rem;
-          background-color: var(--bg-secondary);
-          border: 1px solid var(--border-subtle);
+          background-color: transparent;
+          border: 1px solid color-mix(in oklch, var(--text-primary) 50%, transparent);
           border-radius: var(--radius-sm);
           cursor: pointer;
           transition: all var(--transition-fast);
 
           &:hover {
-            background-color: var(--bg-highlight);
-            border-color: var(--color-accent);
+            background-color: color-mix(in oklch, var(--text-primary) 20%, transparent);
           }
 
           &:focus-visible {
@@ -1133,7 +1132,7 @@
             width: 1.2rem;
             height: 1.2rem;
             color: transparent;
-            stroke: rgba(0, 0, 0, 0.5);
+            stroke: var(--text-primary);
             transition: color var(--transition-fast);
           }
         }
@@ -1180,15 +1179,14 @@
               justify-content: center;
               width: 2rem;
               height: 2rem;
-              background-color: var(--bg-secondary);
-              border: 1px solid var(--border-subtle);
+              background-color: transparent;
+              border: 1px solid rgba(0, 0, 0, 0.2);
               border-radius: var(--radius-sm);
               cursor: pointer;
               transition: all var(--transition-fast);
 
               &:hover {
-                background-color: var(--bg-highlight);
-                border-color: var(--color-accent);
+                background-color: rgba(0, 0, 0, 0.1);
               }
 
               &:focus-visible {
