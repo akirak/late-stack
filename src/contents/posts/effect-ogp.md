@@ -38,7 +38,7 @@ frontend application.
 
 ### 1. Bird's-eye view
 
-:::diagram
+:::diagram{.fit}
 
 ```d2
 direction: right
@@ -159,7 +159,7 @@ interface MetadataFetcher {
 
 The `get` method implements smart caching:
 
-:::diagram
+:::diagram[Sequence diagram]{.scrollable}
 
 ```d2
 shape: sequence_diagram
