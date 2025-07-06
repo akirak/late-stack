@@ -26,7 +26,7 @@ export class D2 extends Effect.Service<D2>()("app/D2", {
         Effect.gen(function* () {
           // Create a command to run d2 CLI
           // d2 accepts input from stdin and outputs SVG to stdout
-          const args = ["-", "--stdout-format", "svg"]
+          const args = ["-", "--stdout-format", "svg", "--pad", "50"]
           if (options.noXMLTag) {
             args.push("--no-xml-tag")
           }
