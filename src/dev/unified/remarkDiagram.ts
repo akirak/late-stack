@@ -1,3 +1,4 @@
+import type GithubSlugger from "github-slugger"
 import type { Loc } from "../error"
 import { Effect, Runtime } from "effect"
 import { visit } from "unist-util-visit"
@@ -6,25 +7,29 @@ import { RemarkPluginDataError } from "../error"
 
 export interface RemarkDiagramOptions {
   runtime?: Runtime.Runtime<D2>
+  slugger: GithubSlugger
 }
 
-function setDiagramSvg(node: any, { svg, codeLanguage, code }: { svg: string, codeLanguage: string, code: string }) {
+function setDiagramSvg(node: any, { className, id, title, svg, codeLanguage, code }: { className?: string, id: string, title?: string, svg: string, codeLanguage: string, code: string }) {
   const data = node.data || (node.data = {})
   data.hName = "diagram"
   data.hProperties = {
+    ...data.hProperties,
+    id,
+    title,
+    className,
     code,
     codeLanguage,
     __html: svg,
-    ...data.hProperties,
   }
   data.hChildren = []
 }
 
-function remarkDiagram(options?: RemarkDiagramOptions) {
-  const { runtime } = options || {}
+function remarkDiagram(options: RemarkDiagramOptions) {
+  const { runtime, slugger } = options
 
   return async (tree: any) => {
-    const contexts: Array<{ node: any, lang: string, code: string, loc: Loc }> = []
+    const contexts: Array<{ className?: string, id: string, title?: string, node: any, lang: string, code: string, loc: Loc }> = []
 
     visit(tree, (node) => {
       if (node.name === "diagram" && node.type === "containerDirective") {
@@ -40,15 +45,27 @@ function remarkDiagram(options?: RemarkDiagramOptions) {
         const lang = child.lang
         const code = child.value.trim()
         const loc = child.position.start
+        const title = node.attributes?.title
+        const id = `diagram-${slugger.slug(title || "untitled")}`
+        // TODO: Validate class names against a schema
+        const class_ = node.attributes?.class
+        const className = class_
+          ? class_.split(" ").map((c: string) =>
+              `diagram-${c.trim()}`,
+            ).join(" ")
+          : undefined
 
         // Validate the diagram source
         switch (lang) {
           case "d2":
             contexts.push({
+              className,
               node,
               lang,
               code,
               loc,
+              title,
+              id,
             })
             break
           default:
@@ -75,8 +92,11 @@ function remarkDiagram(options?: RemarkDiagramOptions) {
               )
               setDiagramSvg(context.node, {
                 svg,
+                className: context.className,
                 codeLanguage: context.lang,
                 code: context.code,
+                title: context.title,
+                id: context.id,
               })
               break
             }

@@ -1025,6 +1025,121 @@
     }
   }
 
+  .diagram-tabs {
+    .react-aria-TabList {
+      /* Format the tab list */
+      display: flex;
+      flex-direction: row;
+    }
+
+    .react-aria-TabPanel {
+      position: relative;
+
+      .diagram-code {
+        overflow-y: auto;
+        max-height: 100%;
+      }
+
+      .diagram-container {
+        &:not(:has(.diagram-fit, .diagram-scrollable)) {
+          display: flex;
+        }
+
+        & > figure {
+          position: relative;
+          --diagram-tab-height: 50vh;
+
+          .diagram:not(:where(.diagram-fit, .diagram-scrollable)) svg {
+            height: var(--diagram-tab-height);
+          }
+
+          .diagram-fit {
+            width: 100%;
+          }
+
+          .diagram-scrollable {
+            max-height: var(--diagram-tab-height);
+            overflow-y: auto;
+          }
+
+          & > .button-group {
+            --button-size: 1.5rem;
+
+            position: absolute;
+            top: 0;
+            right: 0;
+            z-index: 10;
+
+            display: flex;
+            height: var(--button-size);
+            flex-direction: row;
+            align-items: center;
+            margin: var(--space-md);
+            gap: var(--space-xs);
+
+            button {
+              border-radius: var(--radius-sm);
+            }
+
+            svg {
+              width: 1.5em;
+              height: 1.5em;
+              background-color: transparent;
+              fill: rgb(0, 0, 0, 0.8);
+              transition: fill var(--transition-fast);
+
+              &:hover {
+                fill: var(--color-link);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .react-aria-ModalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 100;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .diagram-modal {
+      --diagram-width: 90vw;
+      --diagram-height: 90vh;
+
+      .close-modal {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 2rem;
+        height: 2rem;
+      }
+
+      .diagram {
+        svg {
+          height: var(--diagram-height);
+        }
+
+        &.diagram-fit svg {
+          width: var(--diagram-width);
+          height: auto;
+        }
+
+        &.diagram-scrollable svg {
+          height: var(--diagram-height);
+        }
+      }
+    }
+  }
+
   /* Utilities */
   .visually-hidden {
     position: absolute;

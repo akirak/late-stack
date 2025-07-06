@@ -101,6 +101,7 @@ export const PostBuilderLive: Layer.Layer<
     const ecConfig = yield* Effect.promise(() => EC.loadConfig())
 
     const admonitionSlugger = new GithubSlugger()
+    const diagramSlugger = new GithubSlugger()
 
     const postProcessor = unified()
       .use(remarkParse)
@@ -108,7 +109,10 @@ export const PostBuilderLive: Layer.Layer<
       .use(remarkDirective)
       .use(remarkCustomHeaderId)
       .use(remarkAdmonitions, { slugger: admonitionSlugger })
-      .use(remarkDiagram, { runtime: d2Runtime })
+      .use(remarkDiagram, {
+        runtime: d2Runtime,
+        slugger: diagramSlugger,
+      })
       .use(remarkLink, { runtime: ogpRuntime })
       .use(remarkCaptions, {
         external: {
@@ -150,7 +154,14 @@ export const PostBuilderLive: Layer.Layer<
           "figcaption": [
             ["className"],
           ],
-          "diagram": ["codeLanguage", "code", "__html"],
+          "diagram": [
+            "codeLanguage",
+            "code",
+            "__html",
+            "className",
+            "id",
+            "title",
+          ],
           "link-card": [
             ["url", /^https?:\/\//],
             ["headingLevel"],
