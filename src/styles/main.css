@@ -62,7 +62,7 @@
      * and then applied to the dark mode */
     --dark-bg-primary: oklch(20% 0.05 240); /* Very dark navy-tinted background */
     --dark-bg-secondary: oklch(25% 0.06 245); /* Slightly lighter, more saturated background for components */
-    --dark-bg-highlight: oklch(15% 0.02 70); /* Darker, more saturated background for components */
+    --dark-bg-highlight: oklch(20% 0.02 240); /* Darker, more saturated background for components */
     --dark-text-primary: oklch(95% 0 0); /* Near-white for main content */
     --dark-text-secondary: oklch(75% 0 0); /* Medium gray for secondary info, captions */
     --dark-color-inline-code-bg: oklch(28% 0.06 245); /* Slightly lighter than dark-bg-secondary */
@@ -77,7 +77,7 @@
     --dark-color-warning: oklch(70% 0.15 90); /* Yellow for warnings */
     --dark-color-error: oklch(60% 0.15 20); /* Red for error messages */
     --dark-color-blockquote-bg: var(--dark-bg-highlight);
-    --dark-color-blockquote-border: oklch(45% 0.04 240); /* Darker gray, subtle navy tint */
+    --dark-color-blockquote-border: oklch(35% 0.04 245); /* Darker gray, subtle navy tint */
 
     &[data-theme="dark"] {
       /* --- Dark Theme --- */
@@ -952,7 +952,7 @@
 
     &:hover {
       border-color: var(--color-border-strong);
-      background-color: color-mix(in oklch, var(--bg-secondary) 5%, transparent);
+      background-color: color-mix(in oklch, var(--bg-secondary) 50%, transparent);
     }
 
     display: flex;
