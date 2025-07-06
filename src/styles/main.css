@@ -18,7 +18,7 @@
     --color-link: var(--accent-primary); /* Links use primary accent color */
     --accent-hover: oklch(30% 0.1 240); /* Darker navy on hover */
     --color-information: oklch(50% 0.12 250); /* Blue for information messages */
-    /* --color-success: oklch(50% 0.12 150); /\* Green for success messages *\/ */
+    --color-success: oklch(50% 0.12 150); /* Green for success messages */
     --color-warning: oklch(60% 0.12 90); /* Yellow for warnings */
     --color-error: oklch(50% 0.12 20); /* Red for error messages */
     /* Dedicated colors for inline code */
@@ -43,7 +43,7 @@
     --border-subtle: var(--border-subtle);
     --border-blockquote: var(--color-blockquote-border);
     --color-bg-information: var(--color-information);
-    /* --color-bg-success: var(--color-success); */
+    --color-bg-success: var(--color-success);
     --color-bg-warning: var(--color-warning);
     --color-bg-error: var(--color-error);
 
@@ -73,7 +73,7 @@
     --dark-color-link: var(--dark-accent-primary); /* Links use primary accent color */
     --dark-accent-hover: oklch(75% 0.1 70); /* Lighter for hover state */
     --dark-color-information: oklch(72% 0.15 250); /* Blue for information messages */
-    /* --dark-color-success: oklch(60% 0.15 150); /\* Green for success messages *\/ */
+    --dark-color-success: oklch(60% 0.15 150); /* Green for success messages */
     --dark-color-warning: oklch(70% 0.15 90); /* Yellow for warnings */
     --dark-color-error: oklch(60% 0.15 20); /* Red for error messages */
     --dark-color-blockquote-bg: var(--dark-bg-highlight);
@@ -97,7 +97,7 @@
       --accent-hover: var(--dark-accent-hover);
       --theme-button-image: var(--dark-theme-button-image);
       --color-bg-information: var(--dark-color-information);
-      /* --color-bg-success: var(--dark-color-success); */
+      --color-bg-success: var(--dark-color-success);
       --color-bg-warning: var(--dark-color-warning);
       --color-bg-error: var(--dark-color-error);
     }
@@ -121,7 +121,7 @@
         --accent-hover: var(--dark-accent-hover);
         --theme-button-image: var(--dark-theme-button-image);
         --color-bg-information: var(--dark-color-information);
-        /* --color-bg-success: var(--dark-color-success); */
+        --color-bg-success: var(--dark-color-success);
         --color-bg-warning: var(--dark-color-warning);
         --color-bg-error: var(--dark-color-error);
       }
@@ -1081,8 +1081,55 @@
       position: relative;
 
       .diagram-code {
-        overflow-y: auto;
+        position: relative;
         max-height: 100%;
+        overflow-y: auto;
+      }
+
+      .button-group.diagram-code-buttons {
+        position: absolute;
+        top: var(--space-sm);
+        right: var(--space-sm);
+        z-index: 10;
+        opacity: 0;
+        :hover > & {
+          opacity: 1;
+        }
+        transition: opacity var(--transition-fast);
+
+        .copy-button {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 2rem;
+          height: 2rem;
+          background-color: var(--bg-secondary);
+          border: 1px solid var(--border-subtle);
+          border-radius: var(--radius-sm);
+          cursor: pointer;
+          transition: all var(--transition-fast);
+
+          &:hover {
+            background-color: var(--bg-highlight);
+            border-color: var(--color-accent);
+          }
+
+          &:focus-visible {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+          }
+
+          .icon {
+            width: 1rem;
+            height: 1rem;
+            color: var(--color-text-muted);
+            transition: color var(--transition-fast);
+          }
+
+          &:hover .icon {
+            color: var(--color-accent);
+          }
+        }
       }
 
       .diagram-container {
@@ -1182,6 +1229,49 @@
           height: var(--diagram-height);
         }
       }
+    }
+  }
+
+  .react-aria-Tooltip {
+    position: relative;
+    color: rgba(100%, 100%, 100%, 1);
+    background-color: var(--color-bg-success);
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-xs);
+    font-weight: var(--font-medium);
+    white-space: nowrap;
+    z-index: 1000;
+    transform: translateX(-6px);
+    box-shadow:
+      0 4px 6px -1px rgba(0, 0, 0, 0.1),
+      0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transition:
+      opacity var(--transition-fast),
+      transform var(--transition-slow);
+
+    /* Speech bubble arrow on the right side */
+    &::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      right: -6px;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 6px 0 6px 6px;
+      border-color: transparent transparent transparent var(--color-bg-success);
+    }
+
+    &[data-entering] {
+      opacity: 1;
+      transform: translate(-6px, 0);
+    }
+
+    &[data-exiting] {
+      opacity: 0;
+      transform: translateY(-6px, 4px);
     }
   }
 

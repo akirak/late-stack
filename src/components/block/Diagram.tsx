@@ -1,6 +1,7 @@
 import type { Key } from "react-aria-components"
 import { useRef, useState } from "react"
-import { Button, Dialog, Modal, Tab, TabList, TabPanel, Tabs } from "react-aria-components"
+import { Button, Dialog, Modal, Tab, TabList, TabPanel, Tabs, Tooltip, TooltipTrigger } from "react-aria-components"
+import CopyIcon from "../icons/Copy"
 import ExpandIcon from "../icons/Expand"
 import { CodeBlock } from "./CodeBlock"
 
@@ -17,6 +18,7 @@ interface DiagramProps {
 
 export function Diagram({ className, codeLanguage, code, __html, title }: DiagramProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isTooltipOpen, setIsTooltipOpen] = useState(false)
 
   const ref1 = useRef<HTMLDivElement | null>(null)
   const [height, setHeight] = useState<number | undefined>(undefined)
@@ -25,6 +27,18 @@ export function Diagram({ className, codeLanguage, code, __html, title }: Diagra
   const handleTabChange = (key: Key) => {
     if (key === "code" && ref1.current) {
       setHeight(ref1.current.getBoundingClientRect().height)
+    }
+  }
+
+  // Copy code to clipboard
+  const handleCopyCode = async () => {
+    try {
+      await navigator.clipboard.writeText(code)
+      setIsTooltipOpen(true)
+      setTimeout(() => setIsTooltipOpen(false), 1000)
+    }
+    catch (err) {
+      console.error("Failed to copy code:", err)
     }
   }
 
@@ -63,6 +77,26 @@ export function Diagram({ className, codeLanguage, code, __html, title }: Diagra
         <TabPanel id="code" style={{ height: height || "auto" }}>
           <div className="diagram-code">
             <CodeBlock language={codeLanguage} code={code} />
+          </div>
+          <div className="button-group diagram-code-buttons">
+            <TooltipTrigger
+              isOpen={isTooltipOpen}
+              onOpenChange={setIsTooltipOpen}
+              delay={0}
+              closeDelay={500}
+              trigger="focus"
+            >
+              <Button
+                onPress={handleCopyCode}
+                aria-label="Copy code to clipboard"
+                className="copy-button"
+              >
+                <CopyIcon className="icon" />
+              </Button>
+              <Tooltip placement="left">
+                Copied!
+              </Tooltip>
+            </TooltipTrigger>
           </div>
         </TabPanel>
       </Tabs>
