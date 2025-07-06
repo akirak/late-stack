@@ -19,9 +19,22 @@ interface DiagramProps {
 export function Diagram({ className, codeLanguage, code, __html, title }: DiagramProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isTooltipOpen, setIsTooltipOpen] = useState(false)
+  const [scroll, setScroll] = useState(0)
 
   const ref1 = useRef<HTMLDivElement | null>(null)
   const [height, setHeight] = useState<number | undefined>(undefined)
+
+  // Restore the scroll position when closing the modal
+  const setModalOpen = (open: boolean) => {
+    if (open) {
+      setScroll(window.scrollY)
+      setIsModalOpen(open)
+    }
+    else {
+      setIsModalOpen(open)
+      window.scrollTo({ top: scroll, behavior: "instant" })
+    }
+  }
 
   // Prevent layout shift when switching tabs
   const handleTabChange = (key: Key) => {
@@ -65,7 +78,7 @@ export function Diagram({ className, codeLanguage, code, __html, title }: Diagra
 
               <div className="button-group">
                 <Button
-                  onPress={() => setIsModalOpen(true)}
+                  onPress={() => setModalOpen(true)}
                   aria-label="Open the diagram in modal"
                 >
                   <ExpandIcon className="icon" />
@@ -103,7 +116,7 @@ export function Diagram({ className, codeLanguage, code, __html, title }: Diagra
       <Modal
         isDismissable
         isOpen={isModalOpen}
-        onOpenChange={setIsModalOpen}
+        onOpenChange={setModalOpen}
         className="diagram-modal"
       >
         <Dialog className="diagram-dialog">
