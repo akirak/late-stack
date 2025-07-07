@@ -69,3 +69,28 @@ export function hastToHtml(node: any): string {
 
   return ""
 }
+
+export function hastShallowHeadings(hastTree: any): { id?: string, text: string, level: number }[] {
+  if (!hastTree || !hastTree.children) {
+    return []
+  }
+
+  // Filter out non-heading elements
+  return hastTree.children.map((node: any) => {
+    if (node.type === "element") {
+      const match = /^h([1-6])$/.exec(node.tagName)
+      if (!match) {
+        return null
+      }
+      return {
+        id: node.properties.id,
+        text: node.children.filter(
+          (child: any) => child.type === "text",
+        ).map(
+          (child: any) => child.value,
+        ).join(""),
+        level: Number.parseInt(match[1], 10),
+      }
+    }
+  }).filter((o: any) => !!o)
+}

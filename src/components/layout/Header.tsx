@@ -1,8 +1,8 @@
 import styles from "./layout.module.css"
 
-export function Header({ children }: { children: React.ReactNode }) {
+export function Header({ id, children }: { id?: string, children: React.ReactNode }) {
   return (
-    <header className={styles.header}>
+    <header id={id} className={styles.header}>
       {children}
     </header>
   )

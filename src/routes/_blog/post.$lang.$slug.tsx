@@ -1,9 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router"
 import { Option } from "effect"
 import { getPost } from "@/collections/posts.client"
+import { Toc } from "@/components/block/Toc"
 import { Container } from "@/components/layout/Container"
 import { Header } from "@/components/layout/Header"
-import { hastToJsx } from "@/utils/hast"
+import { Nav } from "@/components/layout/Nav"
+import { hastShallowHeadings, hastToJsx } from "@/utils/hast"
 import { pageMeta } from "@/utils/seo"
 import { useSticky } from "@/utils/sticky"
 
@@ -33,7 +35,7 @@ function PostComponent() {
 
   return (
     <Container>
-      <Header>
+      <Header id="post-header">
         <h1>
           {post.title}
         </h1>
@@ -44,6 +46,25 @@ function PostComponent() {
           {post.readingTime.text}
         </p>
       </Header>
+
+      <Nav>
+        <section>
+          <h2>Table of Contents</h2>
+          <h3 className="self">
+            <a
+              href="#post-header"
+              onClick={(e) => {
+                window.scrollTo({ top: 0 })
+                e.preventDefault()
+              }}
+              aria-label="Go to the beginning of the post"
+            >
+              {post.title}
+            </a>
+          </h3>
+          <Toc headings={hastShallowHeadings(post.hastBody)} />
+        </section>
+      </Nav>
 
       <main className="typography">
         {hastToJsx(post.hastBody)}
