@@ -55,6 +55,12 @@ function PostComponent() {
               href="#post-header"
               onClick={(e) => {
                 window.scrollTo({ top: 0 })
+                // If the scroll behavior is smooth, not instance, the hash will
+                // be updated many times during scrolling. Thus the hash needs
+                // to be cleared after the scroll ends.
+                window.addEventListener("scrollend", () => {
+                  window.location.hash = ""
+                }, { once: true })
                 e.preventDefault()
               }}
               aria-label="Go to the beginning of the post"
