@@ -1,7 +1,10 @@
-import type { PostMetadataSchema } from "@/schemas/post"
 import { Schema } from "effect"
 import { LanguageIdSchema } from "@/schemas/common"
+import { PostSchema } from "@/schemas/post"
 import { PaginationSchema } from "@/utils/pagination"
+
+// eslint-disable-next-line unused-imports/no-unused-vars
+const PostMetadataSchema = PostSchema.omit("hastBody")
 
 export type PostMetadata = typeof PostMetadataSchema.Type
 

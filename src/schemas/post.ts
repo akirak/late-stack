@@ -1,6 +1,13 @@
 import { Option, Schema } from "effect"
 import { GenericSlugSchema, LanguageIdSchema, OptionalDateSchema } from "./common"
 
+export const ReadingTimeSchema = Schema.Struct({
+  text: Schema.String,
+  minutes: Schema.Number,
+  time: Schema.Number,
+  words: Schema.Number,
+})
+
 export const PostSlugSchema = GenericSlugSchema.pipe(
   Schema.brand("PostSlug"),
 )
@@ -31,13 +38,20 @@ export const PostSchema = Schema.Struct({
       nullable: true,
     },
   ),
+  readingTime: ReadingTimeSchema,
   hastBody: Schema.Any,
 })
 
 /**
- * Schema for the metadata of a post which corresponds to the YAML header.
+ * Schema for the metadata of a post, excluding the body content, which is
+ * stored in the index.
  */
-export const PostMetadataSchema = PostSchema.omit("hastBody").pipe(
+export const PostMetadataSchema = PostSchema.omit("hastBody")
+
+/**
+ * Schema for parsing the YAML front matter of a post.
+ */
+export const PostMetadataHeaderSchema = PostSchema.omit("hastBody", "readingTime").pipe(
   Schema.filter(
     (meta) => {
       if (!meta.draft && Option.isNone(meta.description)) {

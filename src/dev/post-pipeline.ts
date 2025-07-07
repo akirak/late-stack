@@ -8,6 +8,8 @@ import { pluginCollapsibleSections } from "@expressive-code/plugin-collapsible-s
 import { Array, Console, Context, Effect, Layer, Option, Order, pipe, Schema, Stream } from "effect"
 import GithubSlugger from "github-slugger"
 import matter from "gray-matter"
+import { toString as hastUtilToString } from "hast-util-to-string"
+import getReadingTime from "reading-time"
 import rehypeAutoLinkHeadings from "rehype-autolink-headings"
 import rehypeExpressiveCode from "rehype-expressive-code"
 import rehypeSanitize, { defaultSchema } from "rehype-sanitize"
@@ -19,7 +21,7 @@ import remarkGfm from "remark-gfm"
 import remarkParse from "remark-parse"
 import remarkRehype from "remark-rehype"
 import { unified } from "unified"
-import { PostMetadataSchema, PostSchema } from "../schemas/post"
+import { PostMetadataHeaderSchema, PostSchema } from "../schemas/post"
 import * as EC from "../styles/expressive-code"
 import { PostError, RemarkPluginDataError } from "./error"
 import { Config } from "./pipeline-config"
@@ -83,7 +85,7 @@ export const PostBuilderLive: Layer.Layer<
         postList,
         Stream.fromIterable,
         // Convert Option to null, etc.
-        Stream.mapEffect(Schema.encode(PostMetadataSchema)),
+        Stream.mapEffect(Schema.encode(PostMetadataHeaderSchema)),
         Stream.map(encodedMeta => encoder.encode(`${JSON.stringify(encodedMeta)}\n`)),
         Stream.run(sink),
       )
@@ -225,16 +227,25 @@ export const PostBuilderLive: Layer.Layer<
       })
 
       try {
-        const metadata = yield* Schema.decodeUnknown(PostMetadataSchema)({
+        const metadataSansRT = yield* Schema.decodeUnknown(PostMetadataHeaderSchema)({
           fileName: path.basename(filePath),
           slug: getSlug(filePath),
           ...doc.data,
         })
-        if (config.production && metadata.draft) {
+        if (config.production && metadataSansRT.draft) {
           return Option.none() as Option.Option<PostMetadata>
         }
         yield* fs.makeDirectory(postOutDir, { recursive: true })
-        const outPath = path.resolve(postOutDir, `${metadata.slug}.${metadata.language}.json`)
+        const outPath = path.resolve(postOutDir, `${metadataSansRT.slug}.${metadataSansRT.language}.json`)
+        const readingTime = pipe(
+          hast,
+          hastUtilToString,
+          getReadingTime,
+        )
+        const metadata = {
+          ...metadataSansRT,
+          readingTime,
+        }
         const fullData = JSON.stringify(
           Schema.encodeUnknownSync(PostSchema)({
             ...metadata,

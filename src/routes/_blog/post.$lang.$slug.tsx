@@ -37,6 +37,12 @@ function PostComponent() {
         <h1>
           {post.title}
         </h1>
+        <p
+          aria-label="Estimated reading time"
+          title={`${post.readingTime.text} — ${post.readingTime.words} words`}
+        >
+          {post.readingTime.text}
+        </p>
       </Header>
 
       <main className="typography">
