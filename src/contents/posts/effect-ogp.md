@@ -18,7 +18,7 @@ system.
 
 Here's how the OGP integration works:
 
-::link[https://effect.website]
+::link[https://react-spectrum.adobe.com/react-aria/components.html]
 
 ::link[https://github.com/anthropics/claude-code]
 

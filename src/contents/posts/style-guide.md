@@ -89,7 +89,7 @@ Sometimes content from other websites is embedded directly in an article.
 
 **Webpage Preview:**
 A preview of another webpage may be displayed, which can be clicked to visit the page.
-::link[https://effect.website]
+::link[https://react-spectrum.adobe.com/react-aria/components.html]
 
 **YouTube Video:**
 Videos may also be embedded, which can be played directly on the page.
