@@ -889,6 +889,20 @@
     }
   }
 
+  /* Table of contents */
+  .table-of-contents {
+    li {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      list-style-type: "- ";
+      margin-left: calc(1ch);
+    }
+
+    * + * {
+      margin-block-start: var(--space-xs);
+    }
+  }
+
   /* Admonition Components */
   .admonition {
     border: 1px solid var(--border-subtle);
