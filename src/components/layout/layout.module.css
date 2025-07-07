@@ -1,6 +1,10 @@
 @layer components {
+  :root {
+    --container-width: 90ch;
+  }
+
   .container {
-    max-width: 90ch;
+    max-width: var(--container-width);
     margin-inline: auto;
 
     display: flex;
@@ -11,5 +15,49 @@
   .header {
     margin-block-start: var(--space-sm);
     margin-block-end: var(--space-xl);
+  }
+
+  .nav {
+    & > section {
+      background-color: var(--bg-secondary);
+      padding: var(--space-md);
+      border-radius: var(--radius-md);
+
+      & > * + * {
+        margin-block-start: var(--space-sm);
+      }
+    }
+
+    @media (min-width: 1200px) {
+      & {
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100vh;
+        width: calc((100vw - var(--container-width)) / 2 * 0.8);
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+      }
+
+      & > section {
+        background-color: inherit;
+      }
+    }
+
+    :where(h2, h3) {
+      margin: 0;
+    }
+
+    :where(h2) {
+      font-family: var(--font-system);
+      color: var(--color-text-muted);
+    }
+
+    h2 {
+      font-size: var(--text-lg);
+    }
   }
 }
