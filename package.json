@@ -2,7 +2,7 @@
   "name": "personal-blog",
   "type": "module",
   "private": true,
-  "packageManager": "pnpm@10.12.3",
+  "packageManager": "pnpm@10.12.4",
   "sideEffects": false,
   "scripts": {
     "dev": "vite dev --port 3000",
@@ -20,7 +20,7 @@
     "prepare": "lefthook install"
   },
   "dependencies": {
-    "@clerk/tanstack-react-start": "^0.16.0",
+    "@clerk/tanstack-react-start": "^0.18.0",
     "@tanstack/react-router": "^1.121.34",
     "@tanstack/react-router-devtools": "^1.121.34",
     "@tanstack/react-start": "^1.121.35",
@@ -41,11 +41,11 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^4.16.1",
-    "@effect/language-service": "^0.19.0",
-    "@effect/platform": "^0.84.11",
-    "@effect/platform-node": "^0.85.16",
-    "@effect/sql": "^0.37.12",
-    "@effect/sql-sqlite-node": "^0.38.12",
+    "@effect/language-service": "^0.23.0",
+    "@effect/platform": "^0.87.0",
+    "@effect/platform-node": "^0.89.0",
+    "@effect/sql": "^0.40.0",
+    "@effect/sql-sqlite-node": "^0.41.0",
     "@eslint-react/eslint-plugin": "^1.52.2",
     "@expressive-code/plugin-collapsible-sections": "^0.41.2",
     "@ladle/react": "^5.0.3",
