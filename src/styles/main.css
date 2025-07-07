@@ -582,7 +582,12 @@
 
     &.root-header {
       left: 0;
-      position: sticky;
+      /* The same criteria as --container-width in src/components/layout/layout.module.css */
+      @media (min-width: 1200px) {
+        & {
+          position: sticky;
+        }
+      }
       align-self: flex-start;
 
       /* Keep the position even if the content is centered */
