@@ -1,5 +1,16 @@
 import { useEffect, useRef } from "react"
 
+function updateTocLocation(id: string) {
+  const current = document.querySelectorAll(".table-of-contents [aria-current='location']")
+  Array.from(current).forEach((el) => {
+    el.removeAttribute("aria-current")
+  })
+  const newCurrent = document.querySelector(`.table-of-contents [data-heading-id="${id}"]`)
+  if (newCurrent) {
+    newCurrent.setAttribute("aria-current", "location")
+  }
+}
+
 export function useSticky(selector: string) {
   const sticky = useRef<Element | null>(null)
 
@@ -16,6 +27,7 @@ export function useSticky(selector: string) {
         })[0]
         sticky.current = element
         element.classList.add("sticky-active")
+        updateTocLocation(element.id)
       }
     }
 
@@ -29,6 +41,7 @@ export function useSticky(selector: string) {
             }
             sticky.current = entry.target
             entry.target.classList.add("sticky-active")
+            updateTocLocation(entry.target.id)
           }
         }
         else {
@@ -69,6 +82,7 @@ export function useSticky(selector: string) {
               behavior: "smooth",
             })
           }
+          updateTocLocation(headingId)
         }
       }
     }

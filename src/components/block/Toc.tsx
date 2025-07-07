@@ -36,7 +36,12 @@ function TocItem({ heading }: { heading: NestedHeading }) {
     <li key={heading.id || heading.text}>
       { heading.id
         ? (
-            <a href={`#${heading.id}`}>{heading.text}</a>
+            <a
+              href={`#${heading.id}`}
+              data-heading-id={heading.id}
+            >
+              {heading.text}
+            </a>
           )
         : heading.text }
       {heading.children.length > 0 && (

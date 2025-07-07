@@ -901,6 +901,11 @@
     * + * {
       margin-block-start: var(--space-xs);
     }
+
+    [aria-current="location"] {
+      color: var(--color-accent);
+      font-weight: var(--font-semibold);
+    }
   }
 
   /* Admonition Components */
