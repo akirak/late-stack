@@ -108,12 +108,6 @@ Tables are used to present structured information in a clear and organized way.
 
 Table: A summary of the visual elements found on this blog.
 
-### Footnotes
-
-A small, clickable number may appear after a sentence, like this.[^1] These are footnotes. Clicking on one will take the reader to a note at the bottom of the page that provides extra information, a citation, or a comment.
-
-[^1]: This is an example of a footnote.
-
 ## For Technical Articles
 
 In more technical posts, specialized formatting is used for code and diagrams.
