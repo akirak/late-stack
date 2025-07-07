@@ -21,7 +21,7 @@ import remarkGfm from "remark-gfm"
 import remarkParse from "remark-parse"
 import remarkRehype from "remark-rehype"
 import { unified } from "unified"
-import { PostMetadataHeaderSchema, PostSchema } from "../schemas/post"
+import { PostMetadataHeaderSchema, PostMetadataSchema, PostSchema } from "../schemas/post"
 import * as EC from "../styles/expressive-code"
 import { PostError, RemarkPluginDataError } from "./error"
 import { Config } from "./pipeline-config"
@@ -85,7 +85,7 @@ export const PostBuilderLive: Layer.Layer<
         postList,
         Stream.fromIterable,
         // Convert Option to null, etc.
-        Stream.mapEffect(Schema.encode(PostMetadataHeaderSchema)),
+        Stream.mapEffect(Schema.encode(PostMetadataSchema)),
         Stream.map(encodedMeta => encoder.encode(`${JSON.stringify(encodedMeta)}\n`)),
         Stream.run(sink),
       )
