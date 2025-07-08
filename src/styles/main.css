@@ -422,6 +422,11 @@
     }
   }
 
+  /* Vertical spacing for main typography content */
+  main.typography > * + *:not(:where(h2, h3, h4, h5, h6)) {
+    margin-top: var(--space-md);
+  }
+
   /* Lists (only inside main contents) */
   .typography {
     :where(ul, ol) {
