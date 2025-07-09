@@ -912,9 +912,14 @@
       margin-block-start: var(--space-xs);
     }
 
-    [aria-current="location"] {
-      color: var(--color-accent);
-      font-weight: var(--font-semibold);
+    /* Highlight the current location only when the TOC is displayed on the side.
+       See src/styles/main.css
+    */
+    @media (min-width: 1200px) {
+      [aria-current="location"] {
+        color: var(--color-accent);
+        font-weight: var(--font-semibold);
+      }
     }
   }
 
