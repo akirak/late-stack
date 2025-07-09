@@ -20,6 +20,7 @@ export const Route = createFileRoute("/about/$lang")({
     meta: pageMeta({
       ogType: "article",
       title: `${loaderData!.localProfile.fullName} [${params.lang}]`,
+      description: "About the author of jingsi.space. This page provides information about the author's background, social accounts, and website purpose.",
     }),
   }),
 })
@@ -45,7 +46,7 @@ function AboutComponent() {
         <h1 id="page-heading">About the author</h1>
       </Header>
 
-      <main aria-labelledby="page-heading">
+      <main aria-labelledby="page-heading" className="typography">
 
         <div>
           {/* Use section for better semantics */}
