@@ -1,23 +1,28 @@
 @layer components {
   :root {
     --container-width: 90ch;
+    --container-padding-inline: var(--space-md);
+
+    @media (min-width: 768px) {
+      --container-padding-inline: var(--space-lg);
+    }
+
+    @media (min-width: 1024px) {
+      --container-padding-inline: var(--space-xl);
+    }
   }
 
   .container {
     max-width: var(--container-width);
     margin-inline: auto;
-    padding-inline: var(--space-md);
+    padding-inline: var(--container-padding-linline);
 
     display: flex;
     flex-direction: column;
     align-items: stretch;
 
-    @media (min-width: 768px) {
-      padding-inline: var(--space-lg);
-    }
-
-    @media (min-width: 1024px) {
-      padding-inline: var(--space-xl);
+    & > *:has(pre) {
+      max-width: calc(100vw - 2 * var(--container-padding-inline));
     }
   }
 
