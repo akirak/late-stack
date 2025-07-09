@@ -148,10 +148,12 @@ Other times, the differences between two pieces of code may be shown. Lines with
 
 Diagrams may also be used to illustrate concepts and workflows.
 
-:::diagram
+:::diagram{.fit}
 
 ```d2
-// This is an example of a diagram.
+# This is an example of a diagram.
+direction: right
+
 Concept_A -> Is_Connected_To -> Concept_B
 ```
 
