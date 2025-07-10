@@ -159,4 +159,18 @@ Concept_A -> Is_Connected_To -> Concept_B
 
 :::
 
+## Site-Wide Features
+
+### Light and Dark Themes
+
+You can switch between light and dark themes using the button in the top-right
+corner.
+
+By default, the theme matches your system's settings. When you manually select a
+theme, that choice is saved and overrides the system setting. To restore the
+automatic theme selection, you need to clear this website's cookies in your
+browser.
+
+## Wrapping up
+
 This guide should help readers understand the look and feel of the blog. Enjoy reading!
