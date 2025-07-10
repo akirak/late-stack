@@ -24,6 +24,10 @@
     & > *:has(pre) {
       max-width: calc(100vw - 2 * var(--container-padding-inline));
     }
+
+    & > * + main {
+      margin-block-start: var(--space-xl);
+    }
   }
 
   .header {
