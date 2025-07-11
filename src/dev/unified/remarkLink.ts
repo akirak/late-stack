@@ -73,12 +73,40 @@ function remarkLink(options?: RemarkLinkOptions) {
     // Collect all link directives that need OGP metadata
     const linkNodes: Array<{ node: any, headingLevel: number, source: typeof ExternalUrlParser.Type }> = []
 
-    visit(tree, (node) => {
+    visit(tree, (node, index, parent) => {
       // Track the depth of the current heading to set the heading level
       // correctly
       if (node.type === "heading") {
         // Reset parent depth for headings
         parentDepth = node.depth
+        return
+      }
+
+      if (node.type === "definition") {
+        const url = node.url
+        if (!url)
+          return
+
+        try {
+          const source = Schema.decodeSync(ExternalUrlParser)(url)
+
+          if (parent && typeof index === "number") {
+            const linkBlockNode = {
+              type: "containerDirective",
+              name: "link",
+              attributes: { href: source.metadataUrl },
+              children: [],
+              data: {},
+            }
+
+            parent.children.splice(index + 1, 0, linkBlockNode)
+            linkNodes.push({ node: linkBlockNode, headingLevel: parentDepth + 1, source })
+          }
+        }
+        catch (e) {
+          // Not a valid external URL, skip
+          console.error(`Error while parsing the definition link to ${url}`, e)
+        }
         return
       }
 
