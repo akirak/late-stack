@@ -143,7 +143,14 @@ export const MetadataFetcherLive = Layer.effect(
           }
 
           // Fetch with timeout and size limit
-          const response = yield* httpClient.get(url).pipe(
+          const response = yield* httpClient.get(url, {
+            headers: {
+              // Some web sites such as theguardian.com require Accept header.
+              Accept: "*/*",
+              // TODO: Support compression in this client
+              // "Accept-Encoding": "gzip, deflate, br, zstd",
+            },
+          }).pipe(
             Effect.timeout(TIMEOUT_MS),
             Effect.mapError((error) => {
               if (error._tag === "TimeoutException") {
