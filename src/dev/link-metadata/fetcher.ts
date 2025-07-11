@@ -168,6 +168,8 @@ export const MetadataFetcherLive = Layer.effect(
             }),
           )
 
+          yield* Effect.logDebug(`Response received for ${url}: ${response.status}`, response.headers)
+
           // Check content length
           const contentLength = response.headers["content-length"]?.toString()
           if (contentLength && Number.parseInt(contentLength) > MAX_BODY_SIZE) {
