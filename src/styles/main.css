@@ -1044,7 +1044,12 @@
     }
 
     :where(h2, h3, h4, h5, h6).link-card-title {
-      font-size: var(--text-lg);
+      --text-size: var(--text-lg);
+
+      font-size: var(--text-size);
+      line-height: calc(var(--text-size) * var(--leading-tight));
+      height: calc(var(--text-size) * var(--leading-tight));
+
       font-weight: var(--font-semibold);
       color: var(--color-text);
       margin: 0;
