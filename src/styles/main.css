@@ -230,7 +230,7 @@
     --leading-tight: 1.25;
     --leading-normal: 1.5;
     --leading-relaxed: 1.625;
-    --leading-loose: 2;
+    --leading-loose: 1.8;
   }
 
   /* Base typography */
@@ -298,6 +298,10 @@
     margin-bottom: var(--space-md);
     color: var(--color-text);
     line-height: var(--leading-relaxed);
+  }
+
+  .typography :where(p, li) {
+    line-height: var(--leading-loose);
   }
 
   /* Text utilities */
