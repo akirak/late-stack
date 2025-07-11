@@ -266,13 +266,32 @@ The `remarkLink` plugin (`src/dev/unified/remarkLink.ts`) integrates OGP fetchin
 
 **Processing flow:**
 
-1. Collect all `::link[url]` directives during AST traversal
+1. Collect all `link` directives and definition nodes during AST traversal (see examples below)
+   - **Text directives**: Create external links with styling
+   - **Definition nodes**: Insert link cards after the original definition (preserving the definition)
 2. Parse URLs using `ExternalUrlParser` to classify YouTube vs generic links
 3. Batch fetch metadata with concurrency limit of 5
 4. Transform directives based on URL type and directive type:
    - **YouTube URLs**: Generate embedded iframe players with proper dimensions
    - **Generic URLs**: Create rich link cards with OGP metadata
-   - **Text directives**: Create external links with styling
+
+Directive examples:
+
+```mark
+::link[https://react-spectrum.adobe.com/react-aria/components.html]
+
+::link[https://github.com/anthropics/claude-code]
+```
+
+Definition examples:
+
+```markdown
+Check out [React Aria][react-aria] and [Claude Code][claude-code] for more
+information.
+
+[react-aria]: https://react-spectrum.adobe.com/react-aria/components.html
+[claude-code]: https://github.com/anthropics/claude-code
+```
 
 **URL classification (`src/schemas/external-url.ts`):**
 
@@ -285,6 +304,15 @@ The `remarkLink` plugin (`src/dev/unified/remarkLink.ts`) integrates OGP fetchin
 - Generic URLs → Rich preview cards with title, description, image, and site name
 - Failed metadata fetches → Graceful fallback to simple external links
 - All external links get `target="_blank" rel="noopener noreferrer"`
+
+**Definition node processing:**
+
+- Definition nodes (`[label]: url`) are detected during AST traversal
+- URLs are validated against `ExternalUrlParser` (YouTube or generic external sources)
+- Original definition nodes are preserved in the markdown output
+- Rich link cards are inserted as new nodes immediately after each definition
+- This allows both traditional reference-style links and rich previews to coexist
+- Processing happens in reverse order to maintain correct node indices during insertion
 
 **Integration points:**
 
