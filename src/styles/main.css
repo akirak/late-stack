@@ -996,7 +996,7 @@
 
     text-decoration: none;
 
-    --image-width: 120px;
+    --image-width: 200px;
     --image-height: 120px;
 
     height: var(--image-height);
