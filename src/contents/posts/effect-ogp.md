@@ -277,7 +277,7 @@ The `remarkLink` plugin (`src/dev/unified/remarkLink.ts`) integrates OGP fetchin
 
 Directive examples:
 
-```mark
+```markdown
 ::link[https://react-spectrum.adobe.com/react-aria/components.html]
 
 ::link[https://github.com/anthropics/claude-code]
