@@ -1017,6 +1017,10 @@
       }
     }
 
+    &:hover img {
+      filter: brightness(0.9);
+    }
+
     & > :last-child {
       flex-grow: 1;
 
