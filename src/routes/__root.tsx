@@ -11,6 +11,7 @@ import { createServerFn } from "@tanstack/react-start"
 import { getCookie, setCookie } from "@tanstack/react-start/server"
 import * as React from "react"
 import appCss from "@/styles/main.css?url"
+import { useRouteReload } from "@/utils/reload"
 import "@/types/css"
 
 const getServerTheme = createServerFn({ method: "GET" }).handler(
@@ -75,6 +76,8 @@ function RootComponent() {
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   const { theme } = Route.useLoaderData()
+
+  useRouteReload()
 
   const toggleTheme = () => {
     const currentTheme = document.documentElement.getAttribute("data-theme")

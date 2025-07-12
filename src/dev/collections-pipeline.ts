@@ -1,4 +1,5 @@
 import type { Scope } from "effect"
+import type { RouteUpdate } from "./types"
 import * as path from "node:path"
 import { FileSystem, Path } from "@effect/platform"
 import { NodeCommandExecutor, NodeFileSystem, NodeHttpClient, NodePath } from "@effect/platform-node"
@@ -9,19 +10,22 @@ import { LinkMetadataServiceLive } from "./link-metadata/layer"
 import { Config } from "./pipeline-config"
 import { PostBuilder, PostBuilderLive } from "./post-pipeline"
 
+type Callback = (updates: RouteUpdate[]) => void
+
 export class Pipeline extends Context.Tag("Pipeline")<Pipeline, {
-  readonly handleFileChange: (filePath: string) => Effect.Effect<void, Error, never>
-  readonly handleFileDeletion: (filePath: string) => Effect.Effect<void, Error, never>
+  readonly handleFileChange: (filePath: string, callback?: Callback) => Effect.Effect<void, Error, never>
+  readonly handleFileDeletion: (filePath: string, callback?: Callback) => Effect.Effect<void, Error, never>
   readonly buildAll: Effect.Effect<void, Error, never>
 }>() { }
 
-type Handler = (filePath: string) => Effect.Effect<void, Error, never>
+type Handler = (filePath: string) => Effect.Effect<RouteUpdate[], Error, never>
 
 type FileEventType = "remove" | "change"
 
 interface FileEvent {
   type_: FileEventType
   filePath: string
+  callback?: Callback
 }
 
 export const PipelineLive: Layer.Layer<
@@ -56,6 +60,7 @@ export const PipelineLive: Layer.Layer<
               }
               return yield* handler(filePath)
             }
+            return []
           })
     { }
 
@@ -113,18 +118,27 @@ export const PipelineLive: Layer.Layer<
     yield* Stream.fromQueue(queue).pipe(
       Stream.debounce("10 millis"),
       Stream.tap(ev => Console.log(JSON.stringify(ev))),
-      Stream.runForEach(matchFileEvent),
+      Stream.runForEach(event =>
+        Effect.gen(function* () {
+          const updates = yield* matchFileEvent(event)
+          if (event.callback) {
+            event.callback(updates)
+          }
+        }),
+      ),
       Effect.forkScoped,
     )
 
     return {
-      handleFileChange: filePath => Queue.offer(queue, {
+      handleFileChange: (filePath, callback) => Queue.offer(queue, {
         type_: "change",
         filePath,
+        callback,
       }),
-      handleFileDeletion: filePath => Queue.offer(queue, {
+      handleFileDeletion: (filePath, callback) => Queue.offer(queue, {
         type_: "remove",
         filePath,
+        callback,
       }),
       buildAll: Effect.gen(function* () {
         yield* Ref.set(allBuildingOrBuilt, true)

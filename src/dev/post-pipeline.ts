@@ -1,6 +1,7 @@
 import type { ConfigError } from "effect/ConfigError"
 import type { D2 } from "./commands/d2"
 import type { LinkMetadataService } from "./link-metadata/layer"
+import type { RouteUpdate } from "./types"
 import type { PostMetadata } from "@/collections/posts/list/types"
 import { TextEncoder } from "node:util"
 import { FileSystem, Path } from "@effect/platform"
@@ -30,7 +31,7 @@ import remarkDiagram from "./unified/remarkDiagram"
 import remarkExternalLinks from "./unified/remarkExternalLinks"
 import remarkLink from "./unified/remarkLink"
 
-type FileHandler = (filePath: string) => Effect.Effect<void, Error, never>
+type FileHandler = (filePath: string) => Effect.Effect<RouteUpdate[], Error, never>
 
 export class PostBuilder extends Context.Tag("PostBuilder")<PostBuilder, {
   readonly buildPost: FileHandler
@@ -338,7 +339,35 @@ export const PostBuilderLive: Layer.Layer<
             postList.push(postMetadata)
           }
           yield* writePostList
+          return [
+            {
+              type: "reload" as "reload" | "delete",
+              matchRoute: {
+                to: "/post/$lang/$slug",
+                params: {
+                  slug: postMetadata.slug,
+                  lang: postMetadata.language,
+                },
+              },
+            },
+            {
+              type: "reload",
+              matchRoute: {
+                to: "/post/$lang",
+                params: {
+                  lang: postMetadata.language,
+                },
+              },
+            },
+            {
+              type: "reload",
+              matchRoute: {
+                to: "/post",
+              },
+            },
+          ]
         }
+        return []
       }),
 
       deletePost: filePath => Effect.gen(function* () {
@@ -347,9 +376,38 @@ export const PostBuilderLive: Layer.Layer<
         // This method can be run multiple times because of how filesystem
         // events work, so check if the operation has not been done yet.
         if (index) {
+          const postMetadata = postList[index]
           delete postList[index]
           yield* writePostList
+          return [
+            {
+              type: "delete",
+              matchRoute: {
+                to: "/post/$lang/$slug",
+                params: {
+                  slug: postMetadata.slug,
+                  lang: postMetadata.language,
+                },
+              },
+            },
+            {
+              type: "reload",
+              matchRoute: {
+                to: "/post/$lang",
+                params: {
+                  lang: postMetadata.language,
+                },
+              },
+            },
+            {
+              type: "reload",
+              matchRoute: {
+                to: "/post",
+              },
+            },
+          ]
         }
+        return []
       }),
 
       buildAllPosts,

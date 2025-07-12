@@ -1,6 +1,7 @@
 import type { PlatformError } from "@effect/platform/Error"
 import type { ConfigError } from "effect/ConfigError"
 import type { Plugin } from "vite"
+import type { RouteUpdate } from "../../src/dev/types"
 import * as fs from "node:fs"
 import { Effect, ManagedRuntime, pipe, String } from "effect"
 import { makePipelineLayer, Pipeline } from "../../src/dev/collections-pipeline"
@@ -46,6 +47,16 @@ export function collections({ contentDir, outDir }: Options): Plugin {
     async handleHotUpdate(ctx) {
       const { file } = ctx
 
+      const reload = (entries: RouteUpdate[]) => {
+        ctx.server.hot.send({
+          type: "custom",
+          event: "routes-reload",
+          data: {
+            entries,
+          },
+        })
+      }
+
       if (!isContentFile(file)) {
         return
       }
@@ -56,11 +67,11 @@ export function collections({ contentDir, outDir }: Options): Plugin {
 
         if (fileExists) {
           // File was added or modified
-          await withPipeline(pipeline => pipeline.handleFileChange(file))
+          await withPipeline(pipeline => pipeline.handleFileChange(file, reload))
         }
         else {
           // File was deleted
-          await withPipeline(pipeline => pipeline.handleFileDeletion(file))
+          await withPipeline(pipeline => pipeline.handleFileDeletion(file, reload))
         }
       }
       catch (e) {
