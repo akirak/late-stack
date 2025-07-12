@@ -51,7 +51,7 @@ export const PipelineLive: Layer.Layer<
               const type_ = arr[0]
               const handler = handlers[type_]
               if (!handler) {
-                yield* Effect.fail(
+                return yield* Effect.fail(
                   new Error(`missing handler for ${type_}`),
                 )
               }
