@@ -55,6 +55,9 @@ There are custom remark plugins that are defined for this project.
 They reside in `src/dev/unified`.
 Examples should be added to `src/contents/posts/style-guide.md`.
 
+When you modify the tree in a plugin, also update the settings for
+`rehypeSanitize` in `src/dev/post-pipeline.ts`.
+
 #### OGP Integration
 
 In the MDAST pipeline, the OGP metadata of linked sources are fetched.
