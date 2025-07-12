@@ -37,7 +37,11 @@ Lists are used to organize information. They can be bulleted or numbered.
 
 ### Links
 
-Links to other pages look like this: [An example link to the About page](/about). Text styled this way can be clicked to navigate to another page or an external website.
+Links to other pages look like this: [An example link to the About page](/about).
+
+External links automatically open in a new tab: [GitHub](https://github.com), [MDN Web Docs](https://developer.mozilla.org), and [React documentation](https://react.dev) are all examples of external links that will open in new windows.
+
+Text styled this way can be clicked to navigate to another page or an external website.
 
 ### Quotes
 
