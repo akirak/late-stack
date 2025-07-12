@@ -53,7 +53,7 @@ To get a list of contents, prefer using functions from src/collections.
 
 There are custom remark plugins that are defined for this project.
 They reside in `src/dev/unified`.
-Examples should be added to `src/contents/posts/markdown-showcase.md`.
+Examples should be added to `src/contents/posts/style-guide.md`.
 
 #### OGP Integration
 
