@@ -27,6 +27,7 @@ import { PostError, RemarkPluginDataError } from "./error"
 import { Config } from "./pipeline-config"
 import remarkAdmonitions from "./unified/remarkAdmonitions"
 import remarkDiagram from "./unified/remarkDiagram"
+import remarkExternalLinks from "./unified/remarkExternalLinks"
 import remarkLink from "./unified/remarkLink"
 
 type FileHandler = (filePath: string) => Effect.Effect<void, Error, never>
@@ -115,6 +116,7 @@ export const PostBuilderLive: Layer.Layer<
         runtime: d2Runtime,
         slugger: diagramSlugger,
       })
+      .use(remarkExternalLinks)
       .use(remarkLink, { runtime: ogpRuntime })
       .use(remarkCaptions, {
         external: {
@@ -145,6 +147,11 @@ export const PostBuilderLive: Layer.Layer<
             ["className", "youtube-embed"],
             ["style"],
             ["aria-labelledby"],
+          ],
+          "a": [
+            ...(defaultSchema.attributes?.a ?? []),
+            ["target", "_blank"],
+            ["rel", "noopener noreferrer"],
           ],
           "span": [
             ["className"],
