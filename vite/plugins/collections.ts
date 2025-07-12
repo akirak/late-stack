@@ -43,43 +43,32 @@ export function collections({ contentDir, outDir }: Options): Plugin {
       )
     },
 
-    async configureServer(server) {
-      return () => {
-        server.watcher.on("add", async (filePath: string) => {
-          if (isContentFile(filePath)) {
-            try {
-              await withPipeline(pipeline => pipeline.handleFileAddition(filePath))
-            }
-            catch (e) {
-              console.error(e)
-            }
-          }
-        })
-        server.watcher.on("change", async (filePath: string) => {
-          if (isContentFile(filePath)) {
-            try {
-              await withPipeline(pipeline => pipeline.handleFileModification(filePath))
-            }
-            catch (e) {
-              console.error(e)
-            }
-          }
-        })
-        server.watcher.on("unlink", async (filePath: string) => {
-          if (isContentFile(filePath)) {
-            try {
-              await withPipeline(pipeline => pipeline.handleFileDeletion(filePath))
-            }
-            catch (e) {
-              console.error(e)
-            }
-          }
-        })
+    async handleHotUpdate(ctx) {
+      const { file } = ctx
 
-        server.middlewares.use((_request, _response, next) => {
-          next()
-        })
+      if (!isContentFile(file)) {
+        return
       }
+
+      try {
+        // Check if file exists to determine if it was added/modified or deleted
+        const fileExists = fs.existsSync(file)
+
+        if (fileExists) {
+          // File was added or modified
+          await withPipeline(pipeline => pipeline.handleFileChange(file))
+        }
+        else {
+          // File was deleted
+          await withPipeline(pipeline => pipeline.handleFileDeletion(file))
+        }
+      }
+      catch (e) {
+        console.error(e)
+      }
+
+      // Return empty array to prevent default HMR handling for content files
+      return []
     },
 
     /**

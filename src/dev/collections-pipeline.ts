@@ -10,15 +10,14 @@ import { Config } from "./pipeline-config"
 import { PostBuilder, PostBuilderLive } from "./post-pipeline"
 
 export class Pipeline extends Context.Tag("Pipeline")<Pipeline, {
-  readonly handleFileAddition: (filePath: string) => Effect.Effect<void, Error, never>
-  readonly handleFileModification: (filePath: string) => Effect.Effect<void, Error, never>
+  readonly handleFileChange: (filePath: string) => Effect.Effect<void, Error, never>
   readonly handleFileDeletion: (filePath: string) => Effect.Effect<void, Error, never>
   readonly buildAll: Effect.Effect<void, Error, never>
 }>() { }
 
 type Handler = (filePath: string) => Effect.Effect<void, Error, never>
 
-type FileEventType = "add" | "remove" | "change"
+type FileEventType = "remove" | "change"
 
 interface FileEvent {
   type_: FileEventType
@@ -97,15 +96,9 @@ export const PipelineLive: Layer.Layer<
 
     const matchFileEvent = Match.type<FileEvent>().pipe(
       Match.when(
-        { type_: "add" },
-        ({ filePath }) => matchFilePath({
-          posts: posts.buildNewPost,
-        })(filePath),
-      ),
-      Match.when(
         { type_: "change" },
         ({ filePath }) => matchFilePath({
-          posts: posts.rebuildPost,
+          posts: posts.buildPost,
         })(filePath),
       ),
       Match.when(
@@ -125,12 +118,8 @@ export const PipelineLive: Layer.Layer<
     )
 
     return {
-      handleFileModification: filePath => Queue.offer(queue, {
+      handleFileChange: filePath => Queue.offer(queue, {
         type_: "change",
-        filePath,
-      }),
-      handleFileAddition: filePath => Queue.offer(queue, {
-        type_: "add",
         filePath,
       }),
       handleFileDeletion: filePath => Queue.offer(queue, {

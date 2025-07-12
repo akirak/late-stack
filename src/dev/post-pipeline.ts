@@ -33,8 +33,7 @@ import remarkLink from "./unified/remarkLink"
 type FileHandler = (filePath: string) => Effect.Effect<void, Error, never>
 
 export class PostBuilder extends Context.Tag("PostBuilder")<PostBuilder, {
-  readonly buildNewPost: FileHandler
-  readonly rebuildPost: FileHandler
+  readonly buildPost: FileHandler
   readonly deletePost: FileHandler
   readonly buildAllPosts: Effect.Effect<void, Error, never>
 }>() { }
@@ -328,24 +327,16 @@ export const PostBuilderLive: Layer.Layer<
     )
 
     return {
-      buildNewPost: filePath => Effect.gen(function* () {
+      buildPost: filePath => Effect.gen(function* () {
         const postMetadata = Option.getOrNull(yield* processPost(filePath))!
         if (postMetadata) {
           const index = postList.findIndex(post => post.fileName === postMetadata.fileName)
-          // This method can be run multiple times because of how filesystem
-          // events work, so check if the operation has not been done yet.
-          if (!index) {
-            postList.push(postMetadata)
-            yield* writePostList
+          if (index) {
+            postList[index] = postMetadata
           }
-        }
-      }),
-
-      rebuildPost: filePath => Effect.gen(function* () {
-        const postMetadata = Option.getOrNull(yield* processPost(filePath))!
-        if (postMetadata) {
-          const index = postList.findIndex(post => post.fileName === postMetadata.fileName)
-          postList[index] = postMetadata
+          else {
+            postList.push(postMetadata)
+          }
           yield* writePostList
         }
       }),
