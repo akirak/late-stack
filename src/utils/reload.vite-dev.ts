@@ -2,10 +2,6 @@ import type { RouteUpdate } from "@/dev/types"
 import { useMatchRoute, useRouter } from "@tanstack/react-router"
 import { useEffect } from "react"
 
-export interface CustomRouteReload {
-  path: string
-}
-
 export function useRouteReload() {
   const router = useRouter()
   const matchRoute = useMatchRoute()
