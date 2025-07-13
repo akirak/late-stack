@@ -1186,6 +1186,8 @@
       }
 
       .diagram-container {
+        max-width: 100%;
+
         &:not(:has(.diagram-fit, .diagram-scrollable)) {
           display: flex;
         }
