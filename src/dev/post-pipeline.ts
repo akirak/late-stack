@@ -28,8 +28,8 @@ import { PostError, RemarkPluginDataError } from "./error"
 import { Config } from "./pipeline-config"
 import remarkAdmonitions from "./unified/remarkAdmonitions"
 import remarkDiagram from "./unified/remarkDiagram"
-import remarkExternalLinks from "./unified/remarkExternalLinks"
 import remarkLink from "./unified/remarkLink"
+import remarkLinkAttributes from "./unified/remarkLinkAttributes"
 
 type FileHandler = (filePath: string) => Effect.Effect<RouteUpdate[], Error, never>
 
@@ -116,7 +116,7 @@ export const PostBuilderLive: Layer.Layer<
         runtime: d2Runtime,
         slugger: diagramSlugger,
       })
-      .use(remarkExternalLinks)
+      .use(remarkLinkAttributes)
       .use(remarkLink, { runtime: ogpRuntime })
       .use(remarkCaptions, {
         external: {

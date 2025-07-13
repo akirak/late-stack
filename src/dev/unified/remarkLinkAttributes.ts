@@ -1,13 +1,13 @@
 import { visit } from "unist-util-visit"
 
 /**
- * A remark plugin that adds target="_blank" and rel="noopener noreferrer"
- * to external links (links with absolute URLs containing hostnames).
+ * A remark plugin that adds target="_blank" and rel="noopener noreferrer" to
+ * links.
  */
-function remarkExternalLinks() {
+function remarkLinkAttributes() {
   return (tree: any) => {
     visit(tree, "link", (node) => {
-      if (node.url && /^https?:\/\//.test(node.url)) {
+      if (node.url) {
         const data = node.data || (node.data = {})
         const hProperties = data.hProperties || (data.hProperties = {})
 
@@ -18,4 +18,4 @@ function remarkExternalLinks() {
   }
 }
 
-export default remarkExternalLinks
+export default remarkLinkAttributes
