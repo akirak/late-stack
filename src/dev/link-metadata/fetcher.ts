@@ -123,22 +123,19 @@ export const MetadataFetcherLive = Layer.effect(
       fetch: (url: string) =>
         Effect.gen(function* () {
           // Validate URL
-          let parsedUrl: URL
-          try {
-            parsedUrl = new URL(url)
-            if (!["http:", "https:"].includes(parsedUrl.protocol)) {
-              return yield* new FetchError({
-                url,
-                reason: "invalid-url",
-                message: "Only HTTP(S) URLs are supported",
-              })
-            }
-          }
-          catch {
-            return yield* new FetchError({
+          const parsedUrl: URL = yield* Effect.try({
+            try: () => new URL(url),
+            catch: _E => new FetchError({
               url,
               reason: "invalid-url",
               message: "Invalid URL format",
+            }),
+          })
+          if (!["http:", "https:"].includes(parsedUrl.protocol)) {
+            return yield* new FetchError({
+              url,
+              reason: "invalid-url",
+              message: "Only HTTP(S) URLs are supported",
             })
           }
 
