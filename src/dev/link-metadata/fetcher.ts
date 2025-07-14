@@ -195,16 +195,13 @@ export const MetadataFetcherLive = Layer.effect(
           }
 
           // Parse HTML
-          try {
-            const metadata = yield* Effect.promise(() => parseHtml(text, url))
-            return metadata
-          }
-          catch (error) {
-            return yield* new ParseError({
+          return yield* Effect.tryPromise({
+            try: () => parseHtml(text, url),
+            catch: error => new ParseError({
               url,
               message: `Failed to parse HTML: ${error}`,
-            })
-          }
+            }),
+          })
         }),
     }
   }),
