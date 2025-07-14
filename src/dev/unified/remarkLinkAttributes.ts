@@ -6,8 +6,8 @@ import { visit } from "unist-util-visit"
  */
 function remarkLinkAttributes() {
   return (tree: any) => {
-    visit(tree, "link", (node) => {
-      if (node.url) {
+    visit(tree, ["link", "linkReference"], (node) => {
+      if (node.url || node.type === "linkReference") {
         const data = node.data || (node.data = {})
         const hProperties = data.hProperties || (data.hProperties = {})
 
