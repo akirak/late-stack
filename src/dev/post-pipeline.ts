@@ -1,6 +1,7 @@
 import type { ConfigError } from "effect/ConfigError"
 import type { D2 } from "./commands/d2"
 import type { LinkMetadataService } from "./link-metadata/layer"
+import type { OembedService } from "./oembed/layer"
 import type { RouteUpdate } from "./types"
 import type { PostMetadata } from "@/collections/posts/list/types"
 import { TextEncoder } from "node:util"
@@ -48,7 +49,7 @@ const byOptionalDateDescending = Option.getOrder(
 export const PostBuilderLive: Layer.Layer<
   PostBuilder,
   Error | ConfigError,
-  Config | Path.Path | FileSystem.FileSystem | LinkMetadataService | D2
+  Config | Path.Path | FileSystem.FileSystem | LinkMetadataService | OembedService | D2
 > = Layer.effect(
   PostBuilder,
   Effect.gen(function* (_) {
@@ -56,8 +57,8 @@ export const PostBuilderLive: Layer.Layer<
     const fs = yield* FileSystem.FileSystem
     const path = yield* Path.Path
 
-    // Create OGP runtime
-    const ogpRuntime = yield* Effect.runtime<LinkMetadataService>()
+    // Create runtime for link metadata and oembed services
+    const linkRuntime = yield* Effect.runtime<LinkMetadataService | OembedService>()
 
     // Create D2 runtime
     const d2Runtime = yield* Effect.runtime<D2>()
@@ -105,6 +106,7 @@ export const PostBuilderLive: Layer.Layer<
 
     const admonitionSlugger = new GithubSlugger()
     const diagramSlugger = new GithubSlugger()
+    const linkSlugger = new GithubSlugger()
 
     const postProcessor = unified()
       .use(remarkParse)
@@ -117,7 +119,7 @@ export const PostBuilderLive: Layer.Layer<
         slugger: diagramSlugger,
       })
       .use(remarkLinkAttributes)
-      .use(remarkLink, { runtime: ogpRuntime })
+      .use(remarkLink, { runtime: linkRuntime, slugger: linkSlugger })
       .use(remarkCaptions, {
         external: {
           table: "Table:",
@@ -135,6 +137,7 @@ export const PostBuilderLive: Layer.Layer<
           "iframe",
           "diagram",
           "link-card",
+          "oembed-frame",
           "svg",
           "span",
           "figure",
@@ -179,11 +182,23 @@ export const PostBuilderLive: Layer.Layer<
             ["imageAlt"],
             ["description"],
           ],
+          "oembed-frame": [
+            "title",
+            "id",
+            "html",
+            "width",
+            "height",
+            "className",
+            "sandbox",
+          ],
           "iframe": [
             "src",
+            "srcdoc",
+            "title",
             "width",
             "height",
             "frameborder",
+            "sandbox",
             "allow",
             "allowfullscreen",
             "style",
@@ -215,8 +230,10 @@ export const PostBuilderLive: Layer.Layer<
     const processPost = (filePath: string) => Effect.gen(function* () {
       const doc = matter.read(filePath)
 
-      // Reset the slugger for each post
+      // Reset the sluggers for each post
       admonitionSlugger.reset()
+      diagramSlugger.reset()
+      linkSlugger.reset()
 
       const mdast = postProcessor.parse(doc.content)
       const hast = yield* Effect.tryPromise({

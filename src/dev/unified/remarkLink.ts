@@ -1,15 +1,23 @@
-import type { LinkMetadata } from "../../schemas/link-metadata"
+import type { Array } from "effect"
+import type GithubSlugger from "github-slugger"
 import { Effect, Match, Option, Runtime, Schema } from "effect"
 import { visit } from "unist-util-visit"
 import { ExternalUrlParser } from "../../schemas/external-url"
+import { LinkMetadata, Oembed } from "../../schemas/link-metadata"
 import { LinkMetadataService } from "../link-metadata/layer"
+import { OembedService } from "../oembed/layer"
 
 interface Options {
   headingLevel: number
+  id?: string
 }
 
 const makeLinkBlock = Match.type<typeof ExternalUrlParser.Type>().pipe(
-  Match.tag("app/YoutubeVideoSource", source => (node: any, _options?: Options, metadata?: LinkMetadata) => {
+  Match.tag("app/YoutubeVideoSource", source => (node: any, _options?: Options, metadata?: LinkMetadata | Oembed) => {
+    if (metadata instanceof Oembed) {
+      metadata = undefined
+    }
+
     const data = node.data || (node.data = {})
     data.hName = "div"
     data.hProperties = {
@@ -36,7 +44,35 @@ const makeLinkBlock = Match.type<typeof ExternalUrlParser.Type>().pipe(
       },
     })
   }),
-  Match.tag("app/GenericExternalSource", source => (node: any, options?: Options, metadata?: LinkMetadata) => {
+  Match.tag("app/TwitterTweetSource", _source => (node: any, options?: Options, oembed?: LinkMetadata | Oembed) => {
+    if (oembed instanceof LinkMetadata) {
+      oembed = undefined
+    }
+
+    // Replace the node with an OembedFrame component
+    if (oembed?.html) {
+      const data = node.data || (node.data = {})
+      data.hName = "oembed-frame"
+      data.hProperties = {
+        ...data.hProperties,
+        id: options?.id,
+        className: "twitter-embed",
+        title: oembed.title || `Tweet by ${oembed.author_name}`,
+        html: oembed.html,
+        width: oembed.width,
+        height: oembed.height,
+        sandbox: "allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox",
+      }
+
+      // Clear children since the component will handle rendering
+      node.children = []
+    }
+  }),
+  Match.tag("app/GenericExternalSource", source => (node: any, options?: Options, metadata?: LinkMetadata | Oembed) => {
+    if (metadata instanceof Oembed) {
+      metadata = undefined
+    }
+
     const url = metadata?.canonical || source.url
 
     const data = node.data || (node.data = {})
@@ -60,7 +96,8 @@ const makeLinkBlock = Match.type<typeof ExternalUrlParser.Type>().pipe(
 )
 
 export interface RemarkLinkOptions {
-  runtime?: Runtime.Runtime<LinkMetadataService>
+  runtime?: Runtime.Runtime<LinkMetadataService | OembedService>
+  slugger: GithubSlugger
 }
 
 // Heading level
@@ -163,33 +200,41 @@ function remarkLink(options?: RemarkLinkOptions) {
 
     // Fetch OGP metadata for all collected links
     if (runtime && linkNodes.length > 0) {
-      const effects = linkNodes.map(({ source }) =>
-        LinkMetadataService.pipe(
+      const effects = linkNodes.map(({ source }) => Match.value(source).pipe(
+        Match.tag("app/TwitterTweetSource", source => OembedService.pipe(
+          Effect.andThen(
+            service =>
+              service.get(source.oembedUrl).pipe(
+                Effect.map(result => [source.metadataUrl, result] as [string, Option.Option<Oembed> | Option.Option<LinkMetadata>]),
+              ),
+          ),
+        )),
+        Match.orElse(source => LinkMetadataService.pipe(
           Effect.andThen(
             service =>
               service.get(source.metadataUrl).pipe(
-                Effect.map(result => ({ url: source.metadataUrl, result })),
+                Effect.map(result => [source.metadataUrl, result] as [string, Option.Option<Oembed> | Option.Option<LinkMetadata>]),
               ),
           ),
-        ),
-      )
+        )),
+      ))
 
       const results = await Runtime.runPromise(runtime)(
         Effect.all(effects, { concurrency: 5 }),
       )
 
-      // Create a map of URL to OGP metadata
-      const ogpMap = new Map<string, LinkMetadata>()
-      results.forEach(({ url, result }) => {
-        if (Option.isSome(result)) {
-          ogpMap.set(url, result.value)
-        }
-      })
+      // Create separate maps for different metadata types
+      const metadataMap = new Map(
+        results.map(([url, result]: [string, Option.Option<Oembed> | Option.Option<LinkMetadata>]) =>
+          [url, Option.getOrUndefined(result as Option.Option<any>)] as [string, LinkMetadata | Oembed | undefined],
+        ),
+      )
 
-      // Apply OGP metadata to nodes
+      // Apply metadata to nodes
       linkNodes.forEach(({ node, headingLevel, source }) => {
-        const ogpMetadata = ogpMap.get(source.metadataUrl)
-        makeLinkBlock(source)(node, { headingLevel }, ogpMetadata)
+        const metadata = metadataMap.get(source.metadataUrl)
+        const id = (options?.slugger && source._tag === "app/TwitterTweetSource") ? options.slugger.slug(`tweet-${source.id}`) : undefined
+        makeLinkBlock(source)(node, { id, headingLevel }, metadata)
       })
     }
   }

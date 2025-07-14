@@ -12,7 +12,7 @@ export const OgType = Schema.String.pipe(
  *
  * Only relevant fields are defined.
  */
-export const LinkMetadataSchema = Schema.Struct({
+export class LinkMetadata extends Schema.TaggedClass<LinkMetadata>()("app/LinkMetadata", {
   canonical: Schema.optional(Schema.String),
   title: Schema.optional(Schema.String),
   description: Schema.optional(Schema.String),
@@ -22,9 +22,9 @@ export const LinkMetadataSchema = Schema.Struct({
   imageHeight: Schema.optional(Schema.Int),
   siteName: Schema.optional(Schema.String),
   ogType: Schema.optional(OgType),
-})
+}) {}
 
-export type LinkMetadata = typeof LinkMetadataSchema.Type
+export const LinkMetadataSchema = Schema.asSchema(LinkMetadata)
 
 export const RawHtmlMetadata = Schema.Record({
   key: Schema.String,
@@ -71,7 +71,7 @@ export const OgpMetadataFromHtml = Schema.transformOrFail(
           Option.getOrUndefined,
         )
 
-        return ParseResult.succeed({
+        return ParseResult.succeed(new LinkMetadata({
           canonical,
           title: record["og:title"] || record["twitter:title"] || record.title,
           siteName: record["og:site_name"],
@@ -81,7 +81,7 @@ export const OgpMetadataFromHtml = Schema.transformOrFail(
           imageWidth,
           imageHeight,
           ogType,
-        })
+        }))
       }
       catch (error) {
         return ParseResult.fail(
@@ -103,3 +103,48 @@ export const OgpMetadataFromHtml = Schema.transformOrFail(
       ),
   },
 )
+
+/**
+ * Schema for oembed API response.
+ *
+ * @see https://oembed.com/
+ */
+export class Oembed extends Schema.TaggedClass<Oembed>()("app/Oembed", {
+  url: Schema.String,
+  author_name: Schema.optionalWith(Schema.String, {
+    nullable: true,
+  }),
+  author_url: Schema.optionalWith(Schema.String, {
+    nullable: true,
+  }),
+  html: Schema.optionalWith(Schema.String, {
+    nullable: true,
+  }),
+  width: Schema.optionalWith(Schema.Number, {
+    nullable: true,
+  }),
+  height: Schema.optionalWith(Schema.Number, {
+    nullable: true,
+  }),
+  type: Schema.String,
+  cache_age: Schema.optionalWith(Schema.String, {
+    nullable: true,
+  }),
+  provider_name: Schema.String,
+  provider_url: Schema.String,
+  version: Schema.String,
+  title: Schema.optionalWith(Schema.String, {
+    nullable: true,
+  }),
+  thumbnail_url: Schema.optionalWith(Schema.String, {
+    nullable: true,
+  }),
+  thumbnail_width: Schema.optionalWith(Schema.Number, {
+    nullable: true,
+  }),
+  thumbnail_height: Schema.optionalWith(Schema.Number, {
+    nullable: true,
+  }),
+}) {}
+
+export const OembedSchema = Schema.asSchema(Oembed)

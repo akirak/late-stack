@@ -1,7 +1,7 @@
 import type { JSX } from "react"
 import type { LinkMetadata } from "@/schemas/link-metadata"
 
-export type LinkCardProps = LinkMetadata & {
+export type LinkCardProps = Omit<LinkMetadata, "_tag"> & {
   url: string
   headingLevel: number
 }

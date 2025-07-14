@@ -7,6 +7,7 @@ import * as NodeSqlite from "@effect/sql-sqlite-node"
 import { Console, Context, Effect, Layer, Match, pipe, Queue, Ref, Stream, String } from "effect"
 import { D2 } from "./commands/d2"
 import { LinkMetadataServiceLive } from "./link-metadata/layer"
+import { OembedServiceLive } from "./oembed/layer"
 import { Config } from "./pipeline-config"
 import { PostBuilder, PostBuilderLive } from "./post-pipeline"
 
@@ -172,8 +173,18 @@ export function makePipelineLayer(config: {
     Layer.provide(NodeHttpClient.layer),
   )
 
+  const oembedLayer = OembedServiceLive.pipe(
+    Layer.provide(
+      NodeSqlite.SqliteClient.layer({
+        filename: path.join(config.outDir, "oembed.sqlite"),
+      }),
+    ),
+    Layer.provide(NodeHttpClient.layer),
+  )
+
   const postBuilderLayer = PostBuilderLive.pipe(
     Layer.provide(linkMetadataLayer),
+    Layer.provide(oembedLayer),
     Layer.provide(D2.Default),
   )
 
