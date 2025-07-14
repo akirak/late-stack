@@ -32,7 +32,7 @@ export const PipelineLive: Layer.Layer<
   Pipeline,
   Error,
   Config | FileSystem.FileSystem | Path.Path | PostBuilder | Scope.Scope
-> = Layer.effect(
+> = Layer.scoped(
   Pipeline,
   Effect.gen(function* (_) {
     yield* Console.log("Instantiating the build pipeline")
