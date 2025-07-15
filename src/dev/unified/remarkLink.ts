@@ -1,4 +1,3 @@
-import type { Array } from "effect"
 import type GithubSlugger from "github-slugger"
 import { Effect, Match, Option, Runtime, Schema } from "effect"
 import { visit } from "unist-util-visit"
