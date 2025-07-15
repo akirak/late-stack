@@ -9,6 +9,7 @@ import { OembedService } from "../oembed/layer"
 interface Options {
   headingLevel: number
   id?: string
+  embedId?: string
 }
 
 const makeLinkBlock = Match.type<typeof ExternalUrlParser.Type>().pipe(
@@ -50,7 +51,7 @@ const makeLinkBlock = Match.type<typeof ExternalUrlParser.Type>().pipe(
     }
 
     // Replace the node with an OembedFrame component
-    if (oembed?.html) {
+    if (oembed?.html && options?.embedId) {
       const data = node.data || (node.data = {})
       data.hName = "oembed-frame"
       data.hProperties = {
@@ -58,7 +59,7 @@ const makeLinkBlock = Match.type<typeof ExternalUrlParser.Type>().pipe(
         id: options?.id,
         className: "twitter-embed",
         title: oembed.title || `Tweet by ${oembed.author_name}`,
-        html: oembed.html,
+        embedId: options.embedId,
         width: oembed.width,
         height: oembed.height,
         sandbox: "allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox",
@@ -234,7 +235,15 @@ function remarkLink(options?: RemarkLinkOptions) {
       linkNodes.forEach(({ node, headingLevel, source }) => {
         const metadata = metadataMap.get(source.metadataUrl)
         const id = (options?.slugger && source._tag === "app/TwitterTweetSource") ? options.slugger.slug(`tweet-${source.id}`) : undefined
-        makeLinkBlock(source)(node, { id, headingLevel }, metadata)
+
+        let embedId: string | undefined
+
+        // Calculate embed ID for Twitter embeds
+        if (source._tag === "app/TwitterTweetSource" && metadata instanceof Oembed && metadata.html) {
+          embedId = metadata.calculateEmbedId()
+        }
+
+        makeLinkBlock(source)(node, { id, headingLevel, embedId }, metadata)
       })
     }
   }

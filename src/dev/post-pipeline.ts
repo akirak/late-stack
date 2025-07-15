@@ -185,7 +185,7 @@ export const PostBuilderLive: Layer.Layer<
           "oembed-frame": [
             "title",
             "id",
-            "html",
+            "embedId",
             "width",
             "height",
             "className",

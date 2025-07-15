@@ -4,7 +4,7 @@ import ExpandIcon from "@/components/icons/Expand"
 
 export interface OembedFrameProps {
   title?: string
-  html: string
+  embedId: string
   id?: string
   width?: number | string
   height?: number | string
@@ -14,7 +14,7 @@ export interface OembedFrameProps {
 
 export default function OembedFrame({
   title,
-  html,
+  embedId,
   id,
   width,
   height,
@@ -25,44 +25,7 @@ export default function OembedFrame({
   const [scroll, setScroll] = useState(0)
   const [contentHeight, setContentHeight] = useState<number | undefined>(undefined)
 
-  const extendedHtml = `
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-      ${html}
-      <script>
-        window.onload = function() {
-          const iframeId = "${id}";
-          if (iframeId.length === 0) {
-            return
-          }
-
-          let lastScrollHeight = document.documentElement.scrollHeight;
-
-          const observer = new MutationObserver(() => {
-            const currentScrollHeight = document.documentElement.scrollHeight;
-
-            if (currentScrollHeight !== lastScrollHeight) {
-              lastScrollHeight = currentScrollHeight;
-              window.parent.postMessage({ height: currentScrollHeight, iframeId: iframeId }, '*');
-            }
-          });
-
-          // Start observing
-          observer.observe(document.body, {
-            childList: true,
-            subtree: true,
-            attributes: true
-          });
-        };
-      </script>
-    </body>
-    </html>
-  `
+  const embedUrl = `/oembed/${embedId}`
 
   const setModalOpen = (open: boolean) => {
     if (open) {
@@ -77,13 +40,8 @@ export default function OembedFrame({
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
-      // Only allow messages from Twitter/X domains
-      if (event.origin !== "https://x.com" && event.origin !== "https://twitter.com") {
-        return
-      }
-
       if (event.data && event.data.height
-        && event.data.iframeId === id
+        && event.data.embedId === embedId
       ) {
         setContentHeight(event.data.height)
       }
@@ -92,14 +50,14 @@ export default function OembedFrame({
     return () => {
       window.removeEventListener("message", handleMessage, false)
     }
-  }, [id])
+  }, [embedId])
 
   return (
     <div className={`oembed-frame-container ${className}`} id={id}>
       <figure>
         <div className="oembed-frame">
           <iframe
-            srcDoc={extendedHtml}
+            src={embedUrl}
             title={title || `Embedded content - ${Date.now()}`}
             width={width}
             height={height}
@@ -136,7 +94,7 @@ export default function OembedFrame({
             </Button>
             <figure className="oembed-frame oembed-frame-expanded">
               <iframe
-                srcDoc={extendedHtml}
+                src={embedUrl}
                 title={`${title || "Embedded content"} - Modal view - ${Date.now()}`}
                 width={width}
                 height={contentHeight}

@@ -20,6 +20,7 @@ import { Route as BlogArchivePostIndexRouteImport } from './routes/_blog/_archiv
 import { Route as BlogPostLangSlugRouteImport } from './routes/_blog/post.$lang.$slug'
 import { Route as BlogArchivePostLangIndexRouteImport } from './routes/_blog/_archive.post.$lang.index'
 import { ServerRoute as SitemapDotxmlServerRouteImport } from './routes/sitemap[.]xml'
+import { ServerRoute as OembedEmbedIdServerRouteImport } from './routes/oembed.$embedId'
 import { ServerRoute as FeedsDefaultDotxmlServerRouteImport } from './routes/feeds.default[.]xml'
 
 const rootServerRouteImport = createServerRootRoute()
@@ -66,6 +67,11 @@ const BlogArchivePostLangIndexRoute =
 const SitemapDotxmlServerRoute = SitemapDotxmlServerRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootServerRouteImport,
+} as any)
+const OembedEmbedIdServerRoute = OembedEmbedIdServerRouteImport.update({
+  id: '/oembed/$embedId',
+  path: '/oembed/$embedId',
   getParentRoute: () => rootServerRouteImport,
 } as any)
 const FeedsDefaultDotxmlServerRoute =
@@ -140,27 +146,31 @@ export interface RootRouteChildren {
 export interface FileServerRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlServerRoute
   '/feeds/default.xml': typeof FeedsDefaultDotxmlServerRoute
+  '/oembed/$embedId': typeof OembedEmbedIdServerRoute
 }
 export interface FileServerRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlServerRoute
   '/feeds/default.xml': typeof FeedsDefaultDotxmlServerRoute
+  '/oembed/$embedId': typeof OembedEmbedIdServerRoute
 }
 export interface FileServerRoutesById {
   __root__: typeof rootServerRouteImport
   '/sitemap.xml': typeof SitemapDotxmlServerRoute
   '/feeds/default.xml': typeof FeedsDefaultDotxmlServerRoute
+  '/oembed/$embedId': typeof OembedEmbedIdServerRoute
 }
 export interface FileServerRouteTypes {
   fileServerRoutesByFullPath: FileServerRoutesByFullPath
-  fullPaths: '/sitemap.xml' | '/feeds/default.xml'
+  fullPaths: '/sitemap.xml' | '/feeds/default.xml' | '/oembed/$embedId'
   fileServerRoutesByTo: FileServerRoutesByTo
-  to: '/sitemap.xml' | '/feeds/default.xml'
-  id: '__root__' | '/sitemap.xml' | '/feeds/default.xml'
+  to: '/sitemap.xml' | '/feeds/default.xml' | '/oembed/$embedId'
+  id: '__root__' | '/sitemap.xml' | '/feeds/default.xml' | '/oembed/$embedId'
   fileServerRoutesById: FileServerRoutesById
 }
 export interface RootServerRouteChildren {
   SitemapDotxmlServerRoute: typeof SitemapDotxmlServerRoute
   FeedsDefaultDotxmlServerRoute: typeof FeedsDefaultDotxmlServerRoute
+  OembedEmbedIdServerRoute: typeof OembedEmbedIdServerRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -232,6 +242,13 @@ declare module '@tanstack/react-start/server' {
       preLoaderRoute: typeof SitemapDotxmlServerRouteImport
       parentRoute: typeof rootServerRouteImport
     }
+    '/oembed/$embedId': {
+      id: '/oembed/$embedId'
+      path: '/oembed/$embedId'
+      fullPath: '/oembed/$embedId'
+      preLoaderRoute: typeof OembedEmbedIdServerRouteImport
+      parentRoute: typeof rootServerRouteImport
+    }
     '/feeds/default.xml': {
       id: '/feeds/default.xml'
       path: '/feeds/default.xml'
@@ -281,6 +298,7 @@ export const routeTree = rootRouteImport
 const rootServerRouteChildren: RootServerRouteChildren = {
   SitemapDotxmlServerRoute: SitemapDotxmlServerRoute,
   FeedsDefaultDotxmlServerRoute: FeedsDefaultDotxmlServerRoute,
+  OembedEmbedIdServerRoute: OembedEmbedIdServerRoute,
 }
 export const serverRouteTree = rootServerRouteImport
   ._addFileChildren(rootServerRouteChildren)

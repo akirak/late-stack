@@ -180,6 +180,7 @@ export function makePipelineLayer(config: {
       }),
     ),
     Layer.provide(NodeHttpClient.layer),
+    Layer.provide(configLayer),
   )
 
   const postBuilderLayer = PostBuilderLive.pipe(

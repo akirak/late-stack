@@ -1,3 +1,4 @@
+import * as crypto from "node:crypto"
 import { Option, ParseResult, pipe, Schema } from "effect"
 
 export const OgType = Schema.String.pipe(
@@ -145,6 +146,17 @@ export class Oembed extends Schema.TaggedClass<Oembed>()("app/Oembed", {
   thumbnail_height: Schema.optionalWith(Schema.Number, {
     nullable: true,
   }),
-}) {}
+}) {
+  /**
+   * Calculate a unique embed ID based on the HTML content
+   */
+  calculateEmbedId(): string | undefined {
+    if (!this.html) {
+      return undefined
+    }
+    const hash = crypto.createHash("sha256").update(this.html).digest("hex")
+    return hash.substring(0, 16) // Use first 16 chars for shorter IDs
+  }
+}
 
 export const OembedSchema = Schema.asSchema(Oembed)

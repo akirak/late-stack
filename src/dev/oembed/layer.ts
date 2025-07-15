@@ -1,8 +1,11 @@
 import type { SqlError } from "@effect/sql/SqlError"
 import type { OembedSchemaError } from "./cache"
+import * as fs from "node:fs"
+import * as path from "node:path"
 import { HttpClient } from "@effect/platform"
 import { Context, Effect, Either, Layer, Option, Schema } from "effect"
 import { Oembed } from "../../schemas/link-metadata"
+import { Config } from "../pipeline-config"
 import { OembedCache, OembedCacheLive } from "./cache"
 
 export class OembedFetchError extends Schema.TaggedError<OembedFetchError>()("app/OembedFetchError", {
@@ -17,6 +20,30 @@ export class OembedService extends Context.Tag("app/OembedService")<
     readonly get: (url: string) => Effect.Effect<Option.Option<Oembed>, SqlError | OembedSchemaError | OembedFetchError>
   }
 >() {}
+
+function saveHtmlFile(html: string, baseDir: string): Effect.Effect<void, Error> {
+  return Effect.gen(function* () {
+    const oembedDir = path.join(baseDir, "oembed")
+
+    // Ensure the oembed directory exists
+    yield* Effect.tryPromise({
+      try: () => fs.promises.mkdir(oembedDir, { recursive: true }),
+      catch: error => new Error(`Failed to create oembed directory: ${error}`),
+    })
+
+    // Calculate embed ID
+    const embedId = new Oembed({ html, url: "", type: "", provider_name: "", provider_url: "", version: "" }).calculateEmbedId()
+
+    if (embedId) {
+      // Save the HTML file
+      const filePath = path.join(oembedDir, `${embedId}.html`)
+      yield* Effect.tryPromise({
+        try: () => fs.promises.writeFile(filePath, html, "utf8"),
+        catch: error => new Error(`Failed to save HTML file: ${error}`),
+      })
+    }
+  })
+}
 
 function fetchOembed(httpClient: HttpClient.HttpClient, url: string) {
   return Effect.gen(function* () {
@@ -78,6 +105,7 @@ export const OembedServiceLive = Layer.effect(
   Effect.gen(function* () {
     const cache = yield* OembedCache
     const httpClient = yield* HttpClient.HttpClient
+    const config = yield* Config
 
     const ttlMs = 60 * 24 * 60 * 60 * 1000 // 60 days
 
@@ -91,6 +119,12 @@ export const OembedServiceLive = Layer.effect(
 
         // Return if still fresh
         if (age < ttlMs) {
+          // Save HTML file as side effect for cached data too
+          if (oembed.data.html) {
+            yield* saveHtmlFile(oembed.data.html, config.outDir).pipe(
+              Effect.catchAll(error => Effect.logError("Failed to save HTML file for cached data", error)),
+            )
+          }
           return Option.some(oembed.data)
         }
       }
@@ -104,6 +138,14 @@ export const OembedServiceLive = Layer.effect(
         // Save to cache
         yield* cache.set(url, freshResult.right)
         yield* Effect.log("Saved fresh oembed data to cache", url)
+
+        // Save HTML file as side effect
+        if (freshResult.right.html) {
+          yield* saveHtmlFile(freshResult.right.html, config.outDir).pipe(
+            Effect.catchAll(error => Effect.logError("Failed to save HTML file", error)),
+          )
+        }
+
         return Option.some(freshResult.right)
       }
 
