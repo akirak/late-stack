@@ -68,6 +68,11 @@ export default function OembedFrame({
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
+      // Only allow messages from Twitter/X domains
+      if (event.origin !== "https://x.com" && event.origin !== "https://twitter.com") {
+        return
+      }
+
       if (event.data && event.data.height
         && event.data.iframeId === id
       ) {
