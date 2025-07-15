@@ -148,6 +148,8 @@ export const MetadataFetcherLive = Layer.effect(
               "Accept": "*/*",
               // TODO: Support compression in this client
               // "Accept-Encoding": "gzip, deflate, br, zstd",
+              // Some web sites require a User-Agent header
+              "User-Agent": "deno.dev",
             },
           }).pipe(
             Effect.timeout(TIMEOUT_MS),
