@@ -202,6 +202,7 @@ export const PostBuilderLive: Layer.Layer<
             "allow",
             "allowfullscreen",
             "style",
+            "loading",
           ],
         },
       })

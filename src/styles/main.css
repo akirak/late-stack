@@ -1518,6 +1518,31 @@
     }
   }
 
+  /* YouTube embed performance optimizations */
+  .youtube-embed {
+    background: var(--color-bg-secondary);
+
+    iframe {
+      transition: opacity var(--transition-normal);
+
+      &[loading="lazy"] {
+        background: var(--color-bg-secondary);
+
+        /* Add loading indicator */
+        &::before {
+          content: "Loading video...";
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          color: var(--color-text-muted);
+          font-size: var(--text-sm);
+          z-index: 1;
+        }
+      }
+    }
+  }
+
   /* Utilities */
   .visually-hidden {
     position: absolute;
