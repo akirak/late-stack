@@ -145,7 +145,7 @@ export const MetadataFetcherLive = Layer.effect(
           const response = yield* httpClient.get(url, {
             headers: {
               // Some web sites such as theguardian.com require Accept header.
-              Accept: "*/*",
+              "Accept": "*/*",
               // TODO: Support compression in this client
               // "Accept-Encoding": "gzip, deflate, br, zstd",
             },
