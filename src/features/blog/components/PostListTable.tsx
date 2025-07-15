@@ -20,7 +20,7 @@ export function PostListTable({ posts }: { posts: readonly PostMetadata[] }) {
           <tr key={post.slug}>
             <td>
               <Link
-                to="/post/$lang/$slug"
+                to="/posts/$lang/$slug"
                 params={{
                   lang: post.language,
                   slug: post.slug,

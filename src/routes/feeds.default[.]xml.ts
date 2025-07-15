@@ -38,7 +38,7 @@ export const ServerRoute = createServerFileRoute("/feeds/default.xml").methods({
           const _cdata = hastToHtml(data.hastBody)
           return {
             title: post.title,
-            href: `${baseUrl}/post/${post.language}/${post.slug}`,
+            href: `${baseUrl}/posts/${post.language}/${post.slug}`,
             id: post.slug,
             published: Option.getOrUndefined(post.publicationDate),
             _cdata,

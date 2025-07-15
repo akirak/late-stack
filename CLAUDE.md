@@ -84,9 +84,9 @@ File-based routing with TanStack Router:
 /                           # Homepage
 /about[/{lang}]             # About page (optional language)
 /_blog/                     # Blog layout wrapper
-  /post/{lang}/{slug}       # Individual blog post
+  /posts/{lang}/{slug}       # Individual blog post
   /_archive/                # Archive layout
-    /post[/{lang}]/         # Post archive (optional language filter)
+    /posts[/{lang}]/         # Post archive (optional language filter)
 ```
 
 Routes use type-safe loaders and server-side data fetching.

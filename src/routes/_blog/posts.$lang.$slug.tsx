@@ -9,7 +9,7 @@ import { hastShallowHeadings, hastToJsx } from "@/utils/hast"
 import { pageMeta } from "@/utils/seo"
 import { useSticky } from "@/utils/sticky"
 
-export const Route = createFileRoute("/_blog/post/$lang/$slug")({
+export const Route = createFileRoute("/_blog/posts/$lang/$slug")({
   component: PostComponent,
   loader: async ({ params }) => {
     return {

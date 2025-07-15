@@ -16,9 +16,9 @@ const sitemapConfig: SitemapConfig<FileRoutesByFullPath> = {
     path: `/about/${lang}`,
     priority: 0.5,
   })),
-  "/post": null,
-  "/post/$lang": null,
-  "/post/$lang/$slug": () => {
+  "/posts": null,
+  "/posts/$lang": null,
+  "/posts/$lang/$slug": () => {
     const dataPath = path.resolve(getDataDir(), "posts.index.jsonl")
 
     if (!fs.existsSync(dataPath)) {
@@ -34,7 +34,7 @@ const sitemapConfig: SitemapConfig<FileRoutesByFullPath> = {
       .map(line => JSON.parse(line))
 
     return posts.map((post: any) => ({
-      path: `/post/${post.language}/${post.slug}`,
+      path: `/posts/${post.language}/${post.slug}`,
       priority: 0.8,
       changeFrequency: "never" as const,
       lastModified: post.publicationDate ? new Date(post.publicationDate) : undefined,

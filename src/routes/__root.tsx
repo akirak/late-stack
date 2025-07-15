@@ -145,7 +145,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <nav className="root-nav">
           <ul aria-label="Main navigation menu">
             <li>
-              <Link to="/post">
+              <Link to="/posts">
                 Archive
               </Link>
             </li>

@@ -8,7 +8,7 @@ import { Container } from "@/components/layout/Container"
 import { PostListTable } from "@/features/blog/components/PostListTable"
 import { pageMeta } from "@/utils/seo"
 
-export const Route = createFileRoute("/_blog/_archive/post/$lang/")({
+export const Route = createFileRoute("/_blog/_archive/posts/$lang/")({
   component: PostArchiveComponent,
   loader: async ({ params }) => {
     const language = pipe(

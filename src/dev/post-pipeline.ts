@@ -361,7 +361,7 @@ export const PostBuilderLive: Layer.Layer<
             {
               type: "reload" as "reload" | "delete",
               matchRoute: {
-                to: "/post/$lang/$slug",
+                to: "/posts/$lang/$slug",
                 params: {
                   slug: postMetadata.slug,
                   lang: postMetadata.language,
@@ -371,7 +371,7 @@ export const PostBuilderLive: Layer.Layer<
             {
               type: "reload",
               matchRoute: {
-                to: "/post/$lang",
+                to: "/posts/$lang",
                 params: {
                   lang: postMetadata.language,
                 },
@@ -380,7 +380,7 @@ export const PostBuilderLive: Layer.Layer<
             {
               type: "reload",
               matchRoute: {
-                to: "/post",
+                to: "/posts",
               },
             },
           ]
@@ -401,7 +401,7 @@ export const PostBuilderLive: Layer.Layer<
             {
               type: "delete",
               matchRoute: {
-                to: "/post/$lang/$slug",
+                to: "/posts/$lang/$slug",
                 params: {
                   slug: postMetadata.slug,
                   lang: postMetadata.language,
@@ -411,7 +411,7 @@ export const PostBuilderLive: Layer.Layer<
             {
               type: "reload",
               matchRoute: {
-                to: "/post/$lang",
+                to: "/posts/$lang",
                 params: {
                   lang: postMetadata.language,
                 },
@@ -420,7 +420,7 @@ export const PostBuilderLive: Layer.Layer<
             {
               type: "reload",
               matchRoute: {
-                to: "/post",
+                to: "/posts",
               },
             },
           ]

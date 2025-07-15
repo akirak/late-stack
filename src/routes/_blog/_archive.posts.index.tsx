@@ -5,7 +5,7 @@ import { Header } from "@/components/layout/Header"
 import { PostListTable } from "@/features/blog/components/PostListTable"
 import { pageMeta } from "@/utils/seo"
 
-export const Route = createFileRoute("/_blog/_archive/post/")({
+export const Route = createFileRoute("/_blog/_archive/posts/")({
   component: PostArchiveComponent,
   loader: async () => {
     return { posts: await getPostList({}) }
