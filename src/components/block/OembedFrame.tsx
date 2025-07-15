@@ -19,41 +19,52 @@ export default function OembedFrame({
   width,
   height,
   className = "",
-  sandbox = "allow-scripts",
+  sandbox = "allow-scripts allow-same-origin",
 }: OembedFrameProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [scroll, setScroll] = useState(0)
   const [contentHeight, setContentHeight] = useState<number | undefined>(undefined)
 
   const extendedHtml = `
-    ${html}
-    <script>
-      window.onload = function() {
-        const iframeId = "${id}";
-        if (iframeId.length === 0) {
-          return
-        }
-
-        let lastScrollHeight = document.documentElement.scrollHeight;
-
-        const observer = new MutationObserver(() => {
-          const currentScrollHeight = document.documentElement.scrollHeight;
-
-          if (currentScrollHeight !== lastScrollHeight) {
-            lastScrollHeight = currentScrollHeight;
-            window.parent.postMessage({ height: currentScrollHeight, iframeId: iframeId }, '*');
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+      ${html}
+      <script>
+        window.onload = function() {
+          const iframeId = "${id}";
+          if (iframeId.length === 0) {
+            return
           }
-        });
 
-        // Start observing
-        observer.observe(document.body, {
-          childList: true,
-          subtree: true,
-          attributes: true
-        });
-      };
-    </script>
+          let lastScrollHeight = document.documentElement.scrollHeight;
+
+          const observer = new MutationObserver(() => {
+            const currentScrollHeight = document.documentElement.scrollHeight;
+
+            if (currentScrollHeight !== lastScrollHeight) {
+              lastScrollHeight = currentScrollHeight;
+              window.parent.postMessage({ height: currentScrollHeight, iframeId: iframeId }, '*');
+            }
+          });
+
+          // Start observing
+          observer.observe(document.body, {
+            childList: true,
+            subtree: true,
+            attributes: true
+          });
+        };
+      </script>
+    </body>
+    </html>
   `
+
+  const dataUrl = `data:text/html;charset=utf-8,${encodeURIComponent(extendedHtml)}`
 
   const setModalOpen = (open: boolean) => {
     if (open) {
@@ -90,7 +101,7 @@ export default function OembedFrame({
       <figure>
         <div className="oembed-frame">
           <iframe
-            srcDoc={extendedHtml}
+            src={dataUrl}
             title={title || `Embedded content - ${Date.now()}`}
             width={width}
             height={height}
@@ -127,7 +138,7 @@ export default function OembedFrame({
             </Button>
             <figure className="oembed-frame oembed-frame-expanded">
               <iframe
-                srcDoc={extendedHtml}
+                src={dataUrl}
                 title={`${title || "Embedded content"} - Modal view - ${Date.now()}`}
                 width={width}
                 height={contentHeight}
