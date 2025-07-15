@@ -99,6 +99,12 @@ A preview of another webpage may be displayed, which can be clicked to visit the
 Videos may also be embedded, which can be played directly on the page.
 ::link[https://www.youtube.com/watch?v=l7OPFjPjtGs]
 
+**Tweets**
+
+Tweets can be embedded and expanded for easier viewing.
+
+::link[https://x.com/emollick/status/1944519849180561710]
+
 ### Tables
 
 Tables are used to present structured information in a clear and organized way.
