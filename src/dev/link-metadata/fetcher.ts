@@ -122,6 +122,8 @@ export const MetadataFetcherLive = Layer.effect(
     return {
       fetch: (url: string) =>
         Effect.gen(function* () {
+          yield* Effect.log("Fetching OGP metadata", url)
+
           // Validate URL
           const parsedUrl: URL = yield* Effect.try({
             try: () => new URL(url),
@@ -165,7 +167,7 @@ export const MetadataFetcherLive = Layer.effect(
             }),
           )
 
-          yield* Effect.logDebug(`Response received for ${url}: ${response.status}`, response.headers)
+          yield* Effect.log(`Response received for ${url}: ${response.status}`)
 
           // Check content length
           const contentLength = response.headers["content-length"]?.toString()
