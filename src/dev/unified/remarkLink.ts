@@ -60,7 +60,7 @@ const makeLinkBlock = Match.type<typeof ExternalUrlParser.Type>().pipe(
         html: oembed.html,
         width: oembed.width,
         height: oembed.height,
-        sandbox: "allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox",
+        sandbox: "allow-scripts allow-popups allow-popups-to-escape-sandbox",
       }
 
       // Clear children since the component will handle rendering

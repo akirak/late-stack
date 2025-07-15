@@ -19,7 +19,7 @@ export default function OembedFrame({
   width,
   height,
   className = "",
-  sandbox = "allow-scripts allow-same-origin",
+  sandbox = "allow-scripts",
 }: OembedFrameProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [scroll, setScroll] = useState(0)
