@@ -1,4 +1,5 @@
 import type { LinkMetadataSchema } from "../../schemas/link-metadata"
+import { brotliDecompressSync, gunzipSync, inflateRawSync, inflateSync } from "node:zlib"
 import { HttpClient } from "@effect/platform"
 import { Context, Data, Effect, Layer, Schema } from "effect"
 import { HTMLRewriter } from "html-rewriter-wasm"
@@ -37,7 +38,7 @@ export const MetadataFetcherLive = Layer.effect(
       })),
     )
 
-    const parseHtml = async (html: string, baseUrl: string): Promise<typeof LinkMetadataSchema.Type> => {
+    const parseHtml = async (buffer: Uint8Array<ArrayBufferLike>, baseUrl: string): Promise<typeof LinkMetadataSchema.Type> => {
       const rawMetadata: Record<string, string> = {}
 
       let fallbackTitle: string | undefined
@@ -100,9 +101,8 @@ export const MetadataFetcherLive = Layer.effect(
         },
       })
 
-      const encoder = new TextEncoder()
       try {
-        await rewriter.write(encoder.encode(html))
+        await rewriter.write(buffer)
         await rewriter.end()
       }
       finally {
@@ -146,8 +146,7 @@ export const MetadataFetcherLive = Layer.effect(
             headers: {
               // Some web sites such as theguardian.com require Accept header.
               "Accept": "*/*",
-              // TODO: Support compression in this client
-              // "Accept-Encoding": "gzip, deflate, br, zstd",
+              "Accept-Encoding": "gzip, deflate, br",
               // Some web sites require a User-Agent header
               "User-Agent": "deno.dev",
             },
@@ -182,7 +181,7 @@ export const MetadataFetcherLive = Layer.effect(
           }
 
           // Read body with size limit
-          const text = yield* response.text.pipe(
+          const arrayBuffer = yield* response.arrayBuffer.pipe(
             Effect.mapError(() => new FetchError({
               url,
               reason: "network",
@@ -190,7 +189,39 @@ export const MetadataFetcherLive = Layer.effect(
             })),
           )
 
-          if (text.length > MAX_BODY_SIZE) {
+          // Check if response is compressed and decompress if needed
+          const contentEncoding = response.headers["content-encoding"]
+          let buffer: Uint8Array<ArrayBufferLike>
+          if (contentEncoding) {
+            const inputBuffer = new Uint8Array(arrayBuffer)
+            const decompressed = yield* Effect.try({
+              try: () => {
+                switch (contentEncoding) {
+                  case "gzip":
+                    return gunzipSync(inputBuffer)
+                  case "deflate":
+                    return inflateSync(inputBuffer)
+                  case "deflate-raw":
+                    return inflateRawSync(inputBuffer)
+                  case "br":
+                    return brotliDecompressSync(inputBuffer)
+                  default:
+                    throw new Error(`Unsupported content encoding: ${contentEncoding}`)
+                }
+              },
+              catch: error => new FetchError({
+                url,
+                reason: "network",
+                message: `Failed to decompress ${contentEncoding} response: ${error}`,
+              }),
+            })
+            buffer = decompressed
+          }
+          else {
+            buffer = new Uint8Array(arrayBuffer)
+          }
+
+          if (buffer.byteLength > MAX_BODY_SIZE) {
             return yield* new FetchError({
               url,
               reason: "too-large",
@@ -200,7 +231,7 @@ export const MetadataFetcherLive = Layer.effect(
 
           // Parse HTML
           return yield* Effect.tryPromise({
-            try: () => parseHtml(text, url),
+            try: () => parseHtml(buffer, url),
             catch: error => new ParseError({
               url,
               message: `Failed to parse HTML: ${error}`,
