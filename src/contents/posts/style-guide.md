@@ -49,6 +49,15 @@ When a person or source is quoted, the text is displayed in a distinct block lik
 
 > This is a quote. It stands out from the regular text to show that it's a direct quotation from another source.
 
+## Interactive Elements
+
+Certain content blocks, like embedded media and diagrams, have interactive features available only on post pages.
+
+- Hover over these blocks to reveal an expand button (↗).
+- Click the expand button to view the content in a full-screen modal.
+- The modal view automatically adjusts to the content's size.
+- Press the `Escape` key or click outside the content to close the modal.
+
 ## Special Content Blocks
 
 To make content more dynamic and helpful, a variety of special blocks are used to highlight information.
