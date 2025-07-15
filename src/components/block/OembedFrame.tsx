@@ -64,8 +64,6 @@ export default function OembedFrame({
     </html>
   `
 
-  const dataUrl = `data:text/html;charset=utf-8,${encodeURIComponent(extendedHtml)}`
-
   const setModalOpen = (open: boolean) => {
     if (open) {
       setScroll(window.scrollY)
@@ -101,7 +99,7 @@ export default function OembedFrame({
       <figure>
         <div className="oembed-frame">
           <iframe
-            src={dataUrl}
+            srcDoc={extendedHtml}
             title={title || `Embedded content - ${Date.now()}`}
             width={width}
             height={height}
@@ -138,7 +136,7 @@ export default function OembedFrame({
             </Button>
             <figure className="oembed-frame oembed-frame-expanded">
               <iframe
-                src={dataUrl}
+                srcDoc={extendedHtml}
                 title={`${title || "Embedded content"} - Modal view - ${Date.now()}`}
                 width={width}
                 height={contentHeight}
