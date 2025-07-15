@@ -1502,7 +1502,6 @@
     .oembed-frame-expanded {
       border: none;
       border-radius: var(--radius-lg);
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 
       iframe {
         border-radius: var(--radius-lg);
