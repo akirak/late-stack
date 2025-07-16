@@ -62,7 +62,7 @@ export const Route = createRootRouteWithContext<AppRouteContext>()({
       // preload fonts (optional, but recommended for performance)
       { rel: "preload", href: "https://fonts.gstatic.com/s/manrope/v19/xn7gYHE41ni1AdIRggexSg.woff2", as: "font", type: "font/woff2", crossOrigin: "anonymous" },
       { rel: "preload", href: "https://fonts.gstatic.com/s/sourceserif4/v13/vEFI2_tTDB4M7-auWDN0ahZJW1gb8tc.woff2", as: "font", type: "font/woff2", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=DM+Mono:wght@400&family=Manrope:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" },
+      { rel: "preload", as: "style", onload: "this.rel='stylesheet'", href: "https://fonts.googleapis.com/css2?family=DM+Mono:wght@400&family=Manrope:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" },
       { rel: "stylesheet", href: appCss },
       { rel: "alternate", type: "application/atom+xml", title: "RSS", href: "/feeds/default.xml" },
     ],
