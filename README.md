@@ -7,10 +7,10 @@ management system powered by Effect and TanStack Start.
 
 The **LATE Stack** consists of:
 
-- [Lightning CSS](https://lightningcss.dev/) - Modern, extremely fast CSS parser and transformer
-- [React Aria](https://react-spectrum.adobe.com/react-aria/) - Best-in-class accessibility components
-- [TanStack Start](https://tanstack.com/start/) - Full-stack React framework with type-safe routing
-- [Effect](https://effect.website/) - Batteries-included functional programming framework for TypeScript
+- [**L**ightning CSS](https://lightningcss.dev/) - Modern, extremely fast CSS parser and transformer
+- [React **A**ria](https://react-spectrum.adobe.com/react-aria/) - Best-in-class accessibility components
+- [**T**anStack Start](https://tanstack.com/start/) - Full-stack React framework with type-safe routing
+- [**E**ffect](https://effect.website/) - Batteries-included functional programming framework for TypeScript
 
 This stack enables the development of full-stack applications with end-to-end
 type safety, prioritizing maintainability and developer experience.
