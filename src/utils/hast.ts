@@ -3,6 +3,7 @@ import { toJsxRuntime } from "hast-util-to-jsx-runtime"
 import { Fragment, jsx, jsxs } from "react/jsx-runtime"
 import { Diagram } from "@/components/block/Diagram"
 import { LinkCard } from "@/components/block/LinkCard"
+import LiteYouTube from "@/components/block/LiteYouTube"
 import OembedFrame from "@/components/block/OembedFrame"
 
 export function hastToJsx(hastTree: any): JsxElement {
@@ -13,6 +14,7 @@ export function hastToJsx(hastTree: any): JsxElement {
     components: {
       "diagram": Diagram,
       "link-card": LinkCard,
+      "lite-youtube": LiteYouTube,
       "oembed-frame": OembedFrame,
     },
   })

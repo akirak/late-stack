@@ -138,6 +138,7 @@ export const PostBuilderLive: Layer.Layer<
           "diagram",
           "link-card",
           "oembed-frame",
+          "lite-youtube",
           "svg",
           "span",
           "figure",
@@ -147,7 +148,6 @@ export const PostBuilderLive: Layer.Layer<
           ...defaultSchema.attributes,
           "div": [
             ["className", /^admonition/],
-            ["className", "youtube-embed"],
             ["style"],
             ["aria-labelledby"],
           ],
@@ -190,6 +190,11 @@ export const PostBuilderLive: Layer.Layer<
             "height",
             "className",
             "sandbox",
+          ],
+          "lite-youtube": [
+            "id",
+            "title",
+            "className",
           ],
           "iframe": [
             "src",

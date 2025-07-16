@@ -19,31 +19,16 @@ const makeLinkBlock = Match.type<typeof ExternalUrlParser.Type>().pipe(
     }
 
     const data = node.data || (node.data = {})
-    data.hName = "div"
+    data.hName = "lite-youtube"
     data.hProperties = {
       ...data.hProperties,
       className: "youtube-embed",
-      style: "position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin: 1rem 0;",
+      id: source.id,
+      title: metadata?.title,
     }
 
-    // Replace the node with an iframe
-    node.children.unshift({
-      type: "paragraph",
-      data: {
-        hName: "iframe",
-        hProperties: {
-          src: source.embedUrl,
-          title: metadata?.title,
-          width: "560",
-          height: "315",
-          frameborder: "0",
-          allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture",
-          allowfullscreen: true,
-          loading: "lazy",
-          style: "position: absolute; top: 0; left: 0; width: 100%; height: 100%;",
-        },
-      },
-    })
+    // Clear children since lite-youtube handles rendering
+    node.children = []
   }),
   Match.tag("app/TwitterTweetSource", _source => (node: any, options?: Options, oembed?: LinkMetadata | Oembed) => {
     if (oembed instanceof LinkMetadata) {
