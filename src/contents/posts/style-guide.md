@@ -166,6 +166,7 @@ Other times, the differences between two pieces of code may be shown. Lines with
 ### Diagrams
 
 Diagrams may also be used to illustrate concepts and workflows.
+You can also view and copy the source code of each diagram.
 
 :::diagram{.fit}
 
@@ -177,6 +178,8 @@ Concept_A -> Is_Connected_To -> Concept_B
 ```
 
 :::
+
+The diagram syntax used here is [D2](https://d2lang.com/).
 
 ## Site-Wide Features
 
