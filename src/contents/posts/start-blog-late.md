@@ -48,7 +48,7 @@ instead of directing traffic to original sources. Your carefully crafted
 insights may power a chatbot's response without attribution, meaning your work
 is consumed but not recognised. With attention fragmented and credit diluted,
 publishing free content can feel like a futile effort that benefits competitors.
-The old paradigm seems to be over.
+It's so over.
 
 In this new landscape, the purpose of blogging shifts. It's less about providing
 utility that AI can replicate and more about cultivating originality. The focus
