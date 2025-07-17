@@ -574,6 +574,15 @@ runs applications in containers on the Deno runtime, which has high
 compatibility with Node.js, allowing the use of `node:fs` to access build
 assets.
 
+:::info[Cloudflare as an alternative]
+
+If I were to utilise Cloudflare Workers, the files would be loaded from an
+object storage, specifically Cloudflare R2. Alternatively, [Cloudflare
+Containers (Beta)](https://developers.cloudflare.com/containers/) could be used,
+although it is only available with the paid plan.
+
+:::
+
 Deno Deploy is a solid platform. While not as popular as Cloudflare Workers, it
 offers a simpler user interface and is easier to use. However, a recent outage
 caused widespread deployment failures, suggesting their operations may not be
