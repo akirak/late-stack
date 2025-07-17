@@ -181,12 +181,12 @@ formatter, linter and numerous other utilities just to build a single
 application. This setup forced developers to manage many moving parts before
 even addressing the core application logic.
 
-Enter [Effect](https://effect.website/). After a long development period, it has
-reached its first stable version. While it provides a powerful _effect system_,
-it is much more than that: **it is a complete, batteries-included application
-framework built on TypeScript syntax.** Although it has a learning curve, its
-robust, functional approach is compelling. As of recently, [Effect has entered
-its early adopter phase][effect-early-adapter].
+Enter [Effect](https://effect.website/). After a long development period, it
+reached its first stable version last year. While it provides a powerful _effect
+system_, it is much more than that: **it is a complete, batteries-included
+application framework built on TypeScript syntax.** Although it has a learning
+curve, its robust, functional approach is compelling. As of recently, [Effect
+has entered its early adopter phase][effect-early-adapter].
 
 [effect-early-adapter]: https://x.com/schickling/status/1938207477096468604
 
