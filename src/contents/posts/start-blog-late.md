@@ -620,8 +620,8 @@ initial code, which has been very helpful. (Usage statistics from
 
 [ccusage]: https://github.com/ryoppippi/ccusage
 
-As a developer not experienced in front-end, many questions are asked. For
-technical decision-making, Google's Gemini 1.5 Flash is primarily used. While it
+As a developer not well experienced in frontend, many questions are asked. For
+technical decision-making, Google's Gemini 2.5 Flash is primarily used. While it
 is less adept at coding, its fast, neutral responses are excellent for
 brainstorming implementation plans. The tools are complementary; for example,
 after Claude generated a colour scheme with poor contrast for the dark mode,
