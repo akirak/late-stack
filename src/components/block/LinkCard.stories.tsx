@@ -1,5 +1,5 @@
 import type { Story } from "@ladle/react"
-import { LinkCard } from "./LinkCard"
+import LinkCard from "./LinkCard"
 
 export const WithImage: Story = () => (
   <LinkCard

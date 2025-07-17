@@ -16,7 +16,7 @@ interface DiagramProps {
   className?: string
 }
 
-export function Diagram({ className, codeLanguage, code, __html, title }: DiagramProps) {
+function Diagram({ className, codeLanguage, code, __html, title }: DiagramProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isTooltipOpen, setIsTooltipOpen] = useState(false)
   const [scroll, setScroll] = useState(0)
@@ -139,3 +139,5 @@ export function Diagram({ className, codeLanguage, code, __html, title }: Diagra
     </>
   )
 }
+
+export default Diagram

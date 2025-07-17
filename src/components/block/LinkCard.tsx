@@ -21,7 +21,7 @@ function LinkCardSite({ domain }: { domain: string }) {
   )
 }
 
-export function LinkCard({
+function LinkCard({
   url,
   title,
   image,
@@ -68,3 +68,5 @@ export function LinkCard({
     </a>
   )
 }
+
+export default LinkCard
