@@ -384,7 +384,9 @@
   hr {
     border: none;
     height: 1px;
-    background-color: var(--border-subtle);
+    /* --border-suble is nearly invisible in the dark mode, so use semi-transparency
+       instead. */
+    background-color: color-mix(in oklch, var(--text-primary) 20%, transparent);
     margin: var(--space-xl) 0;
     border-radius: 1px;
   }
