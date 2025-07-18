@@ -680,6 +680,6 @@ Many features are planned for the future:
 
 If you have suggestions, please open an issue.
 
-This will be a valuable experience, regardless of the outcome. As software
-development becomes increasingly commoditised, unique projects like this are
-more important than ever.
+AI now enables individuals to build tailored publishing systems from scratch.
+With some frontend knowledge, you can design clear, readable pages—and use AI to
+refine both design and content along the way.
