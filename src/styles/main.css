@@ -789,6 +789,14 @@
     color: var(--color-text-muted);
   }
 
+  /* Post Meta Component */
+  .post-meta {
+    display: flex;
+    gap: var(--space-md);
+    list-style: none;
+    color: var(--color-text-muted);
+  }
+
   /* Tag Component */
   .tag {
     background: var(--color-accent);
