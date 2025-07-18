@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router"
 import { Option } from "effect"
 import { getPost } from "@/collections/posts.client"
 import { Toc } from "@/components/block/Toc"
+import { DateFormat } from "@/components/inline/DateFormat"
 import { Container } from "@/components/layout/Container"
 import { Header } from "@/components/layout/Header"
 import { Nav } from "@/components/layout/Nav"
@@ -39,12 +40,21 @@ function PostComponent() {
         <h1>
           {post.title}
         </h1>
-        <p
-          aria-label="Estimated reading time"
-          title={`${post.readingTime.text} — ${post.readingTime.words} words`}
-        >
-          {post.readingTime.text}
-        </p>
+        <ul className="post-meta">
+          {
+            Option.isSome(post.publicationDate) && (
+              <li aria-label="Publication date">
+                <DateFormat date={post.publicationDate} />
+              </li>
+            )
+          }
+          <li
+            aria-label="Estimated reading time"
+            title={`${post.readingTime.text} — ${post.readingTime.words} words`}
+          >
+            {post.readingTime.text}
+          </li>
+        </ul>
       </Header>
 
       <Nav>
