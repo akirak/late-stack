@@ -4,7 +4,7 @@ test("display a title with the suffix (on about page)", async ({ page }) => {
   await page.goto("/about/en")
 
   // Check that the document title includes both the page title and site suffix
-  await expect(page).toHaveTitle("Akira Komamura [en] — jingsi.space")
+  await expect(page).toHaveTitle("Akira Komamura (en) — jingsi.space")
 })
 
 test("display the default title (on home page)", async ({ page }) => {
