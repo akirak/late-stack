@@ -1,0 +1,21 @@
+@layer components {
+  .links {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    gap: var(--space-sm);
+
+    --social-link-size: var(--space-lg);
+
+    & > li {
+      margin: 0;
+      padding: 0;
+
+      list-style-type: none;
+      width: var(--social-link-size);
+      height: var(--social-link-size);
+    }
+  }
+}

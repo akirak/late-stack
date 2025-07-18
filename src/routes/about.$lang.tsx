@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router"
 import { getProfile } from "@/collections/about/server"
 import { Container } from "@/components/layout/Container"
 import { Header } from "@/components/layout/Header"
+import SocialLinks from "@/features/social/components/SocialLinks"
 import { hastToJsx } from "@/utils/hast"
 import { pageMeta } from "@/utils/seo"
 
@@ -18,7 +19,7 @@ export const Route = createFileRoute("/about/$lang")({
 })
 
 function AboutComponent() {
-  const { taglineHast, descriptionHast, postscriptHast } = Route.useLoaderData()
+  const { taglineHast, descriptionHast, postscriptHast, socialLinks } = Route.useLoaderData()
 
   return (
     <Container>
@@ -41,6 +42,8 @@ function AboutComponent() {
         </div>
 
         {hastToJsx(taglineHast)}
+
+        <SocialLinks items={socialLinks} />
 
         {hastToJsx(descriptionHast)}
 
