@@ -380,6 +380,15 @@
     padding: 0;
   }
 
+  /* Horizontal Rules */
+  hr {
+    border: none;
+    height: 1px;
+    background-color: var(--border-subtle);
+    margin: var(--space-xl) 0;
+    border-radius: 1px;
+  }
+
   /* Blockquotes */
   /* Base Blockquote Styles (for light theme primarily) */
   blockquote {
@@ -427,7 +436,7 @@
   }
 
   /* Vertical spacing for main typography content */
-  main.typography > * + *:not(:where(h2, h3, h4, h5, h6)) {
+  main.typography > * + *:not(:where(h2, h3, h4, h5, h6, hr)) {
     margin-top: var(--space-md);
   }
 
