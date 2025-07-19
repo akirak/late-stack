@@ -2,7 +2,7 @@ import type { OgType } from "@/schemas/link-metadata"
 
 const TitleSuffix = ` — jingsi.space`
 
-const FallbackImageUrl = "/ogp/fallback-hotpot.png"
+const FallbackImageUrl = "https://jingsi.space/ogp/fallback-hotpot.png"
 
 const fallbackImageProps = [
   { name: "twitter:image", content: FallbackImageUrl },
