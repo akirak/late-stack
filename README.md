@@ -33,7 +33,7 @@ with YAML frontmatter into JSON data at build time. The content pipeline runs
 during development via Vite plugin and processes multilingual content with draft
 filtering.
 
-For detailed technical background, see the [LATE Stack blog post](src/contents/posts/start-blog-late.md).
+For detailed technical background, see the [LATE Stack blog post](https://jingsi.space/posts/en/start-blog-late).
 
 Also see [CLAUDE.md](./CLAUDE.md).
 
