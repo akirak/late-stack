@@ -33,6 +33,13 @@
   .header {
     margin-block-start: var(--space-sm);
     margin-block-end: var(--space-xl);
+
+    display: flex;
+    flex-direction: column;
+
+    &:not(:has(:not(h1))) {
+      align-items: center;
+    }
   }
 
   .nav {
