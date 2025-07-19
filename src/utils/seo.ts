@@ -2,6 +2,17 @@ import type { OgType } from "@/schemas/link-metadata"
 
 const TitleSuffix = ` — jingsi.space`
 
+const FallbackImageUrl = "/ogp/fallback-hotpot.png"
+
+const fallbackImageProps = [
+  { name: "twitter:image", content: FallbackImageUrl },
+  { name: "twitter:card", content: "summary_large_image" },
+  { name: "og:image", content: FallbackImageUrl },
+  { name: "og:image:width", content: "1200" },
+  { name: "og:image:height", content: "630" },
+  { name: "og:image:alt", content: "jingsi.space" },
+]
+
 interface Seo {
   ogType: typeof OgType.Type
   title: string
@@ -35,7 +46,7 @@ function internalMeta({
           { name: "twitter:card", content: "summary_large_image" },
           { name: "og:image", content: image },
         ]
-      : []),
+      : fallbackImageProps),
     ...(ogType
       ? [
           { name: "og:type", content: "website" },
