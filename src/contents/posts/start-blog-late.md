@@ -627,6 +627,12 @@ brainstorming implementation plans. The tools are complementary; for example,
 after Claude generated a colour scheme with poor contrast for the dark mode,
 Gemini corrected it. The Gemini CLI is also used for improving documentation.
 
+With the help of AI, I was able to generate frontend code without borrowing from
+existing code repositories or blog posts. This experience suggests that the
+value of sharing application code on blogs is diminishing, as AI can now produce
+similar code on demand — **often without crediting the human authors whose work it
+was trained on**.
+
 OpenAI models are also used for architecture. The Effect Collections concept was
 initially brainstormed with the free version of ChatGPT. GPT-4o (via
 [aider][aider]) was used to develop a specification for the [Effect OGP
