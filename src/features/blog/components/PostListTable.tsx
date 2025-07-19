@@ -1,10 +1,11 @@
 import type { PostMetadata } from "@/collections/posts.client"
 import { Link } from "@tanstack/react-router"
 import { DateFormat } from "@/components/inline/DateFormat"
+import styles from "./PostListTable.module.css"
 
 export function PostListTable({ posts }: { posts: readonly PostMetadata[] }) {
   return (
-    <table>
+    <table className={styles.table}>
       <thead>
         <tr>
           <th>

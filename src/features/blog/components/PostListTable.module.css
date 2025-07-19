@@ -1,0 +1,8 @@
+/* Only override table cell padding to increase horizontal spacing */
+@layer components {
+  .table {
+    :where(th, td) {
+      padding: var(--space-xs) var(--space-md);
+    }
+  }
+}
