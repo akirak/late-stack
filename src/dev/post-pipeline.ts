@@ -355,7 +355,7 @@ export const PostBuilderLive: Layer.Layer<
         const postMetadata = Option.getOrNull(yield* processPost(filePath))!
         if (postMetadata) {
           const index = postList.findIndex(post => post.fileName === postMetadata.fileName)
-          if (index) {
+          if (index >= 0) {
             postList[index] = postMetadata
           }
           else {
