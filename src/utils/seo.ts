@@ -7,10 +7,10 @@ const FallbackImageUrl = "/ogp/fallback-hotpot.png"
 const fallbackImageProps = [
   { name: "twitter:image", content: FallbackImageUrl },
   { name: "twitter:card", content: "summary_large_image" },
-  { name: "og:image", content: FallbackImageUrl },
-  { name: "og:image:width", content: "1200" },
-  { name: "og:image:height", content: "630" },
-  { name: "og:image:alt", content: "jingsi.space" },
+  { property: "og:image", content: FallbackImageUrl },
+  { property: "og:image:width", content: "1200" },
+  { property: "og:image:height", content: "630" },
+  { property: "og:image:alt", content: "jingsi.space" },
 ]
 
 interface Seo {
@@ -32,7 +32,7 @@ function internalMeta({
       ? [
           { name: "description", content: description },
           { name: "twitter:description", content: description },
-          { name: "og:description", content: description },
+          { property: "og:description", content: description },
         ]
       : []),
     ...(keywords
@@ -44,12 +44,12 @@ function internalMeta({
       ? [
           { name: "twitter:image", content: image },
           { name: "twitter:card", content: "summary_large_image" },
-          { name: "og:image", content: image },
+          { property: "og:image", content: image },
         ]
       : fallbackImageProps),
     ...(ogType
       ? [
-          { name: "og:type", content: "website" },
+          { property: "og:type", content: "website" },
         ]
       : []),
     // { name: "twitter:creator", content: "@tannerlinsley" },
@@ -60,7 +60,7 @@ function internalMeta({
 function ogTitle(title: string) {
   return [
     { name: "twitter:title", content: title },
-    { name: "og:title", content: title },
+    { property: "og:title", content: title },
   ]
 }
 
