@@ -1,8 +1,9 @@
 ---
 slug: start-blog-late
 title: Starting a Blog with the LATE Stack in 2025
+publicationDate: "2025-07-20T22:00:00+09:00"
 language: en
-draft: true
+description: "An introduction to the LATE Stack (Lightning CSS, React Aria, TanStack, Effect) for building a custom, type-safe blog from scratch, and the motivation for starting a blog in 2025."
 ---
 
 In an era dominated by AI, the relevance of personal blogging is often

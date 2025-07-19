@@ -1,7 +1,8 @@
 ---
 title: Content Pipeline in Vite
 language: en
-draft: true
+publicationDate: "2025-07-20T21:00:00+09:00"
+description: "Learn how to build a content processing pipeline in Vite with a custom plugin. This post details using the Effect library for managing concurrent workflows and implementing hot-reloading for seamless content updates during development."
 ---
 
 :::warning[AI Generated Content]
