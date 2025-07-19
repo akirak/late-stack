@@ -5,9 +5,10 @@ language: en
 draft: true
 ---
 
-In an era dominated by AI, the relevance of personal blogging is often questioned.
-This post explores the rationale for building a new blog from scratch in 2025 and
-details its technical implementation, dubbed the _LATE Stack_.
+In an era dominated by AI, the relevance of personal blogging is often
+questioned. In this post, I will explain the rationale for building a new blog
+from scratch in 2025 and detail its technical implementation, which I call the
+_LATE Stack_.
 
 :::warning[Partly AI-Generated Content]
 
@@ -26,105 +27,94 @@ and research databases.
 
 [license-deals]: https://www.theguardian.com/media/article/2024/may/04/danger-and-opportunity-for-news-industry-as-ai-woos-it-for-vital-human-written-copy "Danger and opportunity for news industry as AI woos it for vital human-written copy"
 
-For publishers and media platforms, this is an existential crisis. Even as they
-move content behind paywalls, [AI companies believe they can eventually bypass
-publishers entirely][end-of-publishing]. _(Caution: the linked article itself is
-behind a paywall)_.
+For publishers and media platforms, this is a crisis. Even as they move content
+behind paywalls, [AI companies believe they can eventually bypass publishers
+entirely][end-of-publishing]. _(Note that the linked article is behind a
+paywall)_.
 
 [end-of-publishing]: https://www.theatlantic.com/technology/archive/2025/06/generative-ai-pirated-articles-books/683009/
 
-The Model Context Protocol (MCP) is rapidly gaining traction, enabling agents to
-fetch information programmatically. Despite ongoing security concerns, its
-adoption continues to grow, and it is poised to become a dominant standard.
-Consequently, traditional web search is losing relevance, and direct website
-visitation may decline.
+The Model Context Protocol (MCP) is gaining traction, enabling agents to fetch
+information and perform effects. Despite ongoing security concerns, its adoption
+continues to grow, and it is poised to become dominant. As a consequence,
+traditional web search is losing relevance, and direct website visitation may
+decline.
 
 This raises a question for individuals: Does it still make sense to write a
-blog? Is it too late for newcomers to start in 2025?
+blog in 2025? Is it too late to even start in 2025?
 
-From a pessimistic viewpoint, the outlook is grim. AI models skim, scrape and
-regurgitate content. Search engines increasingly provide synthesised answers
-instead of directing traffic to original sources. Your carefully crafted
-insights may power a chatbot's response without attribution, meaning your work
-is consumed but not recognised. With attention fragmented and credit diluted,
-publishing free content can feel like a futile effort that benefits competitors.
-It's so over.
+From a pessimistic viewpoint, the outlook appears bleak. AI models peruse and
+regurgitate content. AI chats generate synthesised responses. Even though they
+direct some of the traffic to original sources, your work may be consumed to
+fuel a chatbot's reply, often unacknowledged, even at the best scenario.
 
-In this new landscape, the purpose of blogging shifts. It's less about providing
-utility that AI can replicate and more about cultivating originality. The focus
-turns to defining your audience. If the old game is lost, the new one is about
-choosing who you serve.
+In this landscape, the purpose of blogging shifts. It is less about utility that
+AI can replicate. Perhaps it should be more about [originality][are-blogs-dead].
+Or about contexts. Since the old paradigm (writing for everyone) is being lost
+or getting no reward, you have to either select whom you serve or just leave the
+game.
 
 [are-blogs-dead]: https://www.gnosis.team/post/are-blogs-dead-how-ai-is-changing-content-marketing-forever
 
 ## Motivation: Reclaiming control
 
-In an era where AI-generated content floods every platform and blogging tools
-attempt to lock users into their ecosystems, **building a bespoke blog system is
-an act of reclaiming control**. It is about more than just publishing words—it
-is about shaping the entire experience for both the author and the readers.
+In an era where AI-generated content floods every platform, building a bespoke
+blog system is an act of reclaiming control. It is about more than just
+publishing words—it is about shaping the entire experience for both the author
+and the readers.
 
 Building a custom platform provides ownership over:
 
-- **The architecture that defines how content is created, displayed and
-  discovered**—free from the constraints of opaque third-party services.
-- **The user experience**, tailored to specific values and a creative vision
-  without compromise.
-- **The developer experience**, allowing the system to evolve without vendor
-  lock-in or shifting policies.
-- **Data and privacy**, which are often compromised on “free” AI-powered
-  platforms. This approach retains the option to implement features like a
-  paywall.
+- The architecture for creating, displaying, and discovering content—unencumbered by third-party constraints.
+- The user experience, tailored to specific values and vision.
+- The developer experience, permitting evolution without vendor lock-in.
+- Data and privacy, frequently compromised on “free” AI platforms. This approach retains options such as a paywall.
 
-In this AI era, where automation tempts us to outsource creativity and control,
-building a custom platform is a deliberate choice: **to be the author not just
-of content, but of context**. It is a commitment to authenticity, craftsmanship
-and lasting ownership.
+In this AI era, where automation entices us to outsource creativity,
+constructing a custom platform can be a deliberate choice: to author not merely
+content, but context. It is a commitment to authenticity, craftsmanship, and
+ownership.
 
-This is platform sovereignty: full control over the stack, from tooling and
-interface to data, logic, and infrastructure.
+This is *platform sovereignty*: **comprehensive control over the stack, from tools
+and interface to data and infrastructure**.
 
-Moreover, there is a need to write. Open-source projects risk being used without
-attribution and deserve proper explanation and context, provided at the right
-moment.
+There is also a necessity to write. Open-source projects risk being utilised
+without credit and merit proper explanation and context.
 
-For technical documentation, tools like [DeepWiki](https://deepwiki.com/) are
-emerging. There is little value in publishing information that can be deduced
-directly from code. Instead, the focus must be on intentionally organising
-information and adding contextual insights.
+For technical documentation, tools such as [DeepWiki](https://deepwiki.com/) are
+emerging. **Publishing fragmented information deducible from code is less
+valuable**. The focus should be on organising information in a coherent and
+imparting insights.
 
-For example, when creating content for Emacs, explaining the architecture is
-insufficient. It is more effective to demonstrate features in action, a practice
-[alphapapa](https://github.com/alphapapa) advocated for years ago. A greater
-focus on community success would have led to adopting this approach sooner.
+For instance, when creating content for Emacs, elucidating the architecture is
+insufficient. Demonstrating features in action, as
+[alphapapa](https://github.com/alphapapa) advocated, is more efficacious. A
+focus on community success would have precipitated this approach sooner.
 
 ## Building a custom publishing system from scratch
 
-This website is built primarily in TypeScript, the prevailing choice for
-front-end development in 2025. While other languages could be used, existing
-“black box” web frameworks in languages like Rust or Go—often marketed as
-inherently _fast_—have been intentionally avoided. The priority is not raw
-performance but correctness and understanding. When tackling a domain that is
-not fully understood, sticking to a single, flexible language is advantageous.
-In this case, that language is TypeScript.
+This website is built mainly in TypeScript, the prevailing choice for frontend
+development in 2025. While other languages could be used, “black box” web
+frameworks in Rust or Go—marketed as _fast_—are avoided. The priority is not raw
+performance but correctness and understanding. When tackling an unfamiliar
+domain, sticking to one flexible language is beneficial. Here, it is TypeScript.
 
 :::info[My personal experience with Hugo]
 
-Previous experience with [Hugo](https://gohugo.io/) for a personal website
-(2017–2020) involved generating Markdown from [Org mode](https://orgmode.org/)
-files using [ox-hugo](https://ox-hugo.scripter.co/). However, customising it
-effectively proved difficult. The site was eventually abandoned after its TLS
-certificate expired. This dissatisfaction stemmed partly from a lack of clear
-purpose, but it was exacerbated by an incomplete understanding of the framework.
-Furthermore, the Go language at the time was less refined than it is today.
+Past experience with [Hugo](https://gohugo.io/) for a personal site (2017–2020)
+involved generating Markdown from [Org mode](https://orgmode.org/) files using
+[ox-hugo](https://ox-hugo.scripter.co/). Customising it was tough. The site was
+abandoned after its TLS certificate expired. This dissatisfaction was partly due
+to unclear purpose of the website. After all, I never liked Go for building
+anything that is not boring.
 
 :::
 
 ### Inspiration: Content collections from Astro
 
 [Astro](https://astro.build/) is a web framework designed for content-driven
-websites. While it excels at performance-oriented static sites, it is also
-highly versatile. Its [Islands
+websites. It does not only excel at performance-oriented static sites. It is
+also highly versatile. Its [Islands
 Architecture](https://docs.astro.build/en/concepts/islands/) allows for the
 integration of multiple UI frameworks like React, Vue and Svelte. Many modern
 documentation sites are built with [Astro
@@ -132,151 +122,138 @@ Starlight](https://starlight.astro.build/), which is used in [one of my own
 projects](https://akirak.github.io/flake-templates/). For rapid static site
 development, Astro is an excellent choice.
 
-Astro is architected around the concept of [content
-collections][content collections]. A collection is a set of content entries
-governed by a schema, with a backend that can range from static Markdown files
-to a headless CMS. The data is programmable and schema-validated, aligning with
-the modern practice of schema-driven development.
+Astro is built around [content collections][content collections]. A collection
+is a set of content entries governed by a schema, with a backend ranging from
+static Markdown files to a headless CMS. The data is programmable and
+schema-validated, fitting modern schema-driven development.
 
 [content collections]: https://docs.astro.build/en/guides/content-collections/
 
-However, Astro is not without its limitations. It lacks native support for
-_type-safe routing_ (or type-safe URL states), a feature that is becoming
-standard in frameworks like [TanStack
-Router](https://tanstack.com/router/latest) and recent versions of [React
-Router](https://reactrouter.com/start/framework/routing). This makes Astro less
-suitable for highly interactive applications. While [a third-party
-solution][astro-typesafe-routes] exists, its unofficial status makes it a risky
-dependency. Ultimately, Astro is optimised for content-heavy websites, not
-complex web applications.
+However, Astro has limitations. It lacks native support for _type-safe routing_,
+a feature becoming standard in frameworks like [TanStack
+Router](https://tanstack.com/router/latest) and recent [React
+Router](https://reactrouter.com/start/framework/routing) versions. This makes
+Astro less suitable for interactive applications. While [a third-party
+solution][astro-typesafe-routes] exists, its unofficial status makes it risky.
+Astro is optimised for content-heavy sites, not complex web apps.
 
 [astro-typesafe-routes]: https://github.com/feelixe/astro-typesafe-routes
 
-Inspired by Astro's collections, this project re-implements the concept within a
-React application. The choice of React was driven by its rich ecosystem and
-extensive capabilities. The main challenges are managing bundle size and
-performance. This decision reflects a core project goal: achieving full control
-over the user experience. Purely static sites are becoming less relevant as
-serverless environments mature, making dynamic, full-stack approaches on
-platforms like [Cloudflare Workers][cloudflare-workers-fullstack] increasingly
-attractive.
+Inspired by Astro's collections, this project re-implements the concept in a
+React app. React was chosen for its rich ecosystem and capabilities. The main
+challenges are managing bundle size and performance. This decision reflects a
+core goal: full control over user experience. Purely static sites are less
+relevant as serverless environments mature, making dynamic, full-stack
+approaches on platforms like [Cloudflare Workers][cloudflare-workers-fullstack]
+more appealing.
 
 [cloudflare-workers-fullstack]: https://blog.cloudflare.com/full-stack-development-on-cloudflare-workers/
 
 ### Rise of Effect-TS
 
-For a long time, TypeScript was not considered a first-class backend language.
-As a superset of JavaScript, its origins are in the browser, designed to support
-_gradual typing_.
+TypeScript wasn't always seen as a first-class backend language. As a JavaScript
+superset, it started in the browser, supporting _gradual typing_.
 
-A key weakness of JavaScript/TypeScript for backend development has been its
-leaky `try-catch` exception handling. While many have claimed TypeScript is a
-“full-stack language,” experienced backend developers have often remained
-skeptical.
+A key weakness for backend development has been its leaky `try-catch` exception
+handling. While some claim TypeScript is a “full-stack language,” experienced
+backend developers often remain sceptical.
 
-The JavaScript ecosystem has also been a point of frustration, characterised by
-constant reinvention and a complex toolchain. The promise of TypeScript as “one
-language to rule them all” often fell short in practice, requiring a bundler,
-formatter, linter and numerous other utilities just to build a single
-application. This setup forced developers to manage many moving parts before
-even addressing the core application logic.
+The JavaScript ecosystem has been frustrating, marked by constant reinvention
+and a complex toolchain. The promise of TypeScript as “one language to rule them
+all” often fell short, needing a bundler, formatter, linter and other utilities
+just to build one app. This setup forced developers to manage many parts before
+addressing core logic.
 
 Enter [Effect](https://effect.website/). After a long development period, it
-reached its first stable version last year. While it provides a powerful _effect
-system_, it is much more than that: **it is a complete, batteries-included
-application framework built on TypeScript syntax.** Although it has a learning
-curve, its robust, functional approach is compelling. As of recently, [Effect
-has entered its early adopter phase][effect-early-adapter].
+reached its first stable version last year. While it offers a powerful _effect
+system_, It is much more: **a complete, batteries-included application framework
+built on TypeScript syntax.** Though it has a learning curve, its robust,
+functional approach is compelling. Recently, [Effect entered its early adopter
+phase][effect-early-adapter].
 
 [effect-early-adapter]: https://x.com/schickling/status/1938207477096468604
 
-Effect includes a schema library, similar to Zod, that conforms to the [Standard
-Schema v1][standard schema] specification. This allows for seamless integration
-with TanStack Router. ChatGPT was used to draft an initial specification for
-_Effect Collections_, an implementation of Astro's content collections using
-Effect schemas. This approach enables the use of a single set of schemas for
-validating both content and routing parameters.
+Effect includes a schema library, like Zod, conforming to the [Standard Schema
+v1][standard schema] specification. This allows seamless integration with
+TanStack Router. ChatGPT helped draft an initial specification for _Effect
+Collections_, implementing Astro's content collections using Effect schemas.
+This approach uses one set of schemas for validating both content and routing
+parameters.
 
 [standard schema]: https://standardschema.dev/
 
 ## What is the LATE Stack?
 
-The _LATE Stack_ is the name given to the technology stack for this project. It
-consists of [Lightning CSS](https://lightningcss.dev/) (L), [React
+The _LATE Stack_ is the name for this project's technology stack. It includes
+[Lightning CSS](https://lightningcss.dev/) (L), [React
 Aria](https://react-spectrum.adobe.com/react-aria/index.html) (A), [TanStack
 Router/Start](https://tanstack.com/start/latest) (T) and
-[Effect](https://effect.website/) (E). This stack enables the development of
-full-stack applications with end-to-end type safety.
+[Effect](https://effect.website/) (E). This stack supports full-stack app
+development with end-to-end type safety.
 
-The name is partly a joke. While acronyms like LAMP and MEAN were once common,
-today's developers typically combine frameworks to meet specific needs. Quality
-attributes are what matter. The name LATE also reflects the feeling that it may
-be “too late” to start a blog, a sentiment this project proceeds in spite of.
+The name is partly a joke. While acronyms like LAMP and MEAN were common,
+today's developers mix frameworks to meet needs. Quality attributes matter. The
+name LATE also reflects the feeling it may be “too late” to start a blog, a
+sentiment this project defies.
 
-The primary focus of this stack is _maintainability_. The goal is to avoid
-frequent stack changes, which waste time that could be spent on more meaningful
-work. A stable, traceable system is crucial. This represents a conservative
-choice, but one where developer experience remains a high priority.
+The stack's main focus is _maintainability_. The goal is to avoid frequent stack
+changes, which waste time better spent on meaningful work. A stable, traceable
+system is crucial. This is a conservative choice, but one prioritising developer
+experience.
 
 ### Lightning CSS
 
-Lightning CSS is a modern, extremely fast CSS parser, transformer, and minifier
-written in Rust. It's a faster successor to PostCSS, and [Tailwind CSS v4.0 has
-switched to Lightning CSS][tailwindv4].
+Lightning CSS is a modern, fast CSS parser, transformer, and minifier written in
+Rust. It is a faster successor to PostCSS, and [Tailwind CSS has switched
+to Lightning CSS][tailwindv4].
 
 [tailwindv4]: https://tailwindcss.com/blog/tailwindcss-v4-alpha
 
-This project uses vanilla CSS, a choice supported by the argument that [vanilla
-CSS is a strong contender in 2025][vanillacss]. Recent advancements in the
-language have made extensions like SCSS largely obsolete. Beyond code
-organisation, writing standard CSS is the most unopinionated and future-proof
-method for styling, and Lightning CSS provides the modern tooling for it.
-Furthermore, AI tools can reliably generate standard CSS.
+This project uses vanilla CSS, supported by the argument that [vanilla CSS is a
+strong contender in 2025][vanillacss]. Recent language advancements have made
+extensions like SCSS largely obsolete. Beyond code organisation, writing
+standard CSS is the most unopinionated and future-proof styling method, and
+Lightning CSS offers modern tooling for it. AI tools can also reliably generate
+standard CSS.
 
 [vanillacss]: https://ikius.com/blog/why-vanilla-css-is-great
 
-This is not a rejection of utility-first frameworks like [Tailwind
-CSS](https://tailwindcss.com/). While it is used in other projects, for this
-one, the directness of vanilla CSS is preferred as a learning tool and a stable
-foundation.
+This isn't a rejection of utility-first frameworks like [Tailwind
+CSS](https://tailwindcss.com/). While used in other projects, here, vanilla
+CSS's directness is preferred as a learning tool and stable foundation.
 
 ### React Aria
 
-Although this website is mostly static, there are plans to add interactive
-elements using components.
+Though this site is mostly static, there are plans to add interactive elements
+using components.
 
-Headless (unstyled) components have gained significant adoption. They accelerate
-the development of high-quality, custom-designed applications, which is crucial
-for branded products. For instance, one might use [Radix
+Headless (unstyled) components are widely adopted nowadays. They speed up the
+development of high-quality, custom-designed apps, crucial for branded products.
+For instance, one might use [Radix
 Primitives](https://www.radix-ui.com/primitives)—the foundation for the popular
 [shadcn](https://ui.shadcn.com/) library—directly. Headless components save time
-compared to building from scratch and provide a solid foundation for
+compared to building from scratch and offer a solid foundation for
 accessibility, including robust keyboard navigation.
 
-React Aria is another leading headless component library. Developed and
-maintained by Adobe as a free and open-source project, it is renowned for its
-best-in-class accessibility support. While it previously offered only a
-hooks-based API, the newer [React Aria
-Components][react-aria-components] (RAC) provide a much-improved developer
-experience.
-
-[react-aria-components]: https://react-spectrum.adobe.com/react-aria/components.html
+React Aria is another top headless component library. Developed and maintained
+by Adobe as a free, open-source project, it is known for its best-in-class
+accessibility support. While it previously offered only a hooks-based API, the
+newer [React Aria Components][react-aria-components] (RAC) provide a
+much-improved developer experience.
 
 Both Radix Primitives and React Aria are excellent choices. React Aria was
-selected for its stricter accessibility compliance and superior
+chosen for its stricter accessibility compliance and superior
 internationalisation support, though other options may be considered if needed.
-
-::link[https://argos-ci.com/blog/react-aria-migration]
 
 Other alternatives include using [Mantine without its
 styles](https://mantine.dev/styles/unstyled/). As native HTML capabilities
-improve, our reliance on such libraries may decrease over time.
+improve, reliance on such libraries may decrease over time.
 
 ### TanStack Start
 
 In the React ecosystem, Next.js has been dominant for years, with Remix emerging
-as a strong competitor. Remix has since merged with React Router, which itself
-is a popular choice.
+as a strong competitor. Remix has since merged with React Router, which is also
+popular.
 
 [TanStack Router](https://tanstack.com/router/latest) is a newer entrant from
 the creators of the widely-used TanStack Query (formerly React Query). The
@@ -288,17 +265,17 @@ collections in this project.
 
 ::link[https://betterstack.com/community/comparisons/tanstack-router-vs-react-router/]
 
-[TanStack Start](https://tanstack.com/start/latest) is a framework built on top
-of TanStack Router. It is a full-stack framework, similar to Next.js or Remix,
-and supports various data loading patterns in serverless deployments.
+[TanStack Start](https://tanstack.com/start/latest) is a framework built on
+TanStack Router. It is a full-stack framework, like Next.js or Remix, supporting
+various data loading patterns in serverless deployments.
 
-At present, the framework is still maturing, and its support for major
-deployment providers is incomplete. A recent refactor removed the dependency on
-[Vinxi](https://vinxi.vercel.app/), which caused a temporary regression in its
-support for [Nitro][nitro]. The team is working to make Nitro an optional
-component. While this modular approach will be beneficial long-term, it has
-temporarily removed the ability to customise server configurations, such as
-cache policies. This is expected to be resolved soon.
+Currently, the framework is still maturing, and its support for major deployment
+providers is incomplete. A recent refactor removed the dependency on
+[Vinxi](https://vinxi.vercel.app/), causing a temporary regression in its
+support for [Nitro][nitro]. The team is working to make Nitro optional. While
+this modular approach will be beneficial long-term, it has temporarily removed
+the ability to customise server configurations, like cache policies. This should
+be resolved soon.
 
 [nitro]: https://nitro.build/
 
@@ -306,24 +283,24 @@ cache policies. This is expected to be resolved soon.
 
 ### Effect-TS
 
-Finally, there is Effect. Having used it in other projects, it has become
-indispensable for writing TypeScript. It is important to note that using the
-full [Effect runtime](https://effect.website/docs/runtime/) on the front-end is
+Finally, there's Effect. Having used it in other projects, it is become
+indispensable for writing TypeScript. It is important to note that using the full
+[Effect runtime](https://effect.website/docs/runtime/) on the front-end is
 discouraged due to its impact on bundle size. Therefore, runtime-dependent
 features like concurrency and managed error handling should be avoided in
 client-side code. However, Effect remains highly useful even without its
-runtime, providing a suite of “batteries-included” modules for functional
+runtime, offering a suite of “batteries-included” modules for functional
 programming in TypeScript:
 
 - Functional libraries (e.g. `pipe` function)
-- Schemas, which support Standard Schema
+- Schemas, supporting Standard Schema
 - Utility libraries for strings, arrays, etc.
 
 With its runtime, Effect excels at building concurrent, I/O-bound backend
 services. The project's repositories are also a valuable learning resource,
 showcasing cutting-edge software development practices.
 
-In this project, Effect is primarily used for schemas and the build pipeline
+In this project, Effect is mainly used for schemas and the build pipeline
 integrated into Vite.
 
 ## Authoring workflow with Effect-TS
@@ -335,11 +312,10 @@ deployment.
 
 ### Unified: Content as syntax trees
 
-Collections are defined and content is modelled. Content is accessed via an
-abstract TypeScript API, allowing for virtually any back-end to be supported.
-For simplicity, however, this implementation uses the traditional **YAML front
-matter + Markdown** source format, which is common in static site generators
-and blog systems.
+In the Collections API, content is accessed via an abstract TypeScript API,
+allowing for virtually any back-end to be supported. For simplicity, however,
+this implementation uses the traditional **YAML front matter + Markdown** source
+format, common in static site generators and blog systems.
 
 :::warning[Org mode is not directly supported]
 
@@ -348,19 +324,19 @@ Org mode for notes and tasks, it is recognised that Org is a complex format. The
 preference is to define the Markdown pipeline via a syntax tree processor for
 stability and predictability. While integrating Org mode into the publishing
 workflow remains an interest, doing so would require every step of the pipeline
-to be specified with precision.
+to be specified precisely.
 
 :::
 
 The JavaScript ecosystem includes [unified][unifiedjs], a collection of
 libraries for transforming content between various text-based formats. In the
 unified world, content is represented as a _syntax tree_. Each format has a
-corresponding syntax tree specification, such as `mdast` for Markdown and `hast`
+corresponding syntax tree specification, like `mdast` for Markdown and `hast`
 for HTML. By chaining a parser, plugins (transformers) and a compiler
 (serialiser), you can create a processor to convert from one format to another.
 This enables deeply customisable document conversion pipelines by combining
 plugins for different syntax tree specifications. These syntax trees can also be
-serialised to JSON, allowing intermediate representations to be persisted.
+serialised to JSON, allowing intermediate representations to be saved.
 
 [unifiedjs]: https://unifiedjs.com/
 
@@ -483,7 +459,8 @@ website:
   diagramming tools is straightforward thanks to Nix and Effect.
 
 The following code example demonstrates the OGP implementation (some parts are
-excluded for brevity; see the full source code for details):
+excluded for brevity; see [the full source
+code](https://github.com/akirak/late-stack/) for details):
 
 ```ts title="post-pipeline.ts"
 import remarkLink from "./unified/remarkLink"
@@ -596,16 +573,16 @@ status.
 
 Thanks to the integration with the Vite dev server and Effect's robust error
 handling, the authoring experience is comparable to that of a modern static site
-generator. Syntax errors are logged to the console, and the live preview
-updates instantly upon saving changes.
+generator. Syntax errors are logged to the console, and the live preview updates
+instantly upon saving changes.
 
-Of course, building the entire site is not as fast as a tool like Hugo. As the
-number of posts grows, build times are expected to increase, which will require
-further engineering to optimise.
+Building the entire site isn't as fast as a tool like Hugo. As the number of
+posts grows, build times are expected to increase, requiring further engineering
+to optimise.
 
 The application is currently monolithic, making it easy to modify. It is
 schema-driven, type-safe and highly customisable. The codebase is a standard
-front-end application that uses a modern toolchain, including Nix, pnpm, ESLint
+front-end application using a modern toolchain, including Nix, pnpm, ESLint
 (using [antfu's configuration](https://github.com/antfu/eslint-config) for both
 formatting and linting), Playwright, Lefthook, GitHub Actions and Renovate.
 
@@ -613,28 +590,28 @@ formatting and linting), Playwright, Lefthook, GitHub Actions and Renovate.
 
 This project has also been an exercise in leveraging AI for development.
 
-The approach is not “vibe-based coding,” but rather a structured process
-assisted by AI. Anthropic's Claude (Pro plan) is primarily used for generating
-initial code, which has been very helpful. (Usage statistics from
-[ccusage][ccusage] will determine whether the subscription is continued.)
+The approach isn't vibe coding. It requires lots of manual interventions. Claude
+Code is mainly used for generating initial code, which has been very helpful.
+You can use [ccusage][ccusage] to determine whether your Pro/Max subscription is
+worth it. I was on Pro plan when I was working on this project.
 
 [ccusage]: https://github.com/ryoppippi/ccusage
 
 As a developer not well experienced in frontend, many questions are asked. For
-technical decision-making, Google's Gemini 2.5 Flash is primarily used. While it
-is less adept at coding, its fast, neutral responses are excellent for
-brainstorming implementation plans. The tools are complementary; for example,
-after Claude generated a colour scheme with poor contrast for the dark mode,
-Gemini corrected it. The Gemini CLI is also used for improving documentation.
+technical decision-making, Google's Gemini 2.5 Flash is mainly used. While less
+adept at coding, its fast, neutral responses are excellent for brainstorming
+implementation plans. The tools are complementary; for example, after Claude
+generated a colour scheme with poor contrast for dark mode, Gemini corrected it.
+The Gemini CLI is also used for improving documentation.
 
-With the help of AI, I was able to generate frontend code without borrowing from
-existing code repositories or blog posts. This experience suggests that the
-value of sharing application code on blogs is diminishing, as AI can now produce
-similar code on demand — **often without crediting the human authors whose work it
-was trained on**.
+With the help of AI, I generated frontend code without borrowing from existing
+code repositories or blog posts. This experience suggests that the value of
+sharing application code on blogs is diminishing, as AI can now produce similar
+code on demand — **often without crediting the human authors whose work it was
+trained on**.
 
 OpenAI models are also used for architecture. The Effect Collections concept was
-initially brainstormed with the free version of ChatGPT. GPT-4o (via
+initially brainstormed with the free version of ChatGPT. o3 (via
 [aider][aider]) was used to develop a specification for the [Effect OGP
 service](/post/en/effect-ogp). When it generated a syntactically invalid
 diagram, Claude was used to fix it, and then again to implement the
@@ -645,25 +622,26 @@ multi-tool process.
 [aider]: https://github.com/Aider-AI/aider/
 
 Several CLI-based AI agents are used (claude, gemini and aider). To streamline
-the workflow, a custom Emacs integration was developed that sends prompts from
-Org mode files to a terminal session. This creates a consistent interface across
-different agents. While Emacs can manage multiple coding sessions simultaneously,
-the true bottleneck is human capacity.
+the workflow, I had developed a custom Emacs integration beforehand to sends
+prompts from Org mode files to a terminal session. This creates a consistent
+interface across different terminal-based agents. With this implementation,
+Emacs can manage multiple coding sessions simultaneously, but I often get lost.
+At the moment, the primary bottleneck seems to be in the human.
 
-Agentic services like [Devin][devin] have not been used, as it is unclear how to
+Agentic services like [Devin][devin] haven't been used, as it is unclear how to
 integrate them seamlessly with the Emacs and Org mode environment. Perhaps an
-integration will need to be built for it—using another AI.
+integration layer will need to be built for it—using another AI.
 
 [devin]: https://devin.ai/
 
 The total monthly spending on AI services is under $50. While many spend more,
-this is still a significant cost for most individuals. This will require either
-an increase in income or a reconsideration of these subscriptions.
+this is still a significant cost for most individuals. I feel a need to increase
+my income or reconsider these subscriptions.
 
 ## User experience
 
-Regarding user experience, there is not yet sufficient data. The focus is on
-maintaining high Lighthouse scores. While the Accessibility, Best Practices and
+Regarding user experience, there's not yet sufficient data. The current focus is
+on maintaining high Lighthouse scores. While Accessibility, Best Practices and
 SEO scores should be near-perfect, Performance can fluctuate. These metrics will
 be monitored closely after the official launch.
 
@@ -676,15 +654,18 @@ Many features are planned for the future:
 - Integration with my personal Org mode repository.
 - Taxonomies: Categories and tags, as found in typical blog systems.
 - Search UI, and potentially an MCP server for the content.
-- `llms.txt` to provide a way for language models to contact the author.
+- `llms.txt` to provide a way for language models to better utilise the
+  contents.
 - Performance optimisations as the content grows.
 - AI-driven workflows for content quality control.
-- Refactoring the blog system into a reusable engine for other projects.
+- Refactoring the blog system to make components reusable (pipeline, style,
+  etc.).
 - Enhancing the Markdown processor to support features like footnotes and
   additional diagram syntaxes.
 - Authentication and authorisation to support private content and a paywall.
 
-If you have suggestions, please open an issue.
+If you have suggestions, please [open an
+issue](https://github.com/akirak/late-stack/issues).
 
 AI now enables individuals to build tailored publishing systems from scratch.
 With some frontend knowledge, you can design clear, readable pages—and use AI to
