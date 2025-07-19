@@ -75,7 +75,7 @@ constructing a custom platform can be a deliberate choice: to author not merely
 content, but context. It is a commitment to authenticity, craftsmanship, and
 ownership.
 
-This is *platform sovereignty*: **comprehensive control over the stack, from tools
+This is _platform sovereignty_: **comprehensive control over the stack, from tools
 and interface to data and infrastructure**.
 
 There is also a necessity to write. Open-source projects risk being utilised
