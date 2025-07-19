@@ -41,7 +41,7 @@ traditional web search is losing relevance, and direct website visitation may
 decline.
 
 This raises a question for individuals: Does it still make sense to write a
-blog in 2025? Is it too late to even start in 2025?
+blog in 2025? Is it too late to even start?
 
 From a pessimistic viewpoint, the outlook appears bleak. AI models peruse and
 regurgitate content. AI chats generate synthesised responses. Even though they
