@@ -104,10 +104,10 @@ domain, sticking to one flexible language is beneficial. Here, it is TypeScript.
 
 Past experience with [Hugo](https://gohugo.io/) for a personal site (2017–2020)
 involved generating Markdown from [Org mode](https://orgmode.org/) files using
-[ox-hugo](https://ox-hugo.scripter.co/). Customising it was tough. The site was
-abandoned after its TLS certificate expired. This dissatisfaction was partly due
-to unclear purpose of the website. After all, I never liked Go for building
-anything that is not boring.
+[ox-hugo](https://ox-hugo.scripter.co/). Customising it was tough. There was an
+issue with TLS, but I left it unfixed due to lack of interest. This
+dissatisfaction was partly due to unclear purpose of the website. After all, I
+never liked Go for building anything that is not boring.
 
 :::
 
