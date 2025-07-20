@@ -439,7 +439,7 @@ server.
 Running the pipeline on an Effect runtime unlocks the full power of the effect
 system. Dependencies can be managed with
 [layers](https://effect.website/docs/requirements-management/layers/) (which
-provide dependency injection), and services can be implemented
+provide dependency injection), and services can be run
 [concurrently](https://effect.website/docs/concurrency/basic-concurrency/). This
 results in a superior programming experience.
 
