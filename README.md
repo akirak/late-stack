@@ -3,6 +3,8 @@
 A modern blog built with the LATE Stack, featuring a sophisticated content
 management system powered by Effect and TanStack Start.
 
+[Now in production on Deno Deploy](https://jingsi.space/).
+
 ## What is the LATE Stack?
 
 The **LATE Stack** consists of:
