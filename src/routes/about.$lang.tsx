@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router"
+import React from "react"
 import { getProfile } from "@/collections/about/server"
+import { Admonition } from "@/components/block/Admonition"
 import { Container } from "@/components/layout/Container"
 import { Header } from "@/components/layout/Header"
 import SocialLinks from "@/features/social/components/SocialLinks"
@@ -20,6 +22,7 @@ export const Route = createFileRoute("/about/$lang")({
 
 function AboutComponent() {
   const { taglineHast, descriptionHast, postscriptHast, socialLinks } = Route.useLoaderData()
+  const disclaimerId = React.useId()
 
   return (
     <Container>
@@ -28,18 +31,14 @@ function AboutComponent() {
       </Header>
 
       <main aria-labelledby="page-heading" className="typography">
-        {
-          // TODO: Extract a React component
-        }
-        <div className="admonition admonition-warning">
-          <div className="admonition-header">
-            <span className="admonition-icon" aria-hidden="true">⚠️️</span>
-            Disclaimer: Not Intended for Recruitment
-          </div>
-          <div className="admonition-content">
-            This page is intended for readers of this blog. It provides context about the author and the purpose of the website. It is not designed for recruitment or hiring inquiries.
-          </div>
-        </div>
+        <Admonition
+          type="warning"
+          title="Disclaimer: Not Intended for Recruitment"
+          icon="⚠️"
+          id={disclaimerId}
+        >
+          This page is intended for readers of this blog. It provides context about the author and the purpose of the website. It is not designed for recruitment or hiring inquiries.
+        </Admonition>
 
         {hastToJsx(taglineHast)}
 
