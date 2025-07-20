@@ -242,6 +242,8 @@ accessibility support. While it previously offered only a hooks-based API, the
 newer [React Aria Components][react-aria-components] (RAC) provide a
 much-improved developer experience.
 
+[react-aria-components]: https://react-spectrum.adobe.com/react-aria/components.html
+
 Both Radix Primitives and React Aria are excellent choices. React Aria was
 chosen for its stricter accessibility compliance and superior
 internationalisation support, though other options may be considered if needed.
