@@ -1,0 +1,13 @@
+[
+  {
+    "name": "X (formerly Twitter)",
+    "url": "https://x.com/",
+    "accounts": ["akirak"]
+  },
+  {
+    "name": "Bluesky",
+    "url": "https://bsky.app/",
+    "icon": "bluesky",
+    "accounts": ["akirak.bsky.social"]
+  }
+]

@@ -20,3 +20,12 @@ export const SocialLinkSchema = Schema.Struct({
 })
 
 export type SocialLink = typeof SocialLinkSchema.Type
+
+export const WhoIAmNotSiteSchema = Schema.Struct({
+  name: Schema.String,
+  url: Schema.String,
+  icon: Schema.optional(SocialSiteSchema),
+  accounts: Schema.Array(Schema.String),
+})
+
+export type WhoIAmNotSite = typeof WhoIAmNotSiteSchema.Type

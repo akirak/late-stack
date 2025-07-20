@@ -7,8 +7,9 @@ import remarkRehype from "remark-rehype"
 import { unified } from "unified"
 import { makeGitHubAccount } from "@/features/social/utils"
 import { LanguageIdSchema, LanguagePropertiesSchema } from "@/schemas/common"
-import { SocialLinkSchema } from "@/schemas/social"
+import { SocialLinkSchema, WhoIAmNotSiteSchema } from "@/schemas/social"
 import { getLanguageById } from "../languages"
+import whoIAmNotData from "./who-i-am-not.json"
 
 export const ProfileSpec = Schema.Struct({
   lang: LanguageIdSchema,
@@ -22,6 +23,7 @@ export const ProfileSchema = Schema.Struct({
   postscriptHast: Schema.Any,
   /** Only social sites that are meant for contacting should be listed */
   socialLinks: Schema.Array(SocialLinkSchema),
+  whoIAmNotEntries: Schema.Array(WhoIAmNotSiteSchema),
 })
 
 type SocialLinks = typeof ProfileSchema.Type.socialLinks
@@ -146,9 +148,13 @@ export async function getProfileInternal({ lang }: typeof ProfileSpec.Type): Pro
 
   const fullName = "Akira Komamura"
 
+  // Validate and type the imported JSON data
+  const whoIAmNotEntries = Schema.decodeUnknownSync(Schema.Array(WhoIAmNotSiteSchema))(whoIAmNotData)
+
   return Option.some({
     language,
     fullName,
+    whoIAmNotEntries,
     taglineHast: await fromMarkdown(tagline),
     descriptionHast: await fromMarkdown(globalDescription),
     postscriptHast: await fromMarkdown(postscript),

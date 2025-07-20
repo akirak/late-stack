@@ -5,6 +5,7 @@ import { Admonition } from "@/components/block/Admonition"
 import { Container } from "@/components/layout/Container"
 import { Header } from "@/components/layout/Header"
 import SocialLinks from "@/features/social/components/SocialLinks"
+import WhoIAmNotList from "@/features/social/components/WhoIAmNotList"
 import { hastToJsx } from "@/utils/hast"
 import { pageMeta } from "@/utils/seo"
 
@@ -21,7 +22,7 @@ export const Route = createFileRoute("/about/$lang")({
 })
 
 function AboutComponent() {
-  const { taglineHast, descriptionHast, postscriptHast, socialLinks } = Route.useLoaderData()
+  const { taglineHast, descriptionHast, postscriptHast, socialLinks, whoIAmNotEntries } = Route.useLoaderData()
   const disclaimerId = React.useId()
 
   return (
@@ -45,6 +46,9 @@ function AboutComponent() {
         <SocialLinks items={socialLinks} />
 
         {hastToJsx(descriptionHast)}
+
+        {/* Under the Contract section */}
+        <WhoIAmNotList entries={whoIAmNotEntries} />
 
         <hr />
 

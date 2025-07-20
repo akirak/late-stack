@@ -196,6 +196,18 @@
     max-height: 1.5em;
     width: 100%;
   }
+
+  .inline-flex {
+    display: inline-flex;
+  }
+
+  .items-center {
+    align-items: center;
+  }
+
+  .gap-xs {
+    gap: var(--space-xs);
+  }
 }
 
 @layer typography {
