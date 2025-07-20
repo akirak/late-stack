@@ -42,7 +42,7 @@ traditional web search is losing relevance, and direct website visitation may
 decline.
 
 This raises a question for individuals: Does it still make sense to write a
-blog in 2025? Is it too late to even start?
+blog in 2025? Is it too late to even start? It's so over.
 
 From a pessimistic viewpoint, the outlook appears bleak. AI models peruse and
 regurgitate content. AI chats generate synthesised responses. Even though they
@@ -321,11 +321,12 @@ format, common in static site generators and blog systems.
 :::warning[Org mode is not directly supported]
 
 In the AI era, Markdown's momentum continues to grow. As a heavy user of Emacs
-Org mode for notes and tasks, it is recognised that Org is a complex format. The
+Org mode, I recognise the complexity involved in Org mode's implementation. The
 preference is to define the Markdown pipeline via a syntax tree processor for
-stability and predictability. While integrating Org mode into the publishing
-workflow remains an interest, doing so would require every step of the pipeline
-to be specified precisely.
+stability and predictability. While integrating Org mode remains of interest, it
+would require every stage of the pipeline to be precisely specified—which is why
+I'm working with syntax trees. In this model, Org would become just another step
+in the pipeline.
 
 :::
 
@@ -591,7 +592,7 @@ formatting and linting), Playwright, Lefthook, GitHub Actions and Renovate.
 
 This project has also been an exercise in leveraging AI for development.
 
-The approach isn't vibe coding. It requires lots of manual interventions. Claude
+The approach isn't vibe coding. It required lots of manual interventions. Claude
 Code is mainly used for generating initial code, which has been very helpful.
 You can use [ccusage][ccusage] to determine whether your Pro/Max subscription is
 worth it. I was on Pro plan when I was working on this project.
@@ -601,9 +602,12 @@ worth it. I was on Pro plan when I was working on this project.
 As a developer not well experienced in frontend, many questions are asked. For
 technical decision-making, Google's Gemini 2.5 Flash is mainly used. While less
 adept at coding, its fast, neutral responses are excellent for brainstorming
-implementation plans. The tools are complementary; for example, after Claude
-generated a colour scheme with poor contrast for dark mode, Gemini corrected it.
-The Gemini CLI is also used for improving documentation.
+implementation plans. The tools are complementary; for example, Claude initially
+generated a colour scheme with poor contrast for dark mode, I had Gemini correct
+it. The Gemini CLI is also used for improving documentation, but it can
+sometimes change (or misunderstand) the intention of content, so review is
+always necessary. It's inaccurate. For example, Gemini 2.5 Pro changed Gemini
+2.5 Flash to Gemini **1.5** Flash in this paragraph.
 
 With the help of AI, I generated frontend code without borrowing from existing
 code repositories or blog posts. This experience suggests that the value of
