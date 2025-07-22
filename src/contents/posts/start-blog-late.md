@@ -332,11 +332,11 @@ in the pipeline.
 
 :::
 
-The JavaScript ecosystem includes [unified][unifiedjs], a collection of
-libraries for transforming content between various text-based formats. In the
-unified world, content is represented as a _syntax tree_. Each format has a
-corresponding syntax tree specification, like `mdast` for Markdown and `hast`
-for HTML. By chaining a parser, plugins (transformers) and a compiler
+There is an umbrella ecosystem called [unified][unifiedjs], which is a
+collection of libraries for transforming content between various text-based
+formats. In this world, content is represented as a _syntax tree_. Each format
+has a corresponding syntax tree specification, like `mdast` for Markdown and
+`hast` for HTML. By chaining a parser, plugins (transformers) and a compiler
 (serialiser), you can create a processor to convert from one format to another.
 This enables deeply customisable document conversion pipelines by combining
 plugins for different syntax tree specifications. These syntax trees can also be
