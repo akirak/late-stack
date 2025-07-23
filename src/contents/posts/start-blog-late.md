@@ -214,8 +214,8 @@ This project uses vanilla CSS, supported by the argument that [vanilla CSS is a
 strong contender in 2025][vanillacss]. Recent language advancements have made
 extensions like SCSS largely obsolete. Beyond code organisation, writing
 standard CSS is the most unopinionated and future-proof styling method, and
-Lightning CSS offers modern tooling for it. AI tools can also reliably generate
-standard CSS.
+Lightning CSS offers modern tooling for it. AI tools (at least Claude Code) can
+also generate CSS from the user's prompts.
 
 [vanillacss]: https://ikius.com/blog/why-vanilla-css-is-great
 
