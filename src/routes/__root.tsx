@@ -207,6 +207,17 @@ function RootDocument({ children }: { children: React.ReactNode }) {
               CC BY-NC-SA 4.0
             </a>
           </div>
+
+          <div>
+            <a
+              href="https://github.com/akirak/late-stack"
+              aria-label="Source code of this site"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Built with TypeScript
+            </a>
+          </div>
         </footer>
 
         <TanStackRouterDevtools position="bottom-right" />
