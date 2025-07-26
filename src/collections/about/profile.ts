@@ -96,8 +96,8 @@ situation, I am not actively seeking sponsorships.
 ### Giving
 
 I support several open-source projects and people — primarily
-hard-working maintainers of projects I am interested in. The platforms
-I use for this are [GitHub Sponsors](https://github.com/akirak?tab=sponsoring),
+hard-working maintainers of projects I am interested in or extensively relying
+on. The platforms I use for this are [GitHub Sponsors](https://github.com/akirak?tab=sponsoring),
 [Open Collective](https://opencollective.com/akira-komamura), and
 [Patreon](https://www.patreon.com/) (anonymously).
 
