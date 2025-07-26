@@ -161,9 +161,9 @@ backend developers often remain sceptical.
 
 The JavaScript ecosystem has been frustrating, marked by constant reinvention
 and a complex toolchain. The promise of TypeScript as “one language to rule them
-all” often fell short, needing a bundler, formatter, linter and other utilities
-just to build one app. This setup forced developers to manage many parts before
-addressing core logic.
+all” often fell short, needing a bundler, formatter, linter and numerous
+utilities just to build one app. This setup forced developers to manage many
+parts before addressing core logic.
 
 Enter [Effect](https://effect.website/). After a long development period, it
 reached its first stable version last year. While it offers a powerful _effect
