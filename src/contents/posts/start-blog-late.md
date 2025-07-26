@@ -152,8 +152,8 @@ more appealing.
 
 ### Rise of Effect-TS
 
-TypeScript wasn't always seen as a first-class backend language. As a JavaScript
-superset, it started in the browser, supporting _gradual typing_.
+TypeScript wasn't always seen as a first-class backend language. It is a
+superset of JavaScript, which originates in the browser.
 
 A key weakness for backend development has been its leaky `try-catch` exception
 handling. While some claim TypeScript is a “full-stack language,” experienced
