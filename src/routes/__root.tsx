@@ -4,11 +4,12 @@ import {
   HeadContent,
   Link,
   Outlet,
+  redirect,
   Scripts,
 } from "@tanstack/react-router"
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools"
 import { createServerFn } from "@tanstack/react-start"
-import { getCookie, setCookie } from "@tanstack/react-start/server"
+import { getCookie, getWebRequest, setCookie } from "@tanstack/react-start/server"
 import * as React from "react"
 import BlueskyIcon from "@/components/icons/BlueskyIcon"
 import GitHubIcon from "@/components/icons/GitHubIcon"
@@ -40,8 +41,21 @@ const setServerTheme = createServerFn({ method: "POST" })
     },
   )
 
+const redirectToOfficialDomain = createServerFn({ method: "GET" }).handler(
+  async () => {
+    const request = getWebRequest()
+    const url = new URL(request.url)
+    if (!/^(?:localhost|jingsi\.space)$/.test(url.hostname)) {
+      throw redirect({
+        href: `https://jingsi.space${url.pathname}${url.search}`,
+      })
+    }
+  },
+)
+
 export const Route = createRootRouteWithContext<AppRouteContext>()({
   loader: async () => {
+    await redirectToOfficialDomain()
     const theme = await getServerTheme()
     return {
       theme,
