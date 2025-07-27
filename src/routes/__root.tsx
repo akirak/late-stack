@@ -48,6 +48,7 @@ const redirectToOfficialDomain = createServerFn({ method: "GET" }).handler(
     if (!/^(?:localhost|jingsi\.space)$/.test(url.hostname)) {
       throw redirect({
         href: `https://jingsi.space${url.pathname}${url.search}`,
+        statusCode: 308,
       })
     }
   },
