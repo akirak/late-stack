@@ -174,8 +174,8 @@ phase][effect-early-adapter].
 
 [effect-early-adapter]: https://x.com/schickling/status/1938207477096468604
 
-Effect includes a schema library, like Zod, conforming to the [Standard Schema
-v1][standard schema] specification. This allows seamless integration with
+Effect includes a schema library, like Zod, optionally supporting the [Standard
+Schema v1][standard schema] specification. This allows seamless integration with
 TanStack Router. ChatGPT helped draft an initial specification for _Effect
 Collections_, implementing Astro's content collections using Effect schemas.
 This approach uses one set of schemas for validating both content and routing
