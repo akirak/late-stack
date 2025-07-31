@@ -353,7 +353,7 @@ ecosystems makes this a relatively safe and reliable approach.
 
 The remark and rehype plugin ecosystem is rich, and custom plugins can also be
 created. Several have already been implemented, including one for generating OGP
-link cards. The [Content Style Guide](/post/en/style-guide) is an example post
+link cards. The [Content Style Guide](/posts/en/style-guide) is an example post
 written in this custom Markdown format. AI coding assistants like Claude are
 effective for implementing such plugins.
 
@@ -375,7 +375,7 @@ The pipeline itself is implemented as an [Effect
 layer](https://effect.website/docs/requirements-management/layers/) and executed
 on a [ManagedRuntime](https://effect.website/docs/runtime/#managedruntime)
 within the Vite server process. This integration is documented in [Content
-Pipeline in Vite](/post/en/vite-content-pipeline).
+Pipeline in Vite](/posts/en/vite-content-pipeline).
 
 For blog posts, each Markdown file is processed and saved as a JSON file
 containing a `hast` (HTML syntax tree), not a final HTML file. This approach
@@ -454,7 +454,7 @@ website:
 - Fetching Open Graph Protocol (OGP) metadata for external links in Markdown
   posts. This process runs at build time, ensuring fast page loads for users.
   The external pages are fetched concurrently using an Effect service, as
-  detailed in [a dedicated post](/post/en/effect-ogp).
+  detailed in [a dedicated post](/posts/en/effect-ogp).
 
 - Building diagrams from text-to-diagram code via external commands. The
   currently supported syntax is [D2](https://d2lang.com/). Its CLI was chosen
@@ -620,7 +620,7 @@ trained on**.
 OpenAI models are also used for architecture. The Effect Collections concept was
 initially brainstormed with the free version of ChatGPT. o3 (via
 [aider][aider]) was used to develop a specification for the [Effect OGP
-service](/post/en/effect-ogp). When it generated a syntactically invalid
+service](/posts/en/effect-ogp). When it generated a syntactically invalid
 diagram, Claude was used to fix it, and then again to implement the
 specification. After personal refinement of the implementation, Claude was used
 to update the spec and Gemini to improve the documentation. It is an iterative,
