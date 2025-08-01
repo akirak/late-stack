@@ -30,7 +30,7 @@ type SocialLinks = typeof ProfileSchema.Type.socialLinks
 
 export type Profile = typeof ProfileSchema.Encoded
 
-function getSocialLinksByLanguage(lang: LanguageId): SocialLinks {
+export function getSocialLinksByLanguage(lang: LanguageId): SocialLinks {
   const github = makeGitHubAccount("akirak")
   const bluesky = {
     login: "akirakom.bsky.social‬",
