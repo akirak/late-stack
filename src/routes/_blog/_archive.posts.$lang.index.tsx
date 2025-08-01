@@ -47,7 +47,7 @@ function PostArchiveComponent() {
           List of Posts in
           {" "}
           {
-            language.englishName
+            language.localName
               ? (
                   <span title={language.englishName}>
                     {language.localName}
@@ -55,7 +55,7 @@ function PostArchiveComponent() {
                 )
               : (
                   <span>
-                    {language.localName}
+                    {language.englishName}
                   </span>
                 )
           }
