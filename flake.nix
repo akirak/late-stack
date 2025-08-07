@@ -32,7 +32,6 @@
         {
           default = pkgs.mkShell {
             packages = buildDeps ++ [
-              pkgs.nodePackages.typescript
               pkgs.nodePackages.typescript-language-server
 
               # For e2e testing
