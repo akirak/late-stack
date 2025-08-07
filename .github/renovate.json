@@ -11,6 +11,17 @@
   "packageRules": [
     {
       "matchManagers": [
+        "nix"
+      ],
+      "groupName": "Nix",
+      "extends": [
+        "shedules:earlyMondays",
+        "schedule:automergeDaily"
+      ],
+      "automerge": true
+    },
+    {
+      "matchManagers": [
         "github-actions"
       ],
       "groupName": "Actions",
