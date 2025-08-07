@@ -15,7 +15,7 @@
       ],
       "groupName": "Nix",
       "extends": [
-        "shedules:earlyMondays",
+        "schedule:earlyMondays",
         "schedule:automergeDaily"
       ],
       "automerge": true
