@@ -31,10 +31,7 @@
       "automerge": true
     },
     {
-      "matchPackageNames": [
-        "@tanstack/*",
-        "typescript"
-      ],
+      "matchPackageNames": ["@tanstack/*"],
       "enabled": false
     },
     {
