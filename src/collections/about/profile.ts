@@ -99,7 +99,7 @@ I support several open-source projects and people — primarily
 hard-working maintainers of projects I am interested in or extensively relying
 on. The platforms I use for this are [GitHub Sponsors](https://github.com/akirak?tab=sponsoring),
 [Open Collective](https://opencollective.com/akira-komamura), and
-[Patreon](https://www.patreon.com/) (anonymously).
+[Patreon](https://www.patreon.com/) (privately).
 
 ## Contact
 
