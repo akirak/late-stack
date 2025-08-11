@@ -41,7 +41,7 @@
     "xml": "^1.0.1"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^4.17.0",
+    "@antfu/eslint-config": "^5.0.0",
     "@effect/language-service": "^0.34.0",
     "@effect/platform": "^0.90.0",
     "@effect/platform-node": "^0.94.0",
