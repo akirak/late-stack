@@ -52,7 +52,7 @@ export function getSocialLinksByLanguage(lang: LanguageId): SocialLinks {
 }
 
 const tagline = `
-I am Akira Komamura (he/him, Japanese). After self-teaching Linux and functional
+I am Akira Komamura (he/him). After self-teaching Linux and functional
 programming, I started using Emacs in 2017. I am currently working for the IT
 industry in Japan for a living.
 `
