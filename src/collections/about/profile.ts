@@ -83,9 +83,6 @@ serve myself. I have received a thousand stars in total, but quite a few of them
 are still half-done. I also worked on [Emacs Twist](https://github.com/emacs-twist/),
 which is somewhat a work in progress.
 
-I am also a co-maintainer of [nix-emacs-ci](https://github.com/purcell/nix-emacs-ci),
-which underpins continuous integration for a large proportion of Emacs packages.
-
 ## Support
 
 ### Receiving
