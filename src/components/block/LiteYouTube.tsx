@@ -1,4 +1,4 @@
-import LiteYouTubeEmbed from "react-lite-youtube-embed/dist/index.es.js"
+import LiteYouTubeEmbed from "react-lite-youtube-embed"
 import "react-lite-youtube-embed/dist/LiteYouTubeEmbed.css"
 
 export interface LiteYouTubeProps {
