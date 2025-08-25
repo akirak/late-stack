@@ -1,4 +1,4 @@
-declare module "react-lite-youtube-embed/dist/index.es.js" {
+declare module "react-lite-youtube-embed" {
   import type { ComponentType } from "react"
 
   interface LiteYouTubeEmbedProps {
