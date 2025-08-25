@@ -2,7 +2,7 @@
   "name": "personal-blog",
   "type": "module",
   "private": true,
-  "packageManager": "pnpm@10.14.0",
+  "packageManager": "pnpm@10.15.0",
   "sideEffects": false,
   "scripts": {
     "dev": "vite dev --port 3000",
@@ -42,7 +42,7 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^5.0.0",
-    "@effect/language-service": "^0.35.0",
+    "@effect/language-service": "^0.36.0",
     "@effect/platform": "^0.90.0",
     "@effect/platform-node": "^0.96.0",
     "@effect/sql": "^0.44.0",
