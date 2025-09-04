@@ -9,5 +9,15 @@
     "url": "https://bsky.app/",
     "icon": "bluesky",
     "accounts": ["akirak.bsky.social"]
+  },
+  {
+    "name": "GitHub",
+    "url": "https://github.com/",
+    "icon": "github",
+    "accounts": [
+      "tabooxie163p",
+      "ta0ooxie",
+      "tlm4346126t"
+    ]
   }
 ]
