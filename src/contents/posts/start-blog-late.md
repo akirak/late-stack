@@ -150,7 +150,7 @@ more appealing.
 
 [cloudflare-workers-fullstack]: https://blog.cloudflare.com/full-stack-development-on-cloudflare-workers/
 
-### Rise of Effect-TS
+### The Rise of Effect-TS
 
 TypeScript wasn't always seen as a first-class backend language. It is a
 superset of JavaScript, which originates in the browser.
