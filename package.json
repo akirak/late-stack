@@ -41,13 +41,13 @@
     "xml": "^1.0.1"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^5.0.0",
+    "@antfu/eslint-config": "^5.4.1",
     "@effect/language-service": "^0.40.0",
     "@effect/platform": "^0.90.0",
     "@effect/platform-node": "^0.96.0",
     "@effect/sql": "^0.44.0",
     "@effect/sql-sqlite-node": "^0.45.0",
-    "@eslint-react/eslint-plugin": "^2.0.0",
+    "@eslint-react/eslint-plugin": "^1.53.1",
     "@expressive-code/plugin-collapsible-sections": "^0.41.2",
     "@ladle/react": "^5.0.3",
     "@playwright/test": "^1.54.1",
