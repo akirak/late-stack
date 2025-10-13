@@ -89,7 +89,10 @@
   "pnpm": {
     "onlyBuiltDependencies": [
       "better-sqlite3"
-    ]
+    ],
+    "overrides": {
+      "better-sqlite3": "12.4.1"
+    }
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,json,yaml}": [
