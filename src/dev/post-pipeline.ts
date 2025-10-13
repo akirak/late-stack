@@ -77,7 +77,7 @@ export const PostBuilderLive: Layer.Layer<
     const writePostList = Effect.gen(function* () {
       postList = pipe(
         postList,
-        Array.sortWith((x: PostMetadata) => x.publicationDate, byOptionalDateDescending),
+        Array.sortWith((x: PostMetadata) => Option.fromNullable(x.publicationDate), byOptionalDateDescending),
       )
       const sink = fs.sink(postIndexFile, {
         flag: "w",

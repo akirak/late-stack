@@ -1,7 +1,6 @@
 import type { NonEmptyArray } from "effect/Array"
 import type { PostMetadataSchema } from "@/schemas/post"
 import { createFileRoute } from "@tanstack/react-router"
-import { Option, pipe } from "effect"
 import { getPostListAsync, getPostSync } from "@/collections/posts.server"
 import { hastToHtml } from "@/utils/hast"
 import { generateAtomFeed } from "@/utils/rss"
@@ -28,10 +27,7 @@ export const Route = createFileRoute("/feeds/default.xml")({
             title: "TanStack Blog",
             subtitle: "Latest posts from the TanStack Blog",
             baseUrl,
-            toUpdated: (post: typeof PostMetadataSchema.Type) => pipe(
-              post.publicationDate,
-              Option.getOrElse(() => new Date()),
-            ),
+            toUpdated: (post: typeof PostMetadataSchema.Type) => post.publicationDate ?? new Date(),
             toEntry: (post: typeof PostMetadataSchema.Type) => {
               const data = getPostSync({
                 lang: post.language,
@@ -42,7 +38,7 @@ export const Route = createFileRoute("/feeds/default.xml")({
                 title: post.title,
                 href: `${baseUrl}/posts/${post.language}/${post.slug}`,
                 id: post.slug,
-                published: Option.getOrUndefined(post.publicationDate),
+                published: post.publicationDate ?? undefined,
                 _cdata,
               }
             },

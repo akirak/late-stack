@@ -1,21 +1,15 @@
-import { Option, pipe } from "effect"
-
 function formatDate(date: Date): string {
   return date.toISOString().split("T")[0]
 }
 
-export function DateFormat({ date }: { date: Option.Option<Date> }) {
-  const value = pipe(
-    date,
-    Option.getOrUndefined,
-  )
-
-  if (!value)
+export function DateFormat({ date }: { date?: Date | null }) {
+  if (!date) {
     return null
+  }
 
   return (
-    <time dateTime={value.toISOString()}>
-      {formatDate(value)}
+    <time dateTime={date.toISOString()}>
+      {formatDate(date)}
     </time>
   )
 }
