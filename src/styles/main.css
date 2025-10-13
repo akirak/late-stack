@@ -173,10 +173,6 @@
     display: none;
   }
 
-  .sticky {
-    display: sticky;
-  }
-
   .flex {
     display: flex;
   }
