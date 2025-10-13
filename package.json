@@ -7,8 +7,8 @@
   "scripts": {
     "dev": "vite dev --port 3000",
     "build": "NITRO_PRESET=deno_deploy vite build && rm -rf .output/data && cp -r data .output/",
-    "start": "cd .output && deno run --allow-all server/index.ts",
-    "deploy": "cd .output && deno run --allow-all jsr:@deno/deployctl deploy --project=tanstack-blog server/index.ts",
+    "start": "cd .output && deno run --allow-all server/server.js",
+    "deploy": "cd .output && deno run --allow-all jsr:@deno/deployctl deploy --project=tanstack-blog server/server.js",
     "typecheck": "tsc --noEmit",
     "dev-ladle": "pnpm ladle dev --viteConfig vite.config.ladle.ts",
     "lint": "eslint .",
