@@ -8,23 +8,24 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { createServerRootRoute } from '@tanstack/react-start/server'
-
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as BlogRouteRouteImport } from './routes/_blog/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutIndexRouteImport } from './routes/about.index'
+import { Route as OembedEmbedIdRouteImport } from './routes/oembed.$embedId'
+import { Route as FeedsDefaultDotxmlRouteImport } from './routes/feeds.default[.]xml'
 import { Route as AboutLangRouteImport } from './routes/about.$lang'
 import { Route as BlogArchiveRouteRouteImport } from './routes/_blog/_archive.route'
 import { Route as BlogArchivePostsIndexRouteImport } from './routes/_blog/_archive.posts.index'
 import { Route as BlogPostsLangSlugRouteImport } from './routes/_blog/posts.$lang.$slug'
 import { Route as BlogArchivePostsLangIndexRouteImport } from './routes/_blog/_archive.posts.$lang.index'
-import { ServerRoute as SitemapDotxmlServerRouteImport } from './routes/sitemap[.]xml'
-import { ServerRoute as OembedEmbedIdServerRouteImport } from './routes/oembed.$embedId'
-import { ServerRoute as FeedsDefaultDotxmlServerRouteImport } from './routes/feeds.default[.]xml'
 
-const rootServerRouteImport = createServerRootRoute()
-
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BlogRouteRoute = BlogRouteRouteImport.update({
   id: '/_blog',
   getParentRoute: () => rootRouteImport,
@@ -37,6 +38,16 @@ const IndexRoute = IndexRouteImport.update({
 const AboutIndexRoute = AboutIndexRouteImport.update({
   id: '/about/',
   path: '/about/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OembedEmbedIdRoute = OembedEmbedIdRouteImport.update({
+  id: '/oembed/$embedId',
+  path: '/oembed/$embedId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FeedsDefaultDotxmlRoute = FeedsDefaultDotxmlRouteImport.update({
+  id: '/feeds/default.xml',
+  path: '/feeds/default.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutLangRoute = AboutLangRouteImport.update({
@@ -64,26 +75,13 @@ const BlogArchivePostsLangIndexRoute =
     path: '/posts/$lang/',
     getParentRoute: () => BlogArchiveRouteRoute,
   } as any)
-const SitemapDotxmlServerRoute = SitemapDotxmlServerRouteImport.update({
-  id: '/sitemap.xml',
-  path: '/sitemap.xml',
-  getParentRoute: () => rootServerRouteImport,
-} as any)
-const OembedEmbedIdServerRoute = OembedEmbedIdServerRouteImport.update({
-  id: '/oembed/$embedId',
-  path: '/oembed/$embedId',
-  getParentRoute: () => rootServerRouteImport,
-} as any)
-const FeedsDefaultDotxmlServerRoute =
-  FeedsDefaultDotxmlServerRouteImport.update({
-    id: '/feeds/default.xml',
-    path: '/feeds/default.xml',
-    getParentRoute: () => rootServerRouteImport,
-  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/about/$lang': typeof AboutLangRoute
+  '/feeds/default.xml': typeof FeedsDefaultDotxmlRoute
+  '/oembed/$embedId': typeof OembedEmbedIdRoute
   '/about': typeof AboutIndexRoute
   '/posts/$lang/$slug': typeof BlogPostsLangSlugRoute
   '/posts': typeof BlogArchivePostsIndexRoute
@@ -91,7 +89,10 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/about/$lang': typeof AboutLangRoute
+  '/feeds/default.xml': typeof FeedsDefaultDotxmlRoute
+  '/oembed/$embedId': typeof OembedEmbedIdRoute
   '/about': typeof AboutIndexRoute
   '/posts/$lang/$slug': typeof BlogPostsLangSlugRoute
   '/posts': typeof BlogArchivePostsIndexRoute
@@ -101,8 +102,11 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_blog': typeof BlogRouteRouteWithChildren
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/_blog/_archive': typeof BlogArchiveRouteRouteWithChildren
   '/about/$lang': typeof AboutLangRoute
+  '/feeds/default.xml': typeof FeedsDefaultDotxmlRoute
+  '/oembed/$embedId': typeof OembedEmbedIdRoute
   '/about/': typeof AboutIndexRoute
   '/_blog/posts/$lang/$slug': typeof BlogPostsLangSlugRoute
   '/_blog/_archive/posts/': typeof BlogArchivePostsIndexRoute
@@ -112,7 +116,10 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/sitemap.xml'
     | '/about/$lang'
+    | '/feeds/default.xml'
+    | '/oembed/$embedId'
     | '/about'
     | '/posts/$lang/$slug'
     | '/posts'
@@ -120,7 +127,10 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/sitemap.xml'
     | '/about/$lang'
+    | '/feeds/default.xml'
+    | '/oembed/$embedId'
     | '/about'
     | '/posts/$lang/$slug'
     | '/posts'
@@ -129,8 +139,11 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_blog'
+    | '/sitemap.xml'
     | '/_blog/_archive'
     | '/about/$lang'
+    | '/feeds/default.xml'
+    | '/oembed/$embedId'
     | '/about/'
     | '/_blog/posts/$lang/$slug'
     | '/_blog/_archive/posts/'
@@ -140,41 +153,22 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BlogRouteRoute: typeof BlogRouteRouteWithChildren
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   AboutLangRoute: typeof AboutLangRoute
+  FeedsDefaultDotxmlRoute: typeof FeedsDefaultDotxmlRoute
+  OembedEmbedIdRoute: typeof OembedEmbedIdRoute
   AboutIndexRoute: typeof AboutIndexRoute
-}
-export interface FileServerRoutesByFullPath {
-  '/sitemap.xml': typeof SitemapDotxmlServerRoute
-  '/feeds/default.xml': typeof FeedsDefaultDotxmlServerRoute
-  '/oembed/$embedId': typeof OembedEmbedIdServerRoute
-}
-export interface FileServerRoutesByTo {
-  '/sitemap.xml': typeof SitemapDotxmlServerRoute
-  '/feeds/default.xml': typeof FeedsDefaultDotxmlServerRoute
-  '/oembed/$embedId': typeof OembedEmbedIdServerRoute
-}
-export interface FileServerRoutesById {
-  __root__: typeof rootServerRouteImport
-  '/sitemap.xml': typeof SitemapDotxmlServerRoute
-  '/feeds/default.xml': typeof FeedsDefaultDotxmlServerRoute
-  '/oembed/$embedId': typeof OembedEmbedIdServerRoute
-}
-export interface FileServerRouteTypes {
-  fileServerRoutesByFullPath: FileServerRoutesByFullPath
-  fullPaths: '/sitemap.xml' | '/feeds/default.xml' | '/oembed/$embedId'
-  fileServerRoutesByTo: FileServerRoutesByTo
-  to: '/sitemap.xml' | '/feeds/default.xml' | '/oembed/$embedId'
-  id: '__root__' | '/sitemap.xml' | '/feeds/default.xml' | '/oembed/$embedId'
-  fileServerRoutesById: FileServerRoutesById
-}
-export interface RootServerRouteChildren {
-  SitemapDotxmlServerRoute: typeof SitemapDotxmlServerRoute
-  FeedsDefaultDotxmlServerRoute: typeof FeedsDefaultDotxmlServerRoute
-  OembedEmbedIdServerRoute: typeof OembedEmbedIdServerRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_blog': {
       id: '/_blog'
       path: ''
@@ -194,6 +188,20 @@ declare module '@tanstack/react-router' {
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof AboutIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/oembed/$embedId': {
+      id: '/oembed/$embedId'
+      path: '/oembed/$embedId'
+      fullPath: '/oembed/$embedId'
+      preLoaderRoute: typeof OembedEmbedIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/feeds/default.xml': {
+      id: '/feeds/default.xml'
+      path: '/feeds/default.xml'
+      fullPath: '/feeds/default.xml'
+      preLoaderRoute: typeof FeedsDefaultDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about/$lang': {
@@ -233,31 +241,6 @@ declare module '@tanstack/react-router' {
     }
   }
 }
-declare module '@tanstack/react-start/server' {
-  interface ServerFileRoutesByPath {
-    '/sitemap.xml': {
-      id: '/sitemap.xml'
-      path: '/sitemap.xml'
-      fullPath: '/sitemap.xml'
-      preLoaderRoute: typeof SitemapDotxmlServerRouteImport
-      parentRoute: typeof rootServerRouteImport
-    }
-    '/oembed/$embedId': {
-      id: '/oembed/$embedId'
-      path: '/oembed/$embedId'
-      fullPath: '/oembed/$embedId'
-      preLoaderRoute: typeof OembedEmbedIdServerRouteImport
-      parentRoute: typeof rootServerRouteImport
-    }
-    '/feeds/default.xml': {
-      id: '/feeds/default.xml'
-      path: '/feeds/default.xml'
-      fullPath: '/feeds/default.xml'
-      preLoaderRoute: typeof FeedsDefaultDotxmlServerRouteImport
-      parentRoute: typeof rootServerRouteImport
-    }
-  }
-}
 
 interface BlogArchiveRouteRouteChildren {
   BlogArchivePostsIndexRoute: typeof BlogArchivePostsIndexRoute
@@ -289,17 +272,21 @@ const BlogRouteRouteWithChildren = BlogRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BlogRouteRoute: BlogRouteRouteWithChildren,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   AboutLangRoute: AboutLangRoute,
+  FeedsDefaultDotxmlRoute: FeedsDefaultDotxmlRoute,
+  OembedEmbedIdRoute: OembedEmbedIdRoute,
   AboutIndexRoute: AboutIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-const rootServerRouteChildren: RootServerRouteChildren = {
-  SitemapDotxmlServerRoute: SitemapDotxmlServerRoute,
-  FeedsDefaultDotxmlServerRoute: FeedsDefaultDotxmlServerRoute,
-  OembedEmbedIdServerRoute: OembedEmbedIdServerRoute,
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
 }
-export const serverRouteTree = rootServerRouteImport
-  ._addFileChildren(rootServerRouteChildren)
-  ._addFileTypes<FileServerRouteTypes>()

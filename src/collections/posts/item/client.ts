@@ -6,7 +6,7 @@ import { getPostInternal } from "./internal"
 import { PostSpec } from "./types"
 
 const getPostFn = createServerFn({ method: "GET" })
-  .validator(Schema.decodeUnknownSync(PostSpec))
+  .inputValidator(Schema.decodeUnknownSync(PostSpec))
   .handler(({ data }) =>
     getPostInternal(data).then(Option.getOrThrowWith(() => notFound()),
     ))
