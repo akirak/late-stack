@@ -31,10 +31,6 @@
       "automerge": true
     },
     {
-      "matchPackageNames": ["@tanstack/*"],
-      "enabled": false
-    },
-    {
       "matchUpdateTypes": ["patch", "pin", "digest", "minor"],
       "groupName": "Patches",
       "extends": [
