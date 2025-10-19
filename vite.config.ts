@@ -20,8 +20,8 @@ export default defineConfig({
       outDir: path.resolve(root, "data"),
     }),
     tanstackStart(),
-    nitroV2Plugin(),
     viteReact(),
+    nitroV2Plugin(),
   ],
   css: {
     transformer: "lightningcss",
