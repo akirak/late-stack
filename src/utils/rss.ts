@@ -1,5 +1,5 @@
 import type { NonEmptyReadonlyArray } from "effect/Array"
-import xml from "xml"
+import { createCB } from "xmlbuilder2"
 
 export interface AtomEntry {
   title: string
@@ -20,8 +20,6 @@ export interface AtomOptions<T> {
   toUpdated: (item: T) => Date
 }
 
-type Value = string | { _attr: Record<string, string>, _cdata?: string } | { _text: string } | Value[]
-
 export function generateAtomFeed<T>({
   title,
   subtitle,
@@ -32,37 +30,29 @@ export function generateAtomFeed<T>({
 }: AtomOptions<T>, posts: NonEmptyReadonlyArray<T>) {
   const feedUpdated = toUpdated(posts[0]).toISOString()
 
-  const root = xml.element({
-    _attr: {
-      xmlns: "http://www.w3.org/2005/Atom",
-    },
-  })
-
-  const stream = xml({ feed: root }, { stream: true, declaration: true })
-
   const encoder = new TextEncoder()
 
   return new ReadableStream({
     start(controller) {
-      stream.on("data", (chunk) => {
-        controller.enqueue(encoder.encode(chunk))
+      const stream = createCB({
+        data: (chunk: string) => {
+          controller.enqueue(encoder.encode(chunk))
+        },
+        end: () => {
+          controller.close()
+        },
+        error: (error: Error) => {
+          controller.error(error)
+        },
       })
 
-      stream.on("end", () => {
-        controller.close()
-      })
-
-      stream.on("error", (error) => {
-        controller.error(error)
-      })
-
-      // Add feed metadata
-      root.push({ title })
-      root.push({ link: { _attr: { href: baseUrl } } })
-      root.push({ link: { _attr: { href: self, rel: "self" } } })
-      root.push({ id: baseUrl })
-      root.push({ updated: feedUpdated })
-      root.push({ subtitle })
+      const feed = stream.ele("feed", { xmlns: "http://www.w3.org/2005/Atom" })
+      feed.ele("title").txt(title).up()
+      feed.ele("link", { href: baseUrl }).up()
+      feed.ele("link", { href: self, rel: "self" }).up()
+      feed.ele("id").txt(baseUrl).up()
+      feed.ele("updated").txt(feedUpdated).up()
+      feed.ele("subtitle").txt(subtitle).up()
 
       posts.forEach((post) => {
         const {
@@ -74,28 +64,29 @@ export function generateAtomFeed<T>({
           summary,
           _cdata,
         } = toEntry(post)
-        const entry: Record<string, Value>[] = [
-          { title },
-          { link: { _attr: { href } } },
-          { id },
-        ]
+
+        const entry = feed.ele("entry")
+        entry.ele("title").txt(title).up()
+        entry.ele("link", { href }).up()
+        entry.ele("id").txt(id).up()
+
         if (published) {
-          entry.push({ published: published.toISOString() })
+          entry.ele("published").txt(published.toISOString()).up()
         }
         if (updated) {
-          entry.push({ updated: updated.toISOString() })
+          entry.ele("updated").txt(updated.toISOString()).up()
         }
         if (summary) {
-          entry.push({ summary })
+          entry.ele("summary").txt(summary).up()
         }
         if (_cdata) {
-          entry.push({ content: { _attr: { type: "html" }, _cdata } })
+          entry.ele("content", { type: "html" }).dat(_cdata).up()
         }
 
-        root.push({ entry })
+        entry.up()
       })
 
-      root.close()
+      feed.end()
     },
   })
 }
