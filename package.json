@@ -42,6 +42,7 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^6.0.0",
+    "@deno/vite-plugin": "^1.0.5",
     "@effect/language-service": "^0.43.2",
     "@effect/platform": "^0.92.1",
     "@effect/platform-node": "^0.98.4",

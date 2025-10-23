@@ -1,4 +1,5 @@
 import path from "node:path"
+import deno from "@deno/vite-plugin"
 import commonjs from "@rollup/plugin-commonjs"
 import { nitroV2Plugin } from "@tanstack/nitro-v2-vite-plugin"
 import { tanstackStart } from "@tanstack/react-start/plugin/vite"
@@ -25,6 +26,7 @@ export default defineConfig({
     nitroV2Plugin({
       preset: "deno_server",
     }),
+    deno(),
   ],
   css: {
     transformer: "lightningcss",
