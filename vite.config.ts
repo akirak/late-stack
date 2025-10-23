@@ -1,4 +1,5 @@
 import path from "node:path"
+import commonjs from "@rollup/plugin-commonjs"
 import { nitroV2Plugin } from "@tanstack/nitro-v2-vite-plugin"
 import { tanstackStart } from "@tanstack/react-start/plugin/vite"
 import viteReact from "@vitejs/plugin-react"
@@ -33,6 +34,13 @@ export default defineConfig({
   build: {
     cssMinify: "lightningcss",
     sourcemap: true,
+    rollupOptions: {
+      plugins: [
+        commonjs({
+          defaultIsModuleExports: false,
+        }),
+      ],
+    },
   },
   server: {
     watch: {

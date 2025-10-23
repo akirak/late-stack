@@ -51,6 +51,7 @@
     "@expressive-code/plugin-collapsible-sections": "^0.41.3",
     "@ladle/react": "^5.1.0",
     "@playwright/test": "^1.56.1",
+    "@rollup/plugin-commonjs": "^28.0.8",
     "@tanstack/eslint-plugin-router": "^1.133.3",
     "@tanstack/nitro-v2-vite-plugin": "^1.133.3",
     "@types/node": "^22.18.11",
