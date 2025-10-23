@@ -22,7 +22,9 @@ export default defineConfig({
     }),
     tanstackStart(),
     viteReact(),
-    nitroV2Plugin(),
+    nitroV2Plugin({
+      preset: "deno_server",
+    }),
   ],
   css: {
     transformer: "lightningcss",
