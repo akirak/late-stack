@@ -40,6 +40,9 @@ export default defineConfig({
           defaultIsModuleExports: false,
         }),
       ],
+      external: [
+        "node:*",
+      ],
     },
   },
   server: {
