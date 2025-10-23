@@ -93,6 +93,7 @@
       "better-sqlite3"
     ],
     "overrides": {
+      "@oozcitak/url": "2.0.1",
       "better-sqlite3": "12.4.1"
     }
   },

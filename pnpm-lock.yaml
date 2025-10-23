@@ -6,6 +6,7 @@ settings:
 
 overrides:
   better-sqlite3: 12.4.1
+  '@oozcitak/url': 2.0.1
 
 pnpmfileChecksum: sha256-1UYZbdwG7Ra72UkrD4hRIOmxufZ0Ov4wzA0vg8mE2Jw=
 
@@ -1023,10 +1024,6 @@ packages:
   '@oozcitak/infra@2.0.1':
     resolution: {integrity: sha512-TtjI+kducm0ExL3OTKglPLkAIQ3alq0Otbokml62haZESfQaL3ojLJxl7+UTBhWCkBBuCshzGEEYmX5MXo8WOg==}
     engines: {node: '>=20.0'}
-
-  '@oozcitak/url@1.0.4':
-    resolution: {integrity: sha512-kDcD8y+y3FCSOvnBI6HJgl00viO/nGbQoCINmQ0h98OhnGITrWR3bOGfwYCthgcrV8AnTJz8MzslTQbC3SOAmw==}
-    engines: {node: '>=8.0'}
 
   '@oozcitak/url@2.0.1':
     resolution: {integrity: sha512-lLHUQUyYy86q+qbALr0TMVh+VQAYwNGbsxBx4LhfjvkNYG0hgAwWtq7ePebGs2nEhZmmIFl24ikuCpH2r5d3+A==}
@@ -7391,7 +7388,7 @@ snapshots:
   '@oozcitak/dom@1.15.10':
     dependencies:
       '@oozcitak/infra': 1.0.8
-      '@oozcitak/url': 1.0.4
+      '@oozcitak/url': 2.0.1
       '@oozcitak/util': 8.3.8
 
   '@oozcitak/dom@2.0.1':
@@ -7407,11 +7404,6 @@ snapshots:
   '@oozcitak/infra@2.0.1':
     dependencies:
       '@oozcitak/util': 9.0.4
-
-  '@oozcitak/url@1.0.4':
-    dependencies:
-      '@oozcitak/infra': 1.0.8
-      '@oozcitak/util': 8.3.8
 
   '@oozcitak/url@2.0.1':
     dependencies:
