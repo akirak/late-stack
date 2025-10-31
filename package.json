@@ -96,7 +96,11 @@
     ],
     "overrides": {
       "@oozcitak/url": "2.0.1",
-      "better-sqlite3": "12.4.1"
+      "@types/react": "19.2.2",
+      "@types/react-dom": "19.2.2",
+      "better-sqlite3": "12.4.1",
+      "react": "19.2.0",
+      "react-dom": "19.2.0"
     }
   },
   "lint-staged": {
