@@ -28,6 +28,12 @@ export default defineConfig({
     }),
     deno(),
   ],
+  resolve: {
+    alias: {
+      "react/jsx-runtime": path.resolve(root, "vite/shims/react-jsx-runtime.ts"),
+      "react/jsx-dev-runtime": path.resolve(root, "vite/shims/react-jsx-runtime.ts"),
+    },
+  },
   css: {
     transformer: "lightningcss",
     lightningcss: {
