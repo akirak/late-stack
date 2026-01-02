@@ -61,7 +61,7 @@ export default function OembedFrame({
             title={title || "Embedded content"}
             width={width}
             height={height}
-            // eslint-disable-next-line react-dom/no-missing-iframe-sandbox
+
             sandbox={sandbox}
           />
           <div className="button-group oembed-frame-buttons">
@@ -98,7 +98,7 @@ export default function OembedFrame({
                 title={`${title || "Embedded content"} - Modal view`}
                 width={width}
                 height={contentHeight}
-                // eslint-disable-next-line react-dom/no-missing-iframe-sandbox
+
                 sandbox={sandbox}
               />
             </figure>
