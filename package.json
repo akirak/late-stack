@@ -67,7 +67,7 @@
     "github-slugger": "^2.0.0",
     "gray-matter": "^4.0.3",
     "hast-util-to-string": "^3.0.1",
-    "lefthook": "^1.12.2",
+    "lefthook": "^2.0.0",
     "lint-staged": "^16.1.2",
     "playwright": "^1.54.1",
     "pnpm": "^10.13.1",
