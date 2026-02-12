@@ -33,7 +33,7 @@
     "react": "^19.1.0",
     "react-aria-components": "^1.10.1",
     "react-dom": "^19.1.0",
-    "react-lite-youtube-embed": "^2.5.1",
+    "react-lite-youtube-embed": "^3.0.0",
     "rehype-autolink-headings": "^7.1.0",
     "rehype-expressive-code": "^0.41.3",
     "remark-captions": "^2.2.4",
