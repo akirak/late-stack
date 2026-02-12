@@ -52,7 +52,7 @@
     "@ladle/react": "^5.0.3",
     "@playwright/test": "^1.54.1",
     "@tanstack/eslint-plugin-router": "^1.121.21",
-    "@types/node": "^22.15.32",
+    "@types/node": "^24.0.0",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@types/xml": "^1.0.11",
