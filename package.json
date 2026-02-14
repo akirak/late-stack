@@ -37,8 +37,7 @@
     "rehype-autolink-headings": "^7.1.0",
     "rehype-expressive-code": "^0.41.6",
     "remark-captions": "^2.2.4",
-    "remark-custom-header-id": "^1.0.0",
-    "xmlbuilder2": "^4.0.3"
+    "remark-custom-header-id": "^1.0.0"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^7.4.3",
