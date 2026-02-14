@@ -2,7 +2,7 @@
   "name": "personal-blog",
   "type": "module",
   "private": true,
-  "packageManager": "pnpm@10.18.1",
+  "packageManager": "pnpm@10.29.3",
   "sideEffects": false,
   "scripts": {
     "dev": "vite dev --port 3000",
