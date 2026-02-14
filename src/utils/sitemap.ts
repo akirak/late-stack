@@ -6,10 +6,8 @@
  * but implemented to generate a response stream instead of a static file.
  */
 
-import type { XMLBuilderCB } from "xmlbuilder2/lib/interfaces"
 import type { FileRoutesByFullPath } from "@/routeTree.gen"
 import { Schema } from "effect"
-import { createCB } from "xmlbuilder2"
 
 export const ChangeFreq = Schema.Union(
   Schema.Literal("hourly"),
@@ -48,73 +46,74 @@ export type SitemapConfig<T> = {
 
 interface SitemapOptions { siteUrl: string }
 
-/**
- * Add a sitemap entry to the urlset element.
- */
-function addSitemapEntry(urlset: XMLBuilderCB, loc: string, value: SitemapEntryOpts) {
-  const url = urlset.ele("url")
-  url.ele("loc").txt(loc).up()
-
-  Object.entries(value).forEach(([name, content]) => {
-    if (content instanceof Date) {
-      url.ele(name).txt(content.toISOString()).up()
-    }
-    else {
-      url.ele(name).txt(String(content)).up()
-    }
-  })
-
-  url.up()
+function escapeXmlText(value: string): string {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
 }
 
-export function feedAll(config: SitemapConfig<FileRoutesByFullPath>, dest: XMLBuilderCB, { siteUrl }: SitemapOptions) {
-  Object.entries(config).forEach(async ([key, value]) => {
-    if (!value) {
-      return
-    }
-    if (typeof value === "function") {
-      // OPTIMIZE: Tweak to read from a Node stream
-      value().forEach(({ path, ...value }) => {
-        addSitemapEntry(dest, siteUrl + path, value)
-      })
-    }
-    else if (typeof value === "object") {
-      addSitemapEntry(dest, siteUrl + key, value)
-    }
-  })
-}
-
-export function buildSitemapStream(config: SitemapConfig<FileRoutesByFullPath>) {
+function streamFromString(value: string): ReadableStream<Uint8Array> {
   const encoder = new TextEncoder()
+  const chunk = encoder.encode(value)
 
   return new ReadableStream({
     start(controller) {
-      const stream = createCB({
-        data: (chunk: string) => {
-          controller.enqueue(encoder.encode(chunk))
-        },
-        end: () => {
-          controller.close()
-        },
-        error: (error: Error) => {
-          controller.error(error)
-        },
-      })
-
-      const urlset = stream.ele("urlset", {
-        xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9",
-        // Currently unused name spaces
-        // "xmlns:news": "http://www.google.com/schemas/sitemap-news/0.9",
-        // "xmlns:xhtml": "http://www.w3.org/1999/xhtml",
-        // "xmlns:image": "http://www.google.com/schemas/sitemap-image/1.1",
-        // "xmlns:video": "http://www.google.com/schemas/sitemap-video/1.1",
-      })
-
-      feedAll(config, urlset, {
-        siteUrl: "https://jingsi.space",
-      })
-
-      urlset.end()
+      controller.enqueue(chunk)
+      controller.close()
     },
   })
+}
+
+function renderSitemapEntry(loc: string, value: SitemapEntryOpts): string {
+  const parts = [`<url><loc>${escapeXmlText(loc)}</loc>`]
+
+  Object.entries(value).forEach(([name, content]) => {
+    if (content === undefined) {
+      return
+    }
+
+    const normalized = content instanceof Date
+      ? content.toISOString()
+      : String(content)
+
+    parts.push(`<${name}>${escapeXmlText(normalized)}</${name}>`)
+  })
+
+  parts.push("</url>")
+  return parts.join("")
+}
+
+function buildSitemapXml(config: SitemapConfig<FileRoutesByFullPath>, { siteUrl }: SitemapOptions): string {
+  const entries: string[] = []
+
+  Object.entries(config).forEach(([key, value]) => {
+    if (!value) {
+      return
+    }
+
+    if (typeof value === "function") {
+      value().forEach(({ path, ...entry }) => {
+        entries.push(renderSitemapEntry(siteUrl + path, entry))
+      })
+      return
+    }
+
+    entries.push(renderSitemapEntry(siteUrl + key, value))
+  })
+
+  return [
+    "<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
+    "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">",
+    entries.join(""),
+    "</urlset>",
+  ].join("")
+}
+
+export function buildSitemapStream(config: SitemapConfig<FileRoutesByFullPath>) {
+  const xml = buildSitemapXml(config, {
+    siteUrl: "https://jingsi.space",
+  })
+
+  return streamFromString(xml)
 }

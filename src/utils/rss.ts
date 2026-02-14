@@ -1,5 +1,4 @@
 import type { NonEmptyReadonlyArray } from "effect/Array"
-import { createCB } from "xmlbuilder2"
 
 export interface AtomEntry {
   title: string
@@ -20,6 +19,35 @@ export interface AtomOptions<T> {
   toUpdated: (item: T) => Date
 }
 
+function escapeXmlText(value: string): string {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+}
+
+function escapeXmlAttribute(value: string): string {
+  return escapeXmlText(value)
+    .replaceAll("\"", "&quot;")
+    .replaceAll("'", "&apos;")
+}
+
+function asCData(value: string): string {
+  return value.replaceAll("]]>", "]]]]><![CDATA[>")
+}
+
+function streamFromString(value: string): ReadableStream<Uint8Array> {
+  const encoder = new TextEncoder()
+  const chunk = encoder.encode(value)
+
+  return new ReadableStream({
+    start(controller) {
+      controller.enqueue(chunk)
+      controller.close()
+    },
+  })
+}
+
 export function generateAtomFeed<T>({
   title,
   subtitle,
@@ -30,63 +58,44 @@ export function generateAtomFeed<T>({
 }: AtomOptions<T>, posts: NonEmptyReadonlyArray<T>) {
   const feedUpdated = toUpdated(posts[0]).toISOString()
 
-  const encoder = new TextEncoder()
+  const entries = posts.map((post) => {
+    const {
+      title,
+      href,
+      id,
+      published,
+      updated,
+      summary,
+      _cdata,
+    } = toEntry(post)
 
-  return new ReadableStream({
-    start(controller) {
-      const stream = createCB({
-        data: (chunk: string) => {
-          controller.enqueue(encoder.encode(chunk))
-        },
-        end: () => {
-          controller.close()
-        },
-        error: (error: Error) => {
-          controller.error(error)
-        },
-      })
+    return [
+      "<entry>",
+      `<title>${escapeXmlText(title)}</title>`,
+      `<link href=\"${escapeXmlAttribute(href)}\" />`,
+      `<id>${escapeXmlText(id)}</id>`,
+      published ? `<published>${published.toISOString()}</published>` : "",
+      updated ? `<updated>${updated.toISOString()}</updated>` : "",
+      summary ? `<summary>${escapeXmlText(summary)}</summary>` : "",
+      _cdata
+        ? `<content type=\"html\"><![CDATA[${asCData(_cdata)}]]></content>`
+        : "",
+      "</entry>",
+    ].join("")
+  }).join("")
 
-      const feed = stream.ele("feed", { xmlns: "http://www.w3.org/2005/Atom" })
-      feed.ele("title").txt(title).up()
-      feed.ele("link", { href: baseUrl }).up()
-      feed.ele("link", { href: self, rel: "self" }).up()
-      feed.ele("id").txt(baseUrl).up()
-      feed.ele("updated").txt(feedUpdated).up()
-      feed.ele("subtitle").txt(subtitle).up()
+  const xml = [
+    "<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
+    "<feed xmlns=\"http://www.w3.org/2005/Atom\">",
+    `<title>${escapeXmlText(title)}</title>`,
+    `<link href=\"${escapeXmlAttribute(baseUrl)}\" />`,
+    `<link href=\"${escapeXmlAttribute(self)}\" rel=\"self\" />`,
+    `<id>${escapeXmlText(baseUrl)}</id>`,
+    `<updated>${feedUpdated}</updated>`,
+    `<subtitle>${escapeXmlText(subtitle)}</subtitle>`,
+    entries,
+    "</feed>",
+  ].join("")
 
-      posts.forEach((post) => {
-        const {
-          title,
-          href,
-          id,
-          published,
-          updated,
-          summary,
-          _cdata,
-        } = toEntry(post)
-
-        const entry = feed.ele("entry")
-        entry.ele("title").txt(title).up()
-        entry.ele("link", { href }).up()
-        entry.ele("id").txt(id).up()
-
-        if (published) {
-          entry.ele("published").txt(published.toISOString()).up()
-        }
-        if (updated) {
-          entry.ele("updated").txt(updated.toISOString()).up()
-        }
-        if (summary) {
-          entry.ele("summary").txt(summary).up()
-        }
-        if (_cdata) {
-          entry.ele("content", { type: "html" }).dat(_cdata).up()
-        }
-
-        entry.up()
-      })
-
-      feed.end()
-    },
-  })
+  return streamFromString(xml)
 }
