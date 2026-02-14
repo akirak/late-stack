@@ -1,5 +1,5 @@
 import type { GlobalProvider } from "@ladle/react"
-import React from "react"
+import * as React from "react"
 
 import "@/styles/main.css"
 

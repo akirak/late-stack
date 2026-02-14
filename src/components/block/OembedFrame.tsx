@@ -41,8 +41,7 @@ export default function OembedFrame({
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
       if (event.data && event.data.height
-        && event.data.embedId === embedId
-      ) {
+        && event.data.embedId === embedId) {
         setContentHeight(event.data.height)
       }
     }

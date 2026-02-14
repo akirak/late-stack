@@ -12,7 +12,7 @@ function updateTocLocation(id: string) {
 }
 
 export function useSticky(selector: string) {
-  const sticky = useRef<Element | null>(null)
+  const ref = useRef<Element | null>(null)
 
   useEffect(() => {
     const targets = document.querySelectorAll(selector)
@@ -25,7 +25,7 @@ export function useSticky(selector: string) {
         const element = hiddenElements.sort((a, b) => {
           return b.getBoundingClientRect().bottom - a.getBoundingClientRect().bottom
         })[0]
-        sticky.current = element
+        ref.current = element
         element.classList.add("sticky-active")
         updateTocLocation(element.id)
       }
@@ -36,18 +36,18 @@ export function useSticky(selector: string) {
         if (entry.isIntersecting) {
           if (entry.boundingClientRect.bottom > -100) {
             // scroll down
-            if (sticky.current) {
-              sticky.current.classList.remove("sticky-active")
+            if (ref.current) {
+              ref.current.classList.remove("sticky-active")
             }
-            sticky.current = entry.target
+            ref.current = entry.target
             entry.target.classList.add("sticky-active")
             updateTocLocation(entry.target.id)
           }
         }
         else {
-          if (sticky.current === entry.target) {
-            sticky.current.classList.remove("sticky-active")
-            sticky.current = null
+          if (ref.current === entry.target) {
+            ref.current.classList.remove("sticky-active")
+            ref.current = null
             setLastHiddenTarget()
           }
         }
@@ -70,11 +70,11 @@ export function useSticky(selector: string) {
       const parent = (event.target as HTMLElement)?.parentNode as HTMLElement | null
       if (parent) {
         const headingId = parent.getAttribute("data-heading-id")
-        if (sticky.current?.id === headingId) {
-          const sibling = sticky.current.nextElementSibling
+        if (ref.current?.id === headingId) {
+          const sibling = ref.current.nextElementSibling
           if (sibling) {
             event.preventDefault()
-            const upper = sticky.current.getBoundingClientRect().bottom
+            const upper = ref.current.getBoundingClientRect().bottom
             const top = sibling.getBoundingClientRect().top
             const dx = top - upper - 15 // Add margin
             window.scrollBy({

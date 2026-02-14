@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router"
-import React from "react"
+import * as React from "react"
 import { getProfile } from "@/collections/about/server"
 import { Admonition } from "@/components/block/Admonition"
 import { Container } from "@/components/layout/Container"
