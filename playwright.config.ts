@@ -5,10 +5,8 @@ const executablePath = process.env.PLAYWRIGHT_LAUNCH_OPTIONS_EXECUTABLE_PATH
 
 const production = process.env.NODE_ENV === "production"
 
-// For production, use the default port for the Deno preset
-const APP_PORT = production ? 8000 : 3000
-
-const BASE_URL = process.env.E2E_BASE_URL || `http://localhost:${APP_PORT}`
+const APP_PORT = Number(process.env.E2E_PORT || "3000")
+const BASE_URL = process.env.E2E_BASE_URL || `http://127.0.0.1:${APP_PORT}`
 
 // See https://playwright.dev/docs/test-configuration.
 export default defineConfig({
@@ -38,7 +36,7 @@ export default defineConfig({
           ? {
               executablePath,
             }
-          : { },
+          : {},
       },
     },
 
@@ -65,8 +63,11 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: production ? "deno run start" : "pnpm run dev",
+    command: production
+      ? `NITRO_PORT=${APP_PORT} PORT=${APP_PORT} pnpm run start`
+      : `pnpm run dev -- --host 127.0.0.1 --port ${APP_PORT}`,
     url: BASE_URL,
+    timeout: 120_000,
     reuseExistingServer: !process.env.CI,
   },
 })
