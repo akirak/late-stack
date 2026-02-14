@@ -12,6 +12,8 @@ overrides:
   react: 19.2.4
   react-dom: 19.2.4
 
+pnpmfileChecksum: sha256-1UYZbdwG7Ra72UkrD4hRIOmxufZ0Ov4wzA0vg8mE2Jw=
+
 importers:
 
   .:
