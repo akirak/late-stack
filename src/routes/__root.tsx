@@ -209,7 +209,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 
         <footer className="root-footer">
           <div aria-label="Copyright of this site">
-            © 2025
+            © 2025-2026
             {" "}
             <Link to="/about">Akira Komamura</Link>
           </div>
