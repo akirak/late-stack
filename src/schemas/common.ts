@@ -1,4 +1,4 @@
-import { Option, Schema } from "effect"
+import { Schema } from "effect"
 
 /**
  * Schema for a language code, e.g. "en". To prevent errors caused by mistyping,
@@ -37,11 +37,6 @@ const DateFromISOString = Schema.DateFromString
 /**
  * Schema for an optional date field in a struct.
  */
-export const OptionalDateSchema = Schema.optionalWith(
-  DateFromISOString,
-  {
-    as: "Option",
-    nullable: true,
-    onNoneEncoding: () => Option.some(null),
-  },
-)
+export const OptionalDateSchema = Schema.optionalWith(DateFromISOString, {
+  nullable: true,
+})

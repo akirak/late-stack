@@ -21,7 +21,7 @@ function Diagram({ className, codeLanguage, code, __html, title }: DiagramProps)
   const [isTooltipOpen, setIsTooltipOpen] = useState(false)
   const [scroll, setScroll] = useState(0)
 
-  const ref1 = useRef<HTMLDivElement | null>(null)
+  const ref = useRef<HTMLDivElement | null>(null)
   const [height, setHeight] = useState<number | undefined>(undefined)
 
   // Restore the scroll position when closing the modal
@@ -38,8 +38,8 @@ function Diagram({ className, codeLanguage, code, __html, title }: DiagramProps)
 
   // Prevent layout shift when switching tabs
   const handleTabChange = (key: Key) => {
-    if (key === "code" && ref1.current) {
-      setHeight(ref1.current.getBoundingClientRect().height)
+    if (key === "code" && ref.current) {
+      setHeight(ref.current.getBoundingClientRect().height)
     }
   }
 
@@ -66,7 +66,7 @@ function Diagram({ className, codeLanguage, code, __html, title }: DiagramProps)
             )
           </Tab>
         </TabList>
-        <TabPanel id="diagram" ref={ref1}>
+        <TabPanel id="diagram" ref={ref}>
           <div className="diagram-container">
             <figure>
               { /* eslint-disable-next-line react-dom/no-dangerously-set-innerhtml */ }

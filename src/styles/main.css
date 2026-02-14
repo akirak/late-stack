@@ -173,10 +173,6 @@
     display: none;
   }
 
-  .sticky {
-    display: sticky;
-  }
-
   .flex {
     display: flex;
   }
@@ -190,7 +186,6 @@
   }
 
   .truncate-single-line {
-    whitespace: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     max-height: 1.5em;

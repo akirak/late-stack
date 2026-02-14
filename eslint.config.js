@@ -19,6 +19,8 @@ export default antfu({
     "no-empty": "off",
     // Don't insert `new` into `extends Data.TaggedError` declarations.
     "unicorn/throw-new-error": "off",
+    // TanStack Router route modules export a `Route` object by design.
+    "react-refresh/only-export-components": ["error", { allowExportNames: ["Route"] }],
   },
 }, jsxA11y.flatConfigs.recommended, {
   files: [
@@ -34,4 +36,11 @@ export default antfu({
   rules: {
     "no-console": "off",
   },
-}, pluginRouter.configs["flat/recommended"])
+}, pluginRouter.configs["flat/recommended"], {
+  files: [
+    "src/routes/**/*.tsx",
+  ],
+  rules: {
+    "react-refresh/only-export-components": "off",
+  },
+})

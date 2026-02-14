@@ -6,7 +6,7 @@ import { getPostListInternal } from "./internal"
 import { PostListSpec } from "./types"
 
 const getPostListFn = createServerFn({ method: "GET" })
-  .validator(Schema.decodeUnknownSync(PostListSpec))
+  .inputValidator(Schema.decodeUnknownSync(PostListSpec))
   .handler(({ data }) => getPostListInternal(data))
 
 export function getPostList(data: typeof PostListSpec.Encoded): Promise<readonly PostMetadata[]> {

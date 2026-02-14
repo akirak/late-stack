@@ -113,5 +113,5 @@ jobs:
         uses: denoland/deployctl@v1
         with:
           project: tanstack-blog
-          entrypoint: server/index.ts
-          root: .output
+          entrypoint: server/index.mjs
+          root: dist

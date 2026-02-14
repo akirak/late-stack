@@ -1,5 +1,4 @@
 import type { NonEmptyReadonlyArray } from "effect/Array"
-import xml from "xml"
 
 export interface AtomEntry {
   title: string
@@ -20,7 +19,34 @@ export interface AtomOptions<T> {
   toUpdated: (item: T) => Date
 }
 
-type Value = string | { _attr: Record<string, string>, _cdata?: string } | { _text: string } | Value[]
+function escapeXmlText(value: string): string {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+}
+
+function escapeXmlAttribute(value: string): string {
+  return escapeXmlText(value)
+    .replaceAll("\"", "&quot;")
+    .replaceAll("'", "&apos;")
+}
+
+function asCData(value: string): string {
+  return value.replaceAll("]]>", "]]]]><![CDATA[>")
+}
+
+function streamFromString(value: string): ReadableStream<Uint8Array> {
+  const encoder = new TextEncoder()
+  const chunk = encoder.encode(value)
+
+  return new ReadableStream({
+    start(controller) {
+      controller.enqueue(chunk)
+      controller.close()
+    },
+  })
+}
 
 export function generateAtomFeed<T>({
   title,
@@ -32,70 +58,44 @@ export function generateAtomFeed<T>({
 }: AtomOptions<T>, posts: NonEmptyReadonlyArray<T>) {
   const feedUpdated = toUpdated(posts[0]).toISOString()
 
-  const root = xml.element({
-    _attr: {
-      xmlns: "http://www.w3.org/2005/Atom",
-    },
-  })
+  const entries = posts.map((post) => {
+    const {
+      title,
+      href,
+      id,
+      published,
+      updated,
+      summary,
+      _cdata,
+    } = toEntry(post)
 
-  const stream = xml({ feed: root }, { stream: true, declaration: true })
+    return [
+      "<entry>",
+      `<title>${escapeXmlText(title)}</title>`,
+      `<link href=\"${escapeXmlAttribute(href)}\" />`,
+      `<id>${escapeXmlText(id)}</id>`,
+      published ? `<published>${published.toISOString()}</published>` : "",
+      updated ? `<updated>${updated.toISOString()}</updated>` : "",
+      summary ? `<summary>${escapeXmlText(summary)}</summary>` : "",
+      _cdata
+        ? `<content type=\"html\"><![CDATA[${asCData(_cdata)}]]></content>`
+        : "",
+      "</entry>",
+    ].join("")
+  }).join("")
 
-  const encoder = new TextEncoder()
+  const xml = [
+    "<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
+    "<feed xmlns=\"http://www.w3.org/2005/Atom\">",
+    `<title>${escapeXmlText(title)}</title>`,
+    `<link href=\"${escapeXmlAttribute(baseUrl)}\" />`,
+    `<link href=\"${escapeXmlAttribute(self)}\" rel=\"self\" />`,
+    `<id>${escapeXmlText(baseUrl)}</id>`,
+    `<updated>${feedUpdated}</updated>`,
+    `<subtitle>${escapeXmlText(subtitle)}</subtitle>`,
+    entries,
+    "</feed>",
+  ].join("")
 
-  return new ReadableStream({
-    start(controller) {
-      stream.on("data", (chunk) => {
-        controller.enqueue(encoder.encode(chunk))
-      })
-
-      stream.on("end", () => {
-        controller.close()
-      })
-
-      stream.on("error", (error) => {
-        controller.error(error)
-      })
-
-      // Add feed metadata
-      root.push({ title })
-      root.push({ link: { _attr: { href: baseUrl } } })
-      root.push({ link: { _attr: { href: self, rel: "self" } } })
-      root.push({ id: baseUrl })
-      root.push({ updated: feedUpdated })
-      root.push({ subtitle })
-
-      posts.forEach((post) => {
-        const {
-          title,
-          href,
-          id,
-          published,
-          updated,
-          summary,
-          _cdata,
-        } = toEntry(post)
-        const entry: Record<string, Value>[] = [
-          { title },
-          { link: { _attr: { href } } },
-          { id },
-        ]
-        if (published) {
-          entry.push({ published: published.toISOString() })
-        }
-        if (updated) {
-          entry.push({ updated: updated.toISOString() })
-        }
-        if (summary) {
-          entry.push({ summary })
-        }
-        if (_cdata) {
-          entry.push({ content: { _attr: { type: "html" }, _cdata } })
-        }
-
-        root.push({ entry })
-      })
-
-      root.close()
-    },
-  })
+  return streamFromString(xml)
 }

@@ -77,7 +77,7 @@ export const PostBuilderLive: Layer.Layer<
     const writePostList = Effect.gen(function* () {
       postList = pipe(
         postList,
-        Array.sortWith((x: PostMetadata) => x.publicationDate, byOptionalDateDescending),
+        Array.sortWith((x: PostMetadata) => Option.fromNullable(x.publicationDate), byOptionalDateDescending),
       )
       const sink = fs.sink(postIndexFile, {
         flag: "w",
@@ -246,14 +246,14 @@ export const PostBuilderLive: Layer.Layer<
         try: () => postProcessor.run(mdast),
         catch: e => e instanceof RemarkPluginDataError
           ? new PostError({
-            filePath,
-            loc: e.loc,
-            message: `In remark plugin ${e.plugin}: ${e.message}`,
-          })
+              filePath,
+              loc: e.loc,
+              message: `In remark plugin ${e.plugin}: ${e.message}`,
+            })
           : new PostError({
-            filePath,
-            message: (e instanceof Error ? e.message : String(e)),
-          }),
+              filePath,
+              message: (e instanceof Error ? e.message : String(e)),
+            }),
       })
 
       try {

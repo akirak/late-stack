@@ -4,7 +4,7 @@ import { Option, Schema } from "effect"
 import { getProfileInternal, ProfileSchema, ProfileSpec } from "./profile"
 
 const getProfileFn = createServerFn({ method: "GET" })
-  .validator(Schema.decodeUnknownSync(ProfileSpec))
+  .inputValidator(Schema.decodeUnknownSync(ProfileSpec))
   .handler(({ data }) => getProfileInternal(data).then(
     Option.getOrThrowWith(() => notFound()),
   ),

@@ -1,4 +1,4 @@
-import { Option, Schema } from "effect"
+import { Schema } from "effect"
 import { GenericSlugSchema, LanguageIdSchema, OptionalDateSchema } from "./common"
 
 export const ReadingTimeSchema = Schema.Struct({
@@ -20,14 +20,9 @@ export const PostSchema = Schema.Struct({
   slug: PostSlugSchema,
   title: Schema.String,
   language: LanguageIdSchema,
-  description: Schema.optionalWith(
-    Schema.String,
-    {
-      as: "Option",
-      nullable: true,
-      onNoneEncoding: () => Option.some(null),
-    },
-  ),
+  description: Schema.optionalWith(Schema.String, {
+    nullable: true,
+  }),
   // category: Schema.optional(Schema.String),
   // tags: Schema.Array(Schema.String),
   publicationDate: OptionalDateSchema,
@@ -54,13 +49,13 @@ export const PostMetadataSchema = PostSchema.omit("hastBody")
 export const PostMetadataHeaderSchema = PostSchema.omit("hastBody", "readingTime").pipe(
   Schema.filter(
     (meta) => {
-      if (!meta.draft && Option.isNone(meta.description)) {
+      if (!meta.draft && (meta.description === null || meta.description === undefined)) {
         return {
           path: ["description"],
           message: "A non-draft post must have a description metadata. Set the metadata, or set the draft status to true",
         }
       }
-      if (!meta.draft && Option.isNone(meta.publicationDate)) {
+      if (!meta.draft && (meta.publicationDate === null || meta.publicationDate === undefined)) {
         return {
           path: ["publicationDate"],
           message: "A non-draft post must have a publicationDate metadata. Set the metadata, or set the draft status to true",

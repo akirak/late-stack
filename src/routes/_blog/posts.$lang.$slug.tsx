@@ -1,5 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router"
-import { Option } from "effect"
 import { getPost } from "@/collections/posts.client"
 import { Toc } from "@/components/block/Toc"
 import { DateFormat } from "@/components/inline/DateFormat"
@@ -21,9 +20,7 @@ export const Route = createFileRoute("/_blog/posts/$lang/$slug")({
     meta: pageMeta({
       ogType: "article",
       title: loaderData!.post.title,
-      description: Option.getOrUndefined(
-        loaderData!.post.description,
-      ),
+      description: loaderData!.post.description ?? undefined,
     }),
   }),
 })
@@ -41,13 +38,11 @@ function PostComponent() {
           {post.title}
         </h1>
         <ul className="post-meta">
-          {
-            Option.isSome(post.publicationDate) && (
-              <li aria-label="Publication date">
-                <DateFormat date={post.publicationDate} />
-              </li>
-            )
-          }
+          {post.publicationDate && (
+            <li aria-label="Publication date">
+              <DateFormat date={post.publicationDate} />
+            </li>
+          )}
           <li
             aria-label="Estimated reading time"
             title={`${post.readingTime.text} — ${post.readingTime.words} words`}

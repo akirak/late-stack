@@ -41,8 +41,7 @@ export default function OembedFrame({
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
       if (event.data && event.data.height
-        && event.data.embedId === embedId
-      ) {
+        && event.data.embedId === embedId) {
         setContentHeight(event.data.height)
       }
     }
@@ -58,10 +57,10 @@ export default function OembedFrame({
         <div className="oembed-frame">
           <iframe
             src={embedUrl}
-            title={title || `Embedded content - ${Date.now()}`}
+            title={title || "Embedded content"}
             width={width}
             height={height}
-            // eslint-disable-next-line react-dom/no-missing-iframe-sandbox
+
             sandbox={sandbox}
           />
           <div className="button-group oembed-frame-buttons">
@@ -95,10 +94,10 @@ export default function OembedFrame({
             <figure className="oembed-frame oembed-frame-expanded">
               <iframe
                 src={embedUrl}
-                title={`${title || "Embedded content"} - Modal view - ${Date.now()}`}
+                title={`${title || "Embedded content"} - Modal view`}
                 width={width}
                 height={contentHeight}
-                // eslint-disable-next-line react-dom/no-missing-iframe-sandbox
+
                 sandbox={sandbox}
               />
             </figure>
