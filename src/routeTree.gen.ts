@@ -82,10 +82,10 @@ export interface FileRoutesByFullPath {
   '/about/$lang': typeof AboutLangRoute
   '/feeds/default.xml': typeof FeedsDefaultDotxmlRoute
   '/oembed/$embedId': typeof OembedEmbedIdRoute
-  '/about': typeof AboutIndexRoute
+  '/about/': typeof AboutIndexRoute
   '/posts/$lang/$slug': typeof BlogPostsLangSlugRoute
-  '/posts': typeof BlogArchivePostsIndexRoute
-  '/posts/$lang': typeof BlogArchivePostsLangIndexRoute
+  '/posts/': typeof BlogArchivePostsIndexRoute
+  '/posts/$lang/': typeof BlogArchivePostsLangIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -120,10 +120,10 @@ export interface FileRouteTypes {
     | '/about/$lang'
     | '/feeds/default.xml'
     | '/oembed/$embedId'
-    | '/about'
+    | '/about/'
     | '/posts/$lang/$slug'
-    | '/posts'
-    | '/posts/$lang'
+    | '/posts/'
+    | '/posts/$lang/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -172,7 +172,7 @@ declare module '@tanstack/react-router' {
     '/_blog': {
       id: '/_blog'
       path: ''
-      fullPath: ''
+      fullPath: '/'
       preLoaderRoute: typeof BlogRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
@@ -186,7 +186,7 @@ declare module '@tanstack/react-router' {
     '/about/': {
       id: '/about/'
       path: '/about'
-      fullPath: '/about'
+      fullPath: '/about/'
       preLoaderRoute: typeof AboutIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
@@ -214,14 +214,14 @@ declare module '@tanstack/react-router' {
     '/_blog/_archive': {
       id: '/_blog/_archive'
       path: ''
-      fullPath: ''
+      fullPath: '/'
       preLoaderRoute: typeof BlogArchiveRouteRouteImport
       parentRoute: typeof BlogRouteRoute
     }
     '/_blog/_archive/posts/': {
       id: '/_blog/_archive/posts/'
       path: '/posts'
-      fullPath: '/posts'
+      fullPath: '/posts/'
       preLoaderRoute: typeof BlogArchivePostsIndexRouteImport
       parentRoute: typeof BlogArchiveRouteRoute
     }
@@ -235,7 +235,7 @@ declare module '@tanstack/react-router' {
     '/_blog/_archive/posts/$lang/': {
       id: '/_blog/_archive/posts/$lang/'
       path: '/posts/$lang'
-      fullPath: '/posts/$lang'
+      fullPath: '/posts/$lang/'
       preLoaderRoute: typeof BlogArchivePostsLangIndexRouteImport
       parentRoute: typeof BlogArchiveRouteRoute
     }
