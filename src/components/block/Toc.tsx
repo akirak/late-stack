@@ -14,12 +14,12 @@ function buildNestedHeadings(flatHeadings: Heading[]): NestedHeading[] {
 
   flatHeadings.forEach((heading) => {
     const newNode = { ...heading, children: [] }
-    while (stack.length > 0 && stack[stack.length - 1].level >= heading.level) {
+    while (stack.length > 0 && stack.at(-1).level >= heading.level) {
       stack.pop()
     }
 
     if (stack.length > 0) {
-      stack[stack.length - 1].children.push(newNode)
+      stack.at(-1).children.push(newNode)
     }
     else {
       result.push(newNode)
