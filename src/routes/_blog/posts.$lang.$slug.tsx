@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router"
-import { getPost } from "@/collections/posts.client"
+import { getPostSync } from "@/collections/posts/item/server"
 import { Toc } from "@/components/block/Toc"
 import { DateFormat } from "@/components/inline/DateFormat"
 import { Container } from "@/components/layout/Container"
@@ -13,7 +13,7 @@ export const Route = createFileRoute("/_blog/posts/$lang/$slug")({
   component: PostComponent,
   loader: async ({ params }) => {
     return {
-      post: await getPost(params),
+      post: getPostSync(params),
     }
   },
   head: ({ loaderData }) => ({

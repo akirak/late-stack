@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router"
 import { getSocialLinksByLanguage } from "@/collections/about/profile"
-import { getPostList } from "@/collections/posts.client"
+import { getPostListAsync } from "@/collections/posts/list/server"
 import { Container } from "@/components/layout/Container"
 import { Header } from "@/components/layout/Header"
 import { PostListTable } from "@/features/blog/components/PostListTable"
@@ -10,7 +10,7 @@ import { siteMeta } from "@/utils/seo"
 export const Route = createFileRoute("/")({
   component: HomeComponent,
   loader: async () => {
-    return { posts: await getPostList({}) }
+    return { posts: await getPostListAsync({}) }
   },
   head: () => ({
     meta: siteMeta({
