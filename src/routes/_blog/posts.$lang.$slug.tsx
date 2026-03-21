@@ -1,7 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router"
-import { Schema } from "effect"
-import { getPostSync } from "@/collections/posts/item/server"
-import { PostSpec } from "@/collections/posts/item/types"
+import { getPost } from "@/collections/posts/item/client"
 import { Toc } from "@/components/block/Toc"
 import { DateFormat } from "@/components/inline/DateFormat"
 import { Container } from "@/components/layout/Container"
@@ -13,13 +11,7 @@ import { useSticky } from "@/utils/sticky"
 
 export const Route = createFileRoute("/_blog/posts/$lang/$slug")({
   component: PostComponent,
-  loader: async ({ params }) => {
-    const spec = Schema.decodeUnknownSync(PostSpec)(params)
-
-    return {
-      post: getPostSync(spec),
-    }
-  },
+  loader: async ({ params }) => ({ post: await getPost(params) }),
   head: ({ loaderData }) => ({
     meta: pageMeta({
       ogType: "article",

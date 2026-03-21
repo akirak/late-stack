@@ -3,7 +3,7 @@ import { createFileRoute, notFound } from "@tanstack/react-router"
 import { Option, pipe } from "effect"
 import { Header } from "react-aria-components"
 import { getLanguageById } from "@/collections/languages"
-import { getPostListAsync } from "@/collections/posts/list/server"
+import { getPostList } from "@/collections/posts/list/client"
 import { Container } from "@/components/layout/Container"
 import { PostListTable } from "@/features/blog/components/PostListTable"
 import { pageMeta } from "@/utils/seo"
@@ -17,7 +17,7 @@ export const Route = createFileRoute("/_blog/_archive/posts/$lang/")({
     )
     return {
       language,
-      posts: await getPostListAsync({
+      posts: await getPostList({
         filters: {
           language: language.id,
         },
