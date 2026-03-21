@@ -5,6 +5,8 @@ export interface RemarkAdmonitionsOptions {
   slugger: GithubSlugger
 }
 
+const ADMONITION_NAME_RE = /^(?:info|warning|error)$/
+
 /**
  * Default icon mapping for each admonition type.
  */
@@ -20,7 +22,7 @@ function remarkAdmonitions({ slugger }: RemarkAdmonitionsOptions) {
       if (
         node.type === "containerDirective"
       ) {
-        if (!/^(?:info|warning|error)$/.test(node.name))
+        if (!ADMONITION_NAME_RE.test(node.name))
           return
 
         const titleElement = node.children[0]

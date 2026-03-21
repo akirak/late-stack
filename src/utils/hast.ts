@@ -3,6 +3,8 @@ import { toJsxRuntime } from "hast-util-to-jsx-runtime"
 import { Fragment, jsx, jsxs } from "react/jsx-runtime"
 import { Diagram, LinkCard, LiteYouTube, OembedFrame } from "./lazy-components"
 
+const HEADING_TAG_RE = /^h([1-6])$/
+
 export function hastToJsx(hastTree: any): JsxElement {
   return toJsxRuntime(hastTree, {
     Fragment,
@@ -79,7 +81,7 @@ export function hastShallowHeadings(hastTree: any): { id?: string, text: string,
   // Filter out non-heading elements
   return hastTree.children.map((node: any) => {
     if (node.type === "element") {
-      const match = /^h([1-6])$/.exec(node.tagName)
+      const match = HEADING_TAG_RE.exec(node.tagName)
       if (!match) {
         return null
       }
