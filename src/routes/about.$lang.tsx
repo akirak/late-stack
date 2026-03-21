@@ -15,7 +15,7 @@ export const Route = createFileRoute("/about/$lang")({
   head: ({ loaderData, params }) => ({
     meta: pageMeta({
       ogType: "article",
-      title: `${loaderData!.fullName} (${params.lang})`,
+      title: loaderData ? `${loaderData.fullName} (${params.lang})` : `About (${params.lang})`,
       description: "About the author of jingsi.space. This page provides information about the author's background, social accounts, and website purpose.",
     }),
   }),

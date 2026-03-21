@@ -23,8 +23,8 @@ export const Route = createFileRoute("/_blog/posts/$lang/$slug")({
   head: ({ loaderData }) => ({
     meta: pageMeta({
       ogType: "article",
-      title: loaderData!.post.title,
-      description: loaderData!.post.description ?? undefined,
+      title: loaderData?.post.title ?? "Blog Post",
+      description: loaderData?.post.description ?? undefined,
     }),
   }),
 })

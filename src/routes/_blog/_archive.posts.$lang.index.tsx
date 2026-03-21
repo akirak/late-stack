@@ -24,17 +24,20 @@ export const Route = createFileRoute("/_blog/_archive/posts/$lang/")({
       }),
     }
   },
-  head: ({ loaderData }) => ({
-    meta: pageMeta({
-      ogType: "website",
-      title: `Blog Archive [${loaderData!.language.englishName}]`,
-      description: `View the archive of ${
-        loaderData!.language.localName
-          ? `${loaderData!.language.englishName} (${loaderData!.language.localName})`
-          : loaderData!.language.englishName
-      } blog posts on jingsi.space.`,
-    }),
-  }),
+  head: ({ loaderData, params }) => {
+    const languageName = loaderData?.language.englishName ?? params.lang
+    const localizedLanguageName = loaderData?.language.localName
+      ? `${loaderData.language.englishName} (${loaderData.language.localName})`
+      : languageName
+
+    return {
+      meta: pageMeta({
+        ogType: "website",
+        title: `Blog Archive [${languageName}]`,
+        description: `View the archive of ${localizedLanguageName} blog posts on jingsi.space.`,
+      }),
+    }
+  },
 })
 
 function PostArchiveComponent() {
