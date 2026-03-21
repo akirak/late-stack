@@ -16,8 +16,8 @@ runs:
     - name: Restore the package cache
       uses: nix-community/cache-nix-action@7df957e333c1e5da7721f60227dbba6d06080569 # v7
       with:
-        primary-key: nix-${{ runner.os }}-${{ hashFiles('**/flake.lock', '**/pnpm-lock.yaml') }}-${{ inputs.cache-key }}
-        restore-prefixes-first-match: nix-${{ runner.os }}-
+        primary-key: nix-2-${{ runner.os }}-${{ hashFiles('**/flake.lock', '**/pnpm-lock.yaml') }}-${{ inputs.cache-key }}
+        restore-prefixes-first-match: nix-2-${{ runner.os }}-
         gc-max-store-size-linux: 1G
         paths: |
           node_modules/.pnpm
