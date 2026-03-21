@@ -24,8 +24,8 @@ export const Route = createFileRoute("/feeds/default.xml")({
 
           const atomXml = generateAtomFeed({
             self: `${baseUrl}/feeds/default.xml`,
-            title: "TanStack Blog",
-            subtitle: "Latest posts from the TanStack Blog",
+            title: "jingsi.space",
+            subtitle: "Latest posts from the jingsi.space",
             baseUrl,
             toUpdated: (post: typeof PostMetadataSchema.Type) => post.publicationDate ?? new Date(),
             toEntry: (post: typeof PostMetadataSchema.Type) => {
