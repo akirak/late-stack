@@ -20,7 +20,11 @@ runs:
         restore-prefixes-first-match: nix-2-${{ runner.os }}-
         gc-max-store-size-linux: 1G
         paths: |
-          node_modules/.pnpm
+          # Cache the pnpm content-addressable store, not the generated
+          # node_modules symlink tree. Restoring the virtual store directly can
+          # leave CI with an unwritable install layout and break `pnpm install`
+          # with EACCES during symlink creation.
+          ${{ runner.temp }}/pnpm-store
           # .output
           ~/.cache/ms-playwright
 
@@ -30,4 +34,6 @@ runs:
 
     - name: Install npm dependencies
       shell: bash
+      env:
+        pnpm_config_store_dir: ${{ runner.temp }}/pnpm-store
       run: nix develop -L .#node-build -c pnpm install --no-frozen-lockfile
