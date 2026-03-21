@@ -2,6 +2,7 @@ import type { BundledShikiTheme, ExpressiveCodeEngineConfig } from "expressive-c
 import { loadShikiTheme } from "expressive-code"
 
 const themeNames = ["github-light", "github-dark"] satisfies BundledShikiTheme[]
+const THEME_MODE_RE = /(dark|light)/
 
 export async function loadConfig(): Promise<ExpressiveCodeEngineConfig> {
   const themes = await Promise.all(
@@ -11,7 +12,7 @@ export async function loadConfig(): Promise<ExpressiveCodeEngineConfig> {
   return {
     themes,
     themeCssSelector: (theme) => {
-      const match = theme && theme.name.match(/(dark|light)/)
+      const match = theme && theme.name.match(THEME_MODE_RE)
       if (match) {
         return `[data-theme=${match[1]}]`
       }

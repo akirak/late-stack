@@ -17,6 +17,8 @@ import appCss from "@/styles/main.css?url"
 import { useRouteReload } from "@/utils/reload"
 import "@/types/css"
 
+const OFFICIAL_HOSTNAME_RE = /^(?:localhost|jingsi\.space)$/
+
 const getServerTheme = createServerFn({ method: "GET" }).handler(
   async () => {
     const theme = getCookie("theme")
@@ -45,7 +47,7 @@ const redirectToOfficialDomain = createServerFn({ method: "GET" }).handler(
   async () => {
     const request = getRequest()
     const url = new URL(request.url)
-    if (!/^(?:localhost|jingsi\.space)$/.test(url.hostname)) {
+    if (!OFFICIAL_HOSTNAME_RE.test(url.hostname)) {
       throw redirect({
         href: `https://jingsi.space${url.pathname}${url.search}`,
         statusCode: 308,

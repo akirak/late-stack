@@ -11,6 +11,7 @@ export default antfu({
   },
   ignores: [
     "**/*.gen.ts",
+    "src/contents/**/*.md",
   ],
   rules: {
     "array-callback-return": "off",
@@ -21,6 +22,19 @@ export default antfu({
     "unicorn/throw-new-error": "off",
     // TanStack Router route modules export a `Route` object by design.
     "react-refresh/only-export-components": ["error", { allowExportNames: ["Route"] }],
+    // Avoid this until it is supported well
+    "e18e/prefer-array-to-sorted": "off",
+    // Harmful for EFfect-TS codebase
+    "antfu/top-level-function": "off",
+  },
+}, {
+  files: [
+    "**/*.jsx",
+    "**/*.tsx",
+  ],
+  rules: {
+    // Enforce the rewrite to `function` keyword only in JSX components
+    "antfu/top-level-function": "error",
   },
 }, jsxA11y.flatConfigs.recommended, {
   files: [

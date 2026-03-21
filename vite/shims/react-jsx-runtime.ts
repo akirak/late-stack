@@ -17,7 +17,7 @@ function jsxImpl(
     key = `${configObj.key}`
   }
 
-  const props = Object.prototype.hasOwnProperty.call(configObj, "key")
+  const props = Object.hasOwn(configObj, "key")
     ? Object.keys(configObj).reduce<Record<string, any>>((acc, propName) => {
         if (propName !== "key") {
           acc[propName] = configObj[propName]

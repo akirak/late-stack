@@ -1,10 +1,15 @@
 import { ParseResult, Schema } from "effect"
 
+const TWEET_STATUS_ID_RE = /\/status\/(\d+)/
+const TWEET_URL_RE = /https?:\/\/(?:www\.)?(?:x|twitter)\.com\/(?:#!\/)?(\w+)\/status(?:es)?\/(\d+)/
+const YOUTUBE_URL_RE = /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/
+const YOUTUBE_V_URL_RE = /youtube\.com\/v\/([^&\n?#]+)/
+
 export class TwitterTweetSource extends Schema.TaggedClass<TwitterTweetSource>()("app/TwitterTweetSource", {
   tweetUrl: Schema.String,
 }) {
   get id() {
-    const match = this.tweetUrl.match(/\/status\/(\d+)/)
+    const match = this.tweetUrl.match(TWEET_STATUS_ID_RE)
     return match ? match[1] : null
   }
 
@@ -47,9 +52,7 @@ const TweetUrlParser = Schema.transformOrFail(
   {
     strict: true,
     decode: (url, _, ast) => {
-      const pattern = /https?:\/\/(?:www\.)?(?:x|twitter)\.com\/(?:#!\/)?(\w+)\/status(?:es)?\/(\d+)/
-
-      const match = url.match(pattern)
+      const match = url.match(TWEET_URL_RE)
       if (match && match[1] && match[2]) {
         const tweetUrl = `https://twitter.com/${match[1]}/status/${match[2]}`
         return ParseResult.succeed(new TwitterTweetSource({
@@ -83,8 +86,8 @@ const YoutubeVideoUrlParser = Schema.transformOrFail(
     strict: true,
     decode: (url, _, ast) => {
       const patterns = [
-        /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/,
-        /youtube\.com\/v\/([^&\n?#]+)/,
+        YOUTUBE_URL_RE,
+        YOUTUBE_V_URL_RE,
       ]
 
       for (const pattern of patterns) {

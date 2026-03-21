@@ -48,7 +48,7 @@ function Diagram({ className, codeLanguage, code, __html, title }: DiagramProps)
     try {
       await navigator.clipboard.writeText(code)
       setIsTooltipOpen(true)
-      setTimeout(() => setIsTooltipOpen(false), 1000)
+      setTimeout(setIsTooltipOpen, 1000, false)
     }
     catch (err) {
       console.error("Failed to copy code:", err)

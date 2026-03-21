@@ -8,6 +8,8 @@ import { Oembed } from "../../schemas/link-metadata"
 import { Config } from "../pipeline-config"
 import { OembedCache, OembedCacheLive } from "./cache"
 
+const JSON_CONTENT_TYPE_RE = /^application\/json(?:;|$)/
+
 export class OembedFetchError extends Schema.TaggedError<OembedFetchError>()("app/OembedFetchError", {
   url: Schema.String,
   message: Schema.String,
@@ -79,7 +81,7 @@ function fetchOembed(httpClient: HttpClient.HttpClient, url: string) {
     )
 
     const contentType = response.headers["content-type"]
-    if (!/^application\/json(?:;|$)/.test(contentType)) {
+    if (!JSON_CONTENT_TYPE_RE.test(contentType)) {
       return yield* Effect.fail(new OembedFetchError({
         url,
         message: `Expected JSON response, got ${contentType}`,

@@ -34,6 +34,9 @@ import remarkLinkAttributes from "./unified/remarkLinkAttributes"
 
 type FileHandler = (filePath: string) => Effect.Effect<RouteUpdate[], Error, never>
 
+const ADMONITION_CLASS_RE = /^admonition/
+const HTTP_URL_RE = /^https?:\/\//
+
 export class PostBuilder extends Context.Tag("PostBuilder")<PostBuilder, {
   readonly buildPost: FileHandler
   readonly deletePost: FileHandler
@@ -147,7 +150,7 @@ export const PostBuilderLive: Layer.Layer<
         attributes: {
           ...defaultSchema.attributes,
           "div": [
-            ["className", /^admonition/],
+            ["className", ADMONITION_CLASS_RE],
             ["style"],
             ["aria-labelledby"],
           ],
@@ -175,10 +178,10 @@ export const PostBuilderLive: Layer.Layer<
             "title",
           ],
           "link-card": [
-            ["url", /^https?:\/\//],
+            ["url", HTTP_URL_RE],
             ["headingLevel"],
             ["title"],
-            ["image", /^https?:\/\//],
+            ["image", HTTP_URL_RE],
             ["imageAlt"],
             ["description"],
           ],
