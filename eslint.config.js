@@ -11,6 +11,7 @@ export default antfu({
   },
   ignores: [
     "**/*.gen.ts",
+    "src/contents/**/*.md",
   ],
   rules: {
     "array-callback-return": "off",
