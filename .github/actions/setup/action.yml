@@ -11,11 +11,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: nixbuild/nix-quick-install-action@2c9db80fb984ceb1bcaa77cdda3fdf8cfba92035 # v34
-      with:
-        nix_conf: |
-          keep-env-derivations = true
-          keep-outputs = true
+    - uses: cachix/install-nix-action@v31.10.1
 
     - name: Restore the package cache
       uses: nix-community/cache-nix-action@7df957e333c1e5da7721f60227dbba6d06080569 # v7
