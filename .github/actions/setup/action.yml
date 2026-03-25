@@ -13,6 +13,12 @@ runs:
   steps:
     - uses: cachix/install-nix-action@v31.10.1
 
+    - name: Prepare writable cache directories
+      shell: bash
+      run: |
+        mkdir -p "${RUNNER_TEMP}/.cache/nix"
+        echo "XDG_CACHE_HOME=${RUNNER_TEMP}/.cache" >> "$GITHUB_ENV"
+
     - name: Restore the package cache
       uses: nix-community/cache-nix-action@7df957e333c1e5da7721f60227dbba6d06080569 # v7
       with:

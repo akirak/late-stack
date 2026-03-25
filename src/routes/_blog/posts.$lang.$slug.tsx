@@ -50,8 +50,7 @@ function PostComponent() {
 
       <Nav>
         <section>
-          <h2>Table of Contents</h2>
-          <h3 className="self">
+          <h2>
             <a
               href="#post-header"
               onClick={(e) => {
@@ -66,9 +65,9 @@ function PostComponent() {
               }}
               aria-label="Go to the beginning of the post"
             >
-              {post.title}
+              On this page
             </a>
-          </h3>
+          </h2>
           <Toc headings={hastShallowHeadings(post.hastBody)} />
         </section>
       </Nav>
