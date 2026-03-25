@@ -34,6 +34,8 @@
             packages = buildDeps ++ [
               pkgs.nodePackages.typescript-language-server
 
+              pkgs.deno
+
               # For e2e testing
               playwright-browsers
             ];
