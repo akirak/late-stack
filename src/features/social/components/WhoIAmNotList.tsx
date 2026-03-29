@@ -1,8 +1,16 @@
 import type { WhoIAmNotSite } from "@/schemas/social"
 import { Suspense } from "react"
 import { Admonition } from "@/components/block/Admonition"
-import { Loading } from "@/components/inline/Loading"
 import { socialIcons } from "./icons"
+
+function InlineIconFallback() {
+  return (
+    <span
+      className="social-icon-fallback"
+      aria-hidden="true"
+    />
+  )
+}
 
 function WhoIAmNotSiteItem({ site }: { site: WhoIAmNotSite }) {
   const IconComponent = site.icon ? socialIcons[site.icon] : null
@@ -12,7 +20,7 @@ function WhoIAmNotSiteItem({ site }: { site: WhoIAmNotSite }) {
       <td>
         <span className="inline-flex items-center gap-xs">
           {IconComponent && (
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<InlineIconFallback />}>
               <IconComponent width={12} height={12} />
             </Suspense>
           )}

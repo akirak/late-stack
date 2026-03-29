@@ -1005,6 +1005,12 @@
     }
   }
 
+  .social-icon-fallback {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+  }
+
   /* LinkCard component */
   .link-card {
     background-color: var(--color-bg-highlight);
