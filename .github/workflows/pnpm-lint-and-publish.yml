@@ -40,6 +40,8 @@ jobs:
         run: nix develop -L .#node-build -c pnpm run lint
 
   test-e2e:
+    permissions:
+      contents: read
     strategy:
       matrix:
         include:
