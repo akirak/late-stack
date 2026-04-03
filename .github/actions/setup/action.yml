@@ -5,7 +5,6 @@ description: Set up Nix with a GH-native cache enabled
 inputs:
   cache-key:
     description: Suffix for the cache key to distinguish the package set
-    type: string
     required: true
 
 runs:
