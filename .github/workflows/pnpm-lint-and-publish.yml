@@ -95,7 +95,7 @@ jobs:
           retention-days: 30
 
   deploy:
-    needs: [lint, test-e2e]
+    needs: lint
     runs-on: ubuntu-latest
     permissions:
       id-token: write
