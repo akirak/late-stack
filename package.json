@@ -93,6 +93,7 @@
       "better-sqlite3"
     ],
     "overrides": {
+      "@clerk/shared": "4.8.1",
       "@oozcitak/url": "2.0.1",
       "@types/react": "19.2.14",
       "@types/react-dom": "19.2.3",
