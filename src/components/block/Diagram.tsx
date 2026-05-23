@@ -69,7 +69,7 @@ function Diagram({ className, codeLanguage, code, __html, title }: DiagramProps)
         <TabPanel id="diagram" ref={ref}>
           <div className="diagram-container">
             <figure>
-              { /* eslint-disable-next-line react-dom/no-dangerously-set-innerhtml */ }
+              { /* eslint-disable-next-line react/dom-no-dangerously-set-innerhtml */ }
               <div className={`diagram ${className || ""}`} dangerouslySetInnerHTML={{ __html }} />
 
               { title && (
@@ -128,7 +128,7 @@ function Diagram({ className, codeLanguage, code, __html, title }: DiagramProps)
             Close
           </Button>
           <figure>
-            { /* eslint-disable-next-line react-dom/no-dangerously-set-innerhtml */ }
+            { /* eslint-disable-next-line react/dom-no-dangerously-set-innerhtml */ }
             <div className={`diagram ${className || ""}`} dangerouslySetInnerHTML={{ __html }} />
             { title && (
               <figcaption>{title}</figcaption>

@@ -1,11 +1,11 @@
-import type { JsxElement } from "node_modules/hast-util-to-jsx-runtime/lib/types"
+import type { ReactNode } from "react"
 import { toJsxRuntime } from "hast-util-to-jsx-runtime"
 import { Fragment, jsx, jsxs } from "react/jsx-runtime"
 import { Diagram, LinkCard, LiteYouTube, OembedFrame } from "./lazy-components"
 
 const HEADING_TAG_RE = /^h([1-6])$/
 
-export function hastToJsx(hastTree: any): JsxElement {
+export function hastToJsx(hastTree: any): ReactNode {
   return toJsxRuntime(hastTree, {
     Fragment,
     jsxs,
