@@ -9,5 +9,7 @@ allowBuilds:
   msw: true
 shellEmulator: true
 trustPolicy: no-downgrade
+trustPolicyExclude:
+  - react-lite-youtube-embed@3.5.0
 onlyBuiltDependencies:
   - better-sqlite3
