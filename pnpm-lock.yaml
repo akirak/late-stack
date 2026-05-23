@@ -52,9 +52,6 @@ importers:
       react-dom:
         specifier: 19.2.6
         version: 19.2.6(react@19.2.6)
-      react-lite-youtube-embed:
-        specifier: 3.5.0
-        version: 3.5.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       rehype-autolink-headings:
         specifier: ^7.1.0
         version: 7.1.0
@@ -5079,12 +5076,6 @@ packages:
 
   react-is@17.0.2:
     resolution: {integrity: sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==}
-
-  react-lite-youtube-embed@3.5.0:
-    resolution: {integrity: sha512-lGgvXHL3B3WvF2c9W5FQX2jjmr/cXjkyZZKZWh47mtOcrN4MF1S14yFUBK+HAarm7aGfCp7jhLseoEJgcf0RoA==}
-    peerDependencies:
-      react: '>=18.2.0'
-      react-dom: '>=18.2.0'
 
   react-stately@3.46.0:
     resolution: {integrity: sha512-OdxhWvHgs2L4OJGIs7hnuTr5WjjMM6enhNEAMRqiekhF8+ITvA2LRwNftOZwcogaoCslGYq5S2VQTQwnm0GbCA==}
@@ -11502,11 +11493,6 @@ snapshots:
       scheduler: 0.27.0
 
   react-is@17.0.2: {}
-
-  react-lite-youtube-embed@3.5.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6):
-    dependencies:
-      react: 19.2.6
-      react-dom: 19.2.6(react@19.2.6)
 
   react-stately@3.46.0(react@19.2.6):
     dependencies:
