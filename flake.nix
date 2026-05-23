@@ -32,7 +32,7 @@
         {
           default = pkgs.mkShell {
             packages = buildDeps ++ [
-              pkgs.nodePackages.typescript-language-server
+              pkgs.typescript-go
 
               pkgs.deno
 
