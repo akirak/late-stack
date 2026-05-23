@@ -587,7 +587,7 @@
   }
 
   /* Layout specific */
-  /* Require a class so prevent development tools (e.g. ladle) to not get affected
+  /* Require a class so prevent development tools (e.g. Storybook) to not get affected
    by this style */
   body.site {
     display: flex;

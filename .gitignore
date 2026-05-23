@@ -23,6 +23,7 @@ yarn.lock
 /blob-report/
 /playwright/.cache/
 /dist
+/storybook-static
 
 .aider.*
 !.aider.conf.yml

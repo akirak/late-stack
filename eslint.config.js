@@ -12,6 +12,7 @@ export default antfu({
   ignores: [
     "**/*.gen.ts",
     "src/contents/**/*.md",
+    "storybook-static",
   ],
   rules: {
     "array-callback-return": "off",
