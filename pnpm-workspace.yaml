@@ -11,5 +11,8 @@ shellEmulator: true
 trustPolicy: no-downgrade
 trustPolicyExclude:
   - react-lite-youtube-embed@3.5.0
+  - semver@7.8.1
+overrides:
+  semver: 7.8.1
 onlyBuiltDependencies:
   - better-sqlite3
