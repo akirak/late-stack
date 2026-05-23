@@ -26,3 +26,13 @@ updates:
           - "*"
     cooldown:
       default-days: 3
+
+  - package-ecosystem: nix
+    directory: /
+    schedule:
+      interval: weekly
+    allow:
+      - dependency-name: nixpkgs
+    labels:
+      - automation
+      - dependencies
