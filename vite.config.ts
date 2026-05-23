@@ -7,7 +7,6 @@ import viteReact from "@vitejs/plugin-react"
 import browserslist from "browserslist"
 import { browserslistToTargets } from "lightningcss"
 import { defineConfig } from "vite"
-import tsconfigPaths from "vite-tsconfig-paths"
 import { collections } from "./vite/plugins/collections"
 
 const root = new URL(".", import.meta.url).pathname
@@ -39,9 +38,6 @@ function denoPlugins(): Plugin[] {
 
 export default defineConfig({
   plugins: [
-    tsconfigPaths({
-      projects: ["./tsconfig.json"],
-    }),
     collections({
       contentDir: path.resolve(root, "src/contents"),
       outDir: path.resolve(root, "data"),
@@ -55,6 +51,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
+      "@": path.resolve(root, "src"),
       "react/jsx-runtime": path.resolve(root, "vite/shims/react-jsx-runtime.ts"),
       "react/jsx-dev-runtime": path.resolve(root, "vite/shims/react-jsx-runtime.ts"),
     },
