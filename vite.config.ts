@@ -1,3 +1,4 @@
+import type { Plugin } from "vite"
 import path from "node:path"
 import deno from "@deno/vite-plugin"
 import { nitroV2Plugin } from "@tanstack/nitro-v2-vite-plugin"
@@ -10,6 +11,31 @@ import tsconfigPaths from "vite-tsconfig-paths"
 import { collections } from "./vite/plugins/collections"
 
 const root = new URL(".", import.meta.url).pathname
+
+function denoPlugins(): Plugin[] {
+  return deno().map((plugin) => {
+    const resolveId = plugin.resolveId
+
+    if (!resolveId) {
+      return plugin
+    }
+
+    return {
+      ...plugin,
+      resolveId(source, importer, options) {
+        if (source.startsWith("\0")) {
+          return null
+        }
+
+        if (typeof resolveId === "function") {
+          return resolveId.call(this, source, importer, options)
+        }
+
+        return resolveId.handler.call(this, source, importer, options)
+      },
+    }
+  })
+}
 
 export default defineConfig({
   plugins: [
@@ -25,7 +51,7 @@ export default defineConfig({
     nitroV2Plugin({
       preset: "deno_server",
     }),
-    deno(),
+    denoPlugins(),
   ],
   resolve: {
     alias: {
