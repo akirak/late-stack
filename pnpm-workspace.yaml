@@ -1,0 +1,17 @@
+allowBuilds:
+  "@clerk/shared": true
+  "@parcel/watcher": true
+  "@swc/core": true
+  better-sqlite3: true
+  esbuild: true
+  lefthook: true
+  msgpackr-extract: true
+  msw: true
+shellEmulator: true
+trustPolicy: no-downgrade
+trustPolicyExclude:
+  - semver@7.8.1
+overrides:
+  semver: 7.8.1
+onlyBuiltDependencies:
+  - better-sqlite3

@@ -135,7 +135,7 @@ Mono Font (--font-mono: "DM Mono", "Monaco", "Menlo", "Consolas", monospace):
 - 400 (default/normal) - Used for code blocks and inline code (no explicit
   font-weight specified, so it uses the default weight)
 
-To reflect these settings, update `src/routes/__root.tsx` and `.ladle/head.html`.
+To reflect these settings, update `src/routes/__root.tsx` and `.storybook/preview-head.html`.
 
 ### Development Notes
 
@@ -144,5 +144,5 @@ To reflect these settings, update `src/routes/__root.tsx` and `.ladle/head.html`
 - All data fetching is type-safe using Effect Schema validation
 - Tests run against both dev (port 3000) and production (port 8000) servers
 - Nix flake provides reproducible development environment
-- When you update `vite.config.ts`, also update `vite.config.ladle.ts` to keep
+- When you update `vite.config.ts`, also update `.storybook/vite.config.ts` to keep
   it in sync.

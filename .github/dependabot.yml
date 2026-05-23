@@ -12,8 +12,6 @@ updates:
       github-actions:
         patterns:
           - "*"
-    cooldown:
-      default-days: 7
 
   - package-ecosystem: npm
     directory: /
@@ -28,3 +26,13 @@ updates:
           - "*"
     cooldown:
       default-days: 3
+
+  - package-ecosystem: nix
+    directory: /
+    schedule:
+      interval: weekly
+    allow:
+      - dependency-name: nixpkgs
+    labels:
+      - automation
+      - dependencies
