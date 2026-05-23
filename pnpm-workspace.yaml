@@ -1,2 +1,13 @@
+allowBuilds:
+  "@clerk/shared": true
+  "@parcel/watcher": true
+  "@swc/core": true
+  better-sqlite3: true
+  esbuild: true
+  lefthook: true
+  msgpackr-extract: true
+  msw: true
+shellEmulator: true
+trustPolicy: no-downgrade
 onlyBuiltDependencies:
   - better-sqlite3
