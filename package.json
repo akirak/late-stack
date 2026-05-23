@@ -88,11 +88,6 @@
     "vite-tsconfig-paths": "^6.1.1",
     "vitest": "^4.1.6"
   },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "better-sqlite3"
-    ]
-  },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,json,yaml}": [
       "eslint --fix"
