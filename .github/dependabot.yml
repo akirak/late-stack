@@ -36,3 +36,7 @@ updates:
     labels:
       - automation
       - dependencies
+    groups:
+      nixpkgs:
+        patterns:
+          - nixpkgs
