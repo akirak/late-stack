@@ -16,16 +16,19 @@ updates:
   - package-ecosystem: npm
     directory: /
     schedule:
-      interval: daily
+      interval: weekly
     labels:
       - automation
       - dependencies
     groups:
-      npm-dependencies:
+      patches:
         patterns:
           - "*"
+        update-types:
+          - minor
+          - patch
     cooldown:
-      default-days: 3
+      default-days: 10
 
   - package-ecosystem: nix
     directory: /

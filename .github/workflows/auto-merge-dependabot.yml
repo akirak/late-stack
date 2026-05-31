@@ -34,7 +34,6 @@ jobs:
 
       - name: Merge
         if: |
-          steps.dependabot-metadata.outputs.update-type == 'version-update:semver-patch' ||
           steps.dependabot-metadata.outputs.dependency-group == 'nixpkgs'
         run: |
           gh pr merge "$PR_URL" --delete-branch --merge --auto
