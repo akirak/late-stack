@@ -9,7 +9,7 @@
     "build": "NITRO_PRESET=deno_deploy vite build && rm -rf dist && cp -r .output dist && cp -r data dist/",
     "start": "cd dist && deno task --config deno.json start",
     "deploy": "cd dist && deno run --allow-all jsr:@deno/deployctl deploy --project=tanstack-blog server/index.mjs",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsgo --noEmit",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "lint": "eslint .",

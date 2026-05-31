@@ -57,6 +57,8 @@
 
           node-build = pkgs.mkShell {
             packages = buildDeps ++ [
+              pkgs.typescript-go
+
               # Needed only for deploying
               pkgs.deno
             ];
