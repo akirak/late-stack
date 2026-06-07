@@ -18,6 +18,7 @@
     "test-e2e": "pnpm exec playwright test",
     "test-e2e:chromium": "pnpm exec playwright test --project=chromium",
     "test-e2e-report": "pnpm exec playwright show-report",
+    "test:http:feed": "node tests/http/feed.test.js",
     "prepare": "lefthook install"
   },
   "dependencies": {
