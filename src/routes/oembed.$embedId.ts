@@ -1,17 +1,13 @@
-import * as fs from "node:fs"
-import * as path from "node:path"
 import { createFileRoute } from "@tanstack/react-router"
-import { getDataDir } from "@/utils/data"
+import { Option } from "effect"
+import { readDataFile } from "@/utils/data"
 
 export const Route = createFileRoute("/oembed/$embedId")({
   server: {
     handlers: {
       GET: async ({ params: { embedId } }) => {
-        // Load HTML from static file
-        const htmlFilePath = path.join(getDataDir(), "oembed", `${embedId}.html`)
-
         try {
-          const html = await fs.promises.readFile(htmlFilePath, "utf8")
+          const html = Option.getOrThrow(readDataFile(`oembed/${embedId}.html`))
 
           const fullHtml = `
             <!DOCTYPE html>

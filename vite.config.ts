@@ -1,40 +1,13 @@
-import type { Plugin } from "vite"
 import path from "node:path"
-import deno from "@deno/vite-plugin"
-import { nitroV2Plugin } from "@tanstack/nitro-v2-vite-plugin"
 import { tanstackStart } from "@tanstack/react-start/plugin/vite"
 import viteReact from "@vitejs/plugin-react"
 import browserslist from "browserslist"
 import { browserslistToTargets } from "lightningcss"
+import { nitro } from "nitro/vite"
 import { defineConfig } from "vite"
 import { collections } from "./vite/plugins/collections"
 
 const root = new URL(".", import.meta.url).pathname
-
-function denoPlugins(): Plugin[] {
-  return deno().map((plugin) => {
-    const resolveId = plugin.resolveId
-
-    if (!resolveId) {
-      return plugin
-    }
-
-    return {
-      ...plugin,
-      resolveId(source, importer, options) {
-        if (source.startsWith("\0")) {
-          return null
-        }
-
-        if (typeof resolveId === "function") {
-          return resolveId.call(this, source, importer, options)
-        }
-
-        return resolveId.handler.call(this, source, importer, options)
-      },
-    }
-  })
-}
 
 export default defineConfig({
   plugins: [
@@ -44,10 +17,24 @@ export default defineConfig({
     }),
     tanstackStart(),
     viteReact(),
-    nitroV2Plugin({
-      preset: "deno_server",
+    nitro({
+      compatibilityDate: "2026-08-08",
+      preset: "cloudflare_module",
+      cloudflare: {
+        deployConfig: true,
+        wrangler: {
+          name: "jingsi-space",
+          env: {
+            production: {
+              name: "jingsi-space",
+            },
+            staging: {
+              name: "jingsi-space-staging",
+            },
+          },
+        },
+      },
     }),
-    denoPlugins(),
   ],
   resolve: {
     alias: {
@@ -66,11 +53,6 @@ export default defineConfig({
   build: {
     cssMinify: "lightningcss",
     sourcemap: true,
-    rollupOptions: {
-      external: [
-        "node:*",
-      ],
-    },
   },
   server: {
     watch: {

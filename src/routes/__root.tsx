@@ -4,7 +4,6 @@ import {
   HeadContent,
   Link,
   Outlet,
-  redirect,
   Scripts,
 } from "@tanstack/react-router"
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools"
@@ -16,8 +15,6 @@ import GitHubIcon from "@/components/icons/GitHubIcon"
 import appCss from "@/styles/main.css?url"
 import { useRouteReload } from "@/utils/reload"
 import "@/types/css"
-
-const OFFICIAL_HOSTNAME_RE = /^(?:localhost|jingsi\.space)$/
 
 const getServerTheme = createServerFn({ method: "GET" }).handler(
   async () => {
@@ -43,22 +40,8 @@ const setServerTheme = createServerFn({ method: "POST" })
     },
   )
 
-const redirectToOfficialDomain = createServerFn({ method: "GET" }).handler(
-  async () => {
-    const request = getRequest()
-    const url = new URL(request.url)
-    if (!OFFICIAL_HOSTNAME_RE.test(url.hostname)) {
-      throw redirect({
-        href: `https://jingsi.space${url.pathname}${url.search}`,
-        statusCode: 308,
-      })
-    }
-  },
-)
-
 export const Route = createRootRouteWithContext<AppRouteContext>()({
   loader: async () => {
-    await redirectToOfficialDomain()
     const theme = await getServerTheme()
     return {
       theme,

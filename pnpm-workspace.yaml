@@ -7,6 +7,7 @@ allowBuilds:
   lefthook: true
   msgpackr-extract: true
   msw: true
+  workerd: true
 shellEmulator: true
 trustPolicy: no-downgrade
 trustPolicyExclude:

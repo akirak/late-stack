@@ -17,3 +17,6 @@ interface ImportMeta {
     send: (event: string, data?: any) => void
   }
 }
+declare module "virtual:collections-data" {
+  export const dataFiles: Readonly<Record<string, string>>
+}

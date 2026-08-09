@@ -148,7 +148,7 @@ export const MetadataFetcherLive = Layer.effect(
               "Accept": "*/*",
               "Accept-Encoding": "gzip, deflate, br",
               // Some web sites require a User-Agent header
-              "User-Agent": "deno.dev",
+              "User-Agent": "jingsi.space content builder",
             },
           }).pipe(
             Effect.timeout(TIMEOUT_MS),

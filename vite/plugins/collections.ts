@@ -3,12 +3,38 @@ import type { ConfigError } from "effect/ConfigError"
 import type { Plugin } from "vite"
 import type { RouteUpdate } from "../../src/dev/types"
 import * as fs from "node:fs"
+import * as path from "node:path"
 import { Effect, ManagedRuntime, pipe, String } from "effect"
 import { makePipelineLayer, Pipeline } from "../../src/dev/collections-pipeline"
 
 export interface Options {
   contentDir: string
   outDir: string
+}
+
+const VirtualCollectionsData = "virtual:collections-data"
+const ResolvedVirtualCollectionsData = `\0${VirtualCollectionsData}`
+
+function readDataFiles(dir: string, root = dir): Record<string, string> {
+  if (!fs.existsSync(dir)) {
+    return {}
+  }
+
+  return Object.fromEntries(
+    fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+      const entryPath = path.join(dir, entry.name)
+
+      if (entry.isDirectory()) {
+        return Object.entries(readDataFiles(entryPath, root))
+      }
+
+      if (!entry.isFile() || ![".html", ".json", ".jsonl"].includes(path.extname(entry.name))) {
+        return []
+      }
+
+      return [[path.relative(root, entryPath).split(path.sep).join("/"), fs.readFileSync(entryPath, "utf8")]]
+    }),
+  )
 }
 
 /**
@@ -26,6 +52,18 @@ export function collections({ contentDir, outDir }: Options): Plugin {
 
   return {
     name: "vite-plugin-collections",
+
+    resolveId(id) {
+      if (id === VirtualCollectionsData) {
+        return ResolvedVirtualCollectionsData
+      }
+    },
+
+    load(id) {
+      if (id === ResolvedVirtualCollectionsData) {
+        return `export const dataFiles = ${JSON.stringify(readDataFiles(outDir))}`
+      }
+    },
 
     config(_, env) {
       mode = env.command
@@ -72,6 +110,11 @@ export function collections({ contentDir, outDir }: Options): Plugin {
         else {
           // File was deleted
           await withPipeline(pipeline => pipeline.handleFileDeletion(file, reload))
+        }
+
+        const dataModule = ctx.server.moduleGraph.getModuleById(ResolvedVirtualCollectionsData)
+        if (dataModule) {
+          ctx.server.moduleGraph.invalidateModule(dataModule)
         }
       }
       catch (e) {

@@ -3,7 +3,7 @@
 A modern blog built with the LATE Stack, featuring a sophisticated content
 management system powered by Effect and TanStack Start.
 
-[Now in production on Deno Deploy](https://jingsi.space/).
+[Now in production on Cloudflare Workers](https://jingsi.space/).
 
 ## What is the LATE Stack?
 
@@ -26,7 +26,7 @@ type safety, prioritizing maintainability and developer experience.
 - **Custom Remark Plugins**: Enhanced Markdown processing with OGP metadata fetching
 - **Effect-Powered Pipeline**: Concurrent, robust content processing with proper error handling
 
-The web site is deployed to [Deno Deploy](https://deno.com/deploy).
+The web site is deployed to [Cloudflare Workers](https://workers.cloudflare.com/).
 
 ## Architecture
 
@@ -38,6 +38,26 @@ filtering.
 For detailed technical background, see the [LATE Stack blog post](https://jingsi.space/posts/en/start-blog-late).
 
 Also see [CLAUDE.md](./CLAUDE.md).
+
+## Cloudflare deployment
+
+The build uses Nitro's Cloudflare module preset. The content pipeline still
+writes post data to `data/posts/*.json` and `data/posts.index.jsonl`. During the
+build, `virtual:collections-data` embeds those files in server-only Worker
+modules, so serving posts does not require filesystem access or an R2 bucket.
+They are available to Worker code through the collections API, but are not
+published as browser-readable static files. Static client assets are served
+through the Worker's `ASSETS` binding.
+
+```sh
+pnpm build
+pnpm start   # Preview the production Worker locally with Wrangler
+pnpm deploy  # Deploy with Wrangler
+```
+
+The GitHub Actions deployment requires `CLOUDFLARE_ACCOUNT_ID` and
+`CLOUDFLARE_API_TOKEN` repository secrets. The API token must be allowed to edit
+Workers scripts for the account.
 
 ## License
 
