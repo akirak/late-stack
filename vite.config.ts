@@ -24,6 +24,14 @@ export default defineConfig({
         deployConfig: true,
         wrangler: {
           name: "jingsi-space",
+          env: {
+            production: {
+              name: "jingsi-space",
+            },
+            staging: {
+              name: "jingsi-space-staging",
+            },
+          },
         },
       },
     }),
