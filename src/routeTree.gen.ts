@@ -9,45 +9,39 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as BlogRouteRouteImport } from './routes/_blog/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AboutIndexRouteImport } from './routes/about.index'
-import { Route as OembedEmbedIdRouteImport } from './routes/oembed.$embedId'
-import { Route as FeedsDefaultDotxmlRouteImport } from './routes/feeds.default[.]xml'
-import { Route as AboutLangRouteImport } from './routes/about.$lang'
+import { Route as BlogRouteRouteImport } from './routes/_blog/route'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as BlogArchiveRouteRouteImport } from './routes/_blog/_archive.route'
+import { Route as AboutIndexRouteImport } from './routes/about.index'
+import { Route as AboutLangRouteImport } from './routes/about.$lang'
+import { Route as FeedsDefaultDotxmlRouteImport } from './routes/feeds.default[.]xml'
+import { Route as OembedEmbedIdRouteImport } from './routes/oembed.$embedId'
 import { Route as BlogArchivePostsIndexRouteImport } from './routes/_blog/_archive.posts.index'
 import { Route as BlogPostsLangSlugRouteImport } from './routes/_blog/posts.$lang.$slug'
 import { Route as BlogArchivePostsLangIndexRouteImport } from './routes/_blog/_archive.posts.$lang.index'
 
-const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
-  id: '/sitemap.xml',
-  path: '/sitemap.xml',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogRouteRoute = BlogRouteRouteImport.update({
   id: '/_blog',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
+} as any)
+const BlogArchiveRouteRoute = BlogArchiveRouteRouteImport.update({
+  id: '/_archive',
+  getParentRoute: () => BlogRouteRoute,
 } as any)
 const AboutIndexRoute = AboutIndexRouteImport.update({
   id: '/about/',
   path: '/about/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const OembedEmbedIdRoute = OembedEmbedIdRouteImport.update({
-  id: '/oembed/$embedId',
-  path: '/oembed/$embedId',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FeedsDefaultDotxmlRoute = FeedsDefaultDotxmlRouteImport.update({
-  id: '/feeds/default.xml',
-  path: '/feeds/default.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutLangRoute = AboutLangRouteImport.update({
@@ -55,9 +49,15 @@ const AboutLangRoute = AboutLangRouteImport.update({
   path: '/about/$lang',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BlogArchiveRouteRoute = BlogArchiveRouteRouteImport.update({
-  id: '/_archive',
-  getParentRoute: () => BlogRouteRoute,
+const FeedsDefaultDotxmlRoute = FeedsDefaultDotxmlRouteImport.update({
+  id: '/feeds/default.xml',
+  path: '/feeds/default.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OembedEmbedIdRoute = OembedEmbedIdRouteImport.update({
+  id: '/oembed/$embedId',
+  path: '/oembed/$embedId',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const BlogArchivePostsIndexRoute = BlogArchivePostsIndexRouteImport.update({
   id: '/posts/',
@@ -162,11 +162,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/sitemap.xml': {
-      id: '/sitemap.xml'
-      path: '/sitemap.xml'
-      fullPath: '/sitemap.xml'
-      preLoaderRoute: typeof SitemapDotxmlRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_blog': {
@@ -176,32 +176,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_blog/_archive': {
+      id: '/_blog/_archive'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof BlogArchiveRouteRouteImport
+      parentRoute: typeof BlogRouteRoute
     }
     '/about/': {
       id: '/about/'
       path: '/about'
       fullPath: '/about/'
       preLoaderRoute: typeof AboutIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/oembed/$embedId': {
-      id: '/oembed/$embedId'
-      path: '/oembed/$embedId'
-      fullPath: '/oembed/$embedId'
-      preLoaderRoute: typeof OembedEmbedIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/feeds/default.xml': {
-      id: '/feeds/default.xml'
-      path: '/feeds/default.xml'
-      fullPath: '/feeds/default.xml'
-      preLoaderRoute: typeof FeedsDefaultDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about/$lang': {
@@ -211,12 +204,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutLangRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_blog/_archive': {
-      id: '/_blog/_archive'
-      path: ''
-      fullPath: '/'
-      preLoaderRoute: typeof BlogArchiveRouteRouteImport
-      parentRoute: typeof BlogRouteRoute
+    '/feeds/default.xml': {
+      id: '/feeds/default.xml'
+      path: '/feeds/default.xml'
+      fullPath: '/feeds/default.xml'
+      preLoaderRoute: typeof FeedsDefaultDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/oembed/$embedId': {
+      id: '/oembed/$embedId'
+      path: '/oembed/$embedId'
+      fullPath: '/oembed/$embedId'
+      preLoaderRoute: typeof OembedEmbedIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_blog/_archive/posts/': {
       id: '/_blog/_archive/posts/'
