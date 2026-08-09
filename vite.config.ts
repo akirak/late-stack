@@ -18,7 +18,7 @@ export default defineConfig({
     tanstackStart(),
     viteReact(),
     nitro({
-      compatibilityDate: "2026-08-09",
+      compatibilityDate: "2026-08-08",
       preset: "cloudflare_module",
       cloudflare: {
         deployConfig: true,
