@@ -1,9 +1,9 @@
 import path from "node:path"
-import { nitroV2Plugin } from "@tanstack/nitro-v2-vite-plugin"
 import { tanstackStart } from "@tanstack/react-start/plugin/vite"
 import viteReact from "@vitejs/plugin-react"
 import browserslist from "browserslist"
 import { browserslistToTargets } from "lightningcss"
+import { nitro } from "nitro/vite"
 import { defineConfig } from "vite"
 import { collections } from "./vite/plugins/collections"
 
@@ -17,7 +17,7 @@ export default defineConfig({
     }),
     tanstackStart(),
     viteReact(),
-    nitroV2Plugin({
+    nitro({
       compatibilityDate: "2026-08-09",
       preset: "cloudflare_module",
       cloudflare: {
