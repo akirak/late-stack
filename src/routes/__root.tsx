@@ -17,7 +17,7 @@ import appCss from "@/styles/main.css?url"
 import { useRouteReload } from "@/utils/reload"
 import "@/types/css"
 
-const OFFICIAL_HOSTNAME_RE = /^(?:localhost|jingsi\.space)$/
+const OFFICIAL_HOSTNAME_RE = /^(?:localhost|jingsi\.space|[0-9a-f]+-jingsi-space-staging.akirak.workers.dev)$/
 
 const getServerTheme = createServerFn({ method: "GET" }).handler(
   async () => {
