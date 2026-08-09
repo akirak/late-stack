@@ -221,7 +221,7 @@ export const PostBuilderLive: Layer.Layer<
         },
         properties(element) {
           return {
-            "className": "heading-anchor",
+            "className": ["heading-anchor"],
             "data-heading-id": element.properties?.id,
           }
         },
