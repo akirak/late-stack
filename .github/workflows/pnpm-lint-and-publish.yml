@@ -98,7 +98,6 @@ jobs:
     needs: lint
     runs-on: ubuntu-latest
     permissions:
-      id-token: write
       contents: read
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -111,9 +110,8 @@ jobs:
       - name: Build the production assets
         run: nix develop -L .#node-build -c pnpm run build
 
-      - name: Upload to Deno Deploy
-        uses: denoland/deployctl@v1
-        with:
-          project: tanstack-blog
-          entrypoint: server/index.mjs
-          root: dist
+      - name: Upload to Cloudflare Workers
+        run: nix develop -L .#node-build -c pnpm run deploy
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

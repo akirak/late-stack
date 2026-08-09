@@ -1,66 +1,35 @@
 import type { Pagination } from "./pagination"
-import events from "node:events"
-import * as fs from "node:fs"
-import * as fsPromise from "node:fs/promises"
-import * as path from "node:path"
-import readline from "node:readline"
-import * as url from "node:url"
 import { Option, pipe, Schema } from "effect"
-import { isRunningInBrowser, isRunningInDeno } from "./env"
+import { dataFiles } from "virtual:collections-data"
 
-/**
- * Returns a path to the data directory for SSR. Data files are only available
- * on the server, so this value is set to null on browser.
- */
-export function getDataDir() {
-  if (isRunningInBrowser()) {
-    throw new Error(`Server data is not available inside browser`)
-  }
-  else if (isRunningInDeno()) {
-    // In the production enviroment of Deno Deploy, The data directory should be
-    // copied to .output directory. The working directory will be directly under
-    // .output.
-    return "data"
-  }
-  else {
-    const __filename = url.fileURLToPath(import.meta.url)
-    const __dirname = path.dirname(__filename)
-    // Top-level directory in the repository
-    return path.join(__dirname, "../../data")
-  }
+function normalizeDataPath(filePath: string): string {
+  return filePath.replaceAll("\\", "/").replace(/^\.\//, "")
 }
 
 /**
- * Read a JSON file in the data directory.
+ * Read a generated data file embedded in the application bundle.
+ *
+ * The collections Vite plugin turns build-time output into a virtual module so
+ * production runtimes do not need filesystem access.
+ */
+export function readDataFile(filePath: string): Option.Option<string> {
+  return Option.fromNullable(dataFiles[normalizeDataPath(filePath)])
+}
+
+/**
+ * Read a JSON file in the generated data.
  *
  * If the file doesn't exist, the function returns None.
  */
 export async function readJsonDataFile<T>(filePath: string): Promise<Option.Option<T>> {
-  const fullPath = path.join(getDataDir(), filePath)
-  if (fs.existsSync(fullPath)) {
-    return pipe(
-      (await fsPromise.readFile(fullPath, "utf-8")),
-      JSON.parse,
-      Option.some,
-    )
-  }
-  else {
-    return Option.none()
-  }
+  return readJsonDataFileSync(filePath)
 }
 
 export function readJsonDataFileSync<T>(filePath: string): Option.Option<T> {
-  const fullPath = path.join(getDataDir(), filePath)
-  if (fs.existsSync(fullPath)) {
-    return pipe(
-      fs.readFileSync(fullPath, "utf-8"),
-      JSON.parse,
-      Option.some,
-    )
-  }
-  else {
-    return Option.none()
-  }
+  return pipe(
+    readDataFile(filePath),
+    Option.map(content => JSON.parse(content) as T),
+  )
 }
 
 export async function readJsonDataFileWithSchema<A, I>(
@@ -71,43 +40,44 @@ export async function readJsonDataFileWithSchema<A, I>(
     .then(Option.map(Schema.decodeUnknownSync(schema)))
 }
 
+function readJsonLines(filePath: string): unknown[] {
+  return pipe(
+    readDataFile(filePath),
+    Option.map(content => content
+      .split("\n")
+      .filter(Boolean)
+      .map(line => JSON.parse(line))),
+    Option.getOrElse(() => []),
+  )
+}
+
 export async function readJsonLinesDataFileFiltered<A, I>(
   filePath: string,
   schema: Schema.Schema<A, I>,
   { offset, limit }: Pagination,
   predicate?: (x: A) => boolean,
 ): Promise<I[]> {
-  const fullPath = path.join(getDataDir(), filePath)
-  const stream = fs.createReadStream(fullPath, "utf-8")
-  const rl = readline.createInterface({
-    input: stream,
-    crlfDelay: Infinity,
-  })
   const result: I[] = []
-  let count = -offset
-  rl.on("line", (line) => {
-    if (typeof line === "string") {
-      if (line.length > 0) {
-        const encoded = JSON.parse(line)
-        const data = Schema.decodeUnknownSync(schema)(encoded)
-        // There is an opportunity for optimization here if the predicate is
-        // null.
-        if (!predicate || predicate(data)) {
-          if (count >= 0) {
-            result.push(encoded)
-          }
-          count += 1
-        }
-      }
+  let matched = 0
+
+  for (const encoded of readJsonLines(filePath)) {
+    const data = Schema.decodeUnknownSync(schema)(encoded)
+
+    if (predicate && !predicate(data)) {
+      continue
     }
-    else {
-      throw new TypeError(`undecoded input while reading a file ${filePath}`)
+
+    if (matched >= offset && result.length < limit) {
+      result.push(encoded as I)
     }
-    if (count === limit) {
-      rl.close()
+
+    matched += 1
+
+    if (result.length === limit) {
+      break
     }
-  })
-  await events.once(rl, "close")
+  }
+
   return result
 }
 
@@ -117,33 +87,26 @@ export async function readJsonLinesDataFileWithSchema<A, I>(
   { offset, limit }: Pagination,
   predicate: (x: A) => boolean,
 ): Promise<A[]> {
-  const fullPath = path.join(getDataDir(), filePath)
-  const stream = fs.createReadStream(fullPath, "utf-8")
-  const rl = readline.createInterface({
-    input: stream,
-    crlfDelay: Infinity,
-  })
   const result: A[] = []
-  let count = -offset
-  rl.on("line", (line) => {
-    if (typeof line === "string") {
-      if (line.length > 0) {
-        const data = Schema.decodeUnknownSync(schema)(JSON.parse(line))
-        if (predicate(data)) {
-          if (count >= 0) {
-            result.push(data)
-          }
-          count += 1
-        }
-      }
+  let matched = 0
+
+  for (const encoded of readJsonLines(filePath)) {
+    const data = Schema.decodeUnknownSync(schema)(encoded)
+
+    if (!predicate(data)) {
+      continue
     }
-    else {
-      throw new TypeError(`undecoded input while reading a file ${filePath}`)
+
+    if (matched >= offset && result.length < limit) {
+      result.push(data)
     }
-    if (count === limit) {
-      rl.close()
+
+    matched += 1
+
+    if (result.length === limit) {
+      break
     }
-  })
-  await events.once(rl, "close")
+  }
+
   return result
 }

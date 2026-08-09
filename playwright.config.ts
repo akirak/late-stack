@@ -64,7 +64,7 @@ export default defineConfig({
   /* Run your local dev server before starting the tests */
   webServer: {
     command: production
-      ? `NITRO_PORT=${APP_PORT} PORT=${APP_PORT} pnpm run start`
+      ? `pnpm run start --port ${APP_PORT}`
       : `pnpm run dev -- --host 127.0.0.1 --port ${APP_PORT}`,
     url: BASE_URL,
     timeout: 120_000,

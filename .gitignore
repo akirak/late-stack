@@ -9,6 +9,7 @@ yarn.lock
 .vercel
 .output
 .nitro
+.wrangler
 .tanstack
 
 /build/

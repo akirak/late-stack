@@ -1,9 +1,10 @@
 import type { FileRoutesByFullPath } from "@/routeTree.gen"
 import type { SitemapConfig } from "@/utils/sitemap"
-import * as fs from "node:fs"
-import * as path from "node:path"
 import { createFileRoute } from "@tanstack/react-router"
-import { getDataDir } from "@/utils/data"
+import { Option, Schema } from "effect"
+import { PostsIndexFile } from "@/collections/posts/list/types"
+import { PostMetadataSchema } from "@/schemas/post"
+import { readDataFile } from "@/utils/data"
 import { buildSitemapStream } from "@/utils/sitemap"
 
 const sitemapConfig: SitemapConfig<FileRoutesByFullPath> = {
@@ -19,25 +20,24 @@ const sitemapConfig: SitemapConfig<FileRoutesByFullPath> = {
   "/posts/": null,
   "/posts/$lang/": null,
   "/posts/$lang/$slug": () => {
-    const dataPath = path.resolve(getDataDir(), "posts.index.jsonl")
+    const fileContent = Option.getOrUndefined(readDataFile(PostsIndexFile))
 
-    if (!fs.existsSync(dataPath)) {
+    if (!fileContent) {
       console.warn("posts.index.jsonl not found. Running build first to generate post data.")
       return []
     }
 
-    const fileContent = fs.readFileSync(dataPath, "utf-8")
     const posts = fileContent
       .trim()
       .split("\n")
       .filter(Boolean)
-      .map(line => JSON.parse(line))
+      .map(line => Schema.decodeUnknownSync(PostMetadataSchema)(JSON.parse(line)))
 
-    return posts.map((post: any) => ({
+    return posts.map(post => ({
       path: `/posts/${post.language}/${post.slug}`,
       priority: 0.8,
       changefreq: "never" as const,
-      lastmod: post.publicationDate ? new Date(post.publicationDate) : undefined,
+      lastmod: post.publicationDate,
     }))
   },
   "/feeds/default.xml": null,

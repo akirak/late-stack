@@ -34,8 +34,6 @@
             packages = buildDeps ++ [
               pkgs.typescript-go
 
-              pkgs.deno
-
               # For e2e testing
               playwright-browsers
             ];
@@ -56,12 +54,7 @@
           };
 
           node-build = pkgs.mkShell {
-            packages = buildDeps ++ [
-              pkgs.typescript-go
-
-              # Needed only for deploying
-              pkgs.deno
-            ];
+            packages = buildDeps ++ [ pkgs.typescript-go ];
           };
         }
       );
