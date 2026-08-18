@@ -69,7 +69,7 @@ Linux distributions. I also embrace reproducibility, idempotency, composability,
 evolvability, and operational transparency, so I have been using NixOS since
 2020.
 
-In the future, I might apply knowledge of web development to build a more
+In the future, I might apply knowledge from my aspiration to build a more
 comprehensive environment for Org mode users, especially those who are
 interested in using Org mode for personal knowledge and task management. AI has
 raised the bar. As alternatives grow more capable, I feel the need to pursue
