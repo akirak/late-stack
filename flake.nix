@@ -18,6 +18,7 @@
             pkgs.sqlite
             pkgs.node-gyp
             pkgs.d2
+            pkgs.python3
           ];
 
           playwright-browsers = pkgs.playwright-driver.browsers.override {
