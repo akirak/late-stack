@@ -11,9 +11,7 @@ export function getRouter() {
     defaultPreload: "intent",
     defaultErrorComponent: err => (
       <div>
-        <p>
-          {err.error.message}
-        </p>
+        <p>{err.error instanceof Error ? err.error.message : String(err.error)}</p>
       </div>
     ),
     defaultNotFoundComponent: () => <p>not found</p>,
