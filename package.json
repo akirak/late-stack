@@ -84,7 +84,7 @@
     "unified": "^11.0.5",
     "unist-util-visit": "^5.1.0",
     "vite": "^8.2.2",
-    "vitest": "^4.1.11",
+    "vitest": "^5.0.0",
     "wrangler": "^4.127.1"
   },
   "lint-staged": {
