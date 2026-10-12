@@ -51,6 +51,24 @@ export default antfu({
   rules: {
     "no-console": "off",
   },
+}, {
+  files: [
+    "**/*.js",
+  ],
+  rules: {
+    // unused-imports delegates to @typescript-eslint/no-unused-vars, which
+    // misclassifies every reference in JS files parsed by espree as
+    // type-only (ref.isValueReference is undefined). Fall back to the core
+    // rule with the same options for JS files.
+    "unused-imports/no-unused-vars": "off",
+    "no-unused-vars": ["error", {
+      args: "after-used",
+      argsIgnorePattern: "^_",
+      ignoreRestSiblings: true,
+      vars: "all",
+      varsIgnorePattern: "^_",
+    }],
+  },
 }, pluginRouter.configs["flat/recommended"], {
   files: [
     "src/routes/**/*.tsx",
