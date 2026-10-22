@@ -79,7 +79,7 @@
     "remark-gfm": "^4.0.1",
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.1.2",
-    "storybook": "^10.6.1",
+    "storybook": "^10.6.2",
     "tsx": "^4.23.15",
     "unified": "^11.0.5",
     "unist-util-visit": "^5.1.0",
