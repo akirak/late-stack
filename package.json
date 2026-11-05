@@ -41,7 +41,7 @@
     "remark-custom-header-id": "^1.0.0"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^9.5.1",
+    "@antfu/eslint-config": "^10.0.0",
     "@effect/language-service": "^0.87.5",
     "@effect/platform": "^0.97.2",
     "@effect/platform-node": "^0.108.2",
